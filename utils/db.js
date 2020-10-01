@@ -7,7 +7,7 @@ getUrl = () => {
 }
 
 getDbName = () => {
-    return "TTWStats"
+    return process.env.MONGO_DB_NAME
 }
 
 getDbConnection = async () => {
