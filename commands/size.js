@@ -27,7 +27,6 @@ module.exports = {
             return
         }
 
-        message.channel.send("Changing size, hang on...")
         currentGather.changeSize(newSize)
     },
 };
