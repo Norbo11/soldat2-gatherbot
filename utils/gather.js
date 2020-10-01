@@ -60,6 +60,12 @@ class Gather {
         })
     }
 
+    changeSize(newSize) {
+        this.currentSize = newSize
+        this.currentQueue = []
+        util.displayQueueWithServerInfo(message)
+    }
+
     startNewGame() {
         const shuffledQueue = _.shuffle(this.currentQueue)
 
