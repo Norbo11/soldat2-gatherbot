@@ -74,13 +74,10 @@ getGatherEndFields = (game) => {
         getGatherLengthField(game.startTime, game.endTime, true),
         getMapField(game.mapName, true),
         ...getWinnerAndLoserFields(
-            game.alphaTickets,
-            game.bravoTickets,
-            stats.getTeamCaps(game.events, "Alpha"),
-            stats.getTeamCaps(game.events, "Bravo"),
+            game.alphaCaps,
+            game.bravoCaps,
             game.alphaPlayers,
             game.bravoPlayers,
-            stats.getKillsAndDeathsPerPlayer(game.events)
         ),
     ]
 }
@@ -101,28 +98,36 @@ getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     })
 }
 
-getWinnerAndLoserFields = (alphaTickets, bravoTickets, alphaCaps, bravoCaps,
-                           alphaDiscordIds, bravoDiscordIds, playerKillsAndDeaths) => {
+getWinnerAndLoserFields = (alphaCaps, bravoCaps, alphaDiscordIds, bravoDiscordIds) => {
+
+    // TODO: Hook this up
+    const playerKillsAndDeaths = {}
+    const allPlayers = [...alphaDiscordIds, ...bravoDiscordIds]
+
+    allPlayers.forEach(discordId => {
+        playerKillsAndDeaths[discordId] = {
+            kills: 0,
+            deaths: 0
+        }
+    })
 
     const alphaPlayersString = getPlayerFieldsWithKillsAndDeaths(alphaDiscordIds, playerKillsAndDeaths).join("\n")
     const bravoPlayersString = getPlayerFieldsWithKillsAndDeaths(bravoDiscordIds, playerKillsAndDeaths).join("\n")
 
-    const winningTeam = alphaTickets > bravoTickets ? "Alpha" : "Bravo"
-    const losingTeam = alphaTickets > bravoTickets ? "Bravo" : "Alpha"
-    const winnerTickets = alphaTickets > bravoTickets ? alphaTickets : bravoTickets
-    const loserTickets = alphaTickets > bravoTickets ? bravoTickets : alphaTickets
-    const winnerCaps = alphaTickets > bravoTickets ? alphaCaps : bravoCaps
-    const loserCaps = alphaTickets > bravoTickets ? bravoCaps : alphaCaps
-    const winningPlayersString = alphaTickets > bravoTickets ? alphaPlayersString : bravoPlayersString
-    const losingPlayersString = alphaTickets > bravoTickets ? bravoPlayersString : alphaPlayersString
+    const winningTeam = alphaCaps > bravoCaps ? "Alpha" : "Bravo"
+    const losingTeam = alphaCaps > bravoCaps ? "Bravo" : "Alpha"
+    const winnerCaps = alphaCaps > bravoCaps ? alphaCaps : bravoCaps
+    const loserCaps = alphaCaps > bravoCaps ? bravoCaps : alphaCaps
+    const winningPlayersString = alphaCaps > bravoCaps ? alphaPlayersString : bravoPlayersString
+    const losingPlayersString = alphaCaps > bravoCaps ? bravoPlayersString : alphaPlayersString
 
     return [
         {
-            name: `${teamEmoji(winningTeam)} **Winning Team (${winnerTickets} tickets left) (${winnerCaps} caps)**`,
+            name: `${teamEmoji(winningTeam)} **Winning Team (${winnerCaps} caps)**`,
             value: `${winningPlayersString}`,
         },
         {
-            name: `${teamEmoji(losingTeam)} Losing Team (${loserTickets} tickets left) (${loserCaps} caps)`,
+            name: `${teamEmoji(losingTeam)} Losing Team (${loserCaps} caps)`,
             value: `${losingPlayersString}`,
         },
     ]
