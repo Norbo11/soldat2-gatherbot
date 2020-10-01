@@ -2,7 +2,7 @@ const logger = require("../utils/logger")
 const utils = require("../utils/commandUtils")
 
 module.exports = {
-    aliases: ["endgame"],
+    aliases: ["endgame", "end"],
     description: "End the current gather.",
     execute(client, message, args) {
         if (!currentGather.gatherInProgress()) {

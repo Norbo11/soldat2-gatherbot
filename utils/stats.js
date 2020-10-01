@@ -226,7 +226,6 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
         `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
         `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
         `**Last Gather**: ${moment(playerStats.lastGameTimestamp).from(moment())}`,
-        `**Friendly Fire**: ${playerStats.totalTeamKills} team kills (${(playerStats.totalTeamKills / playerStats.totalKills * 100).toFixed(1)}% of kills)`,
     ]
 
     let favouriteWeapons = Object.keys(playerStats.weaponStats).map(weaponId => {
@@ -366,11 +365,6 @@ const formatTopPlayers = (topPlayers, discordIdToUsername) => {
                 {
                     name: "**Total Games**",
                     value: topPlayersByTotalGames.length > 0 ? topPlayersByTotalGames.join("\n") : "No Players",
-                    inline: true
-                },
-                {
-                    name: "**Friendly Fire**",
-                    value: topPlayersByTeamKills.length > 0 ? topPlayersByTeamKills.join("\n") : "No Players",
                     inline: true
                 },
             ]

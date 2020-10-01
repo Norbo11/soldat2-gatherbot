@@ -4,7 +4,7 @@ const utils = require("util")
 
 
 module.exports = {
-    aliases: ["stats", "ttwstats"],
+    aliases: ["stats"],
     description: "Show yours or someone else's personal gather statistics (use @mentions).",
     execute(client, message, args) {
         let discordUsers = []
