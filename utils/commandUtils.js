@@ -4,36 +4,28 @@ const discord = require("../utils/discord")
 
 
 displayGatherStatus = (message) => {
-    currentSoldatClient.getServerInfo(serverInfo => {
-        currentSoldatClient.getGatherStatus((alphaTickets, bravoTickets, alphaCaps, bravoCaps) => {
+    let description = undefined;
 
-            let description = undefined;
+    if (currentGather.inGameState === constants.IN_GAME_STATES["GATHER_PRE_RESET"]) {
+        description = `**Gather Waiting for Reset**`
+    } else if (currentGather.inGameState === constants.IN_GAME_STATES["GATHER_STARTED"]) {
+        description = `**Gather In Progress**\n`
+    }
 
-            if (currentGather.inGameState === constants.IN_GAME_STATES["GATHER_PRE_RESET"]) {
-                description = `**Gather Waiting for Reset**`
+    const alphaDiscordIds = currentGather.alphaTeam.map(user => user.id)
+    const bravoDiscordIds = currentGather.bravoTeam.map(user => user.id)
 
-            } else if (currentGather.inGameState === constants.IN_GAME_STATES["GATHER_STARTED"]) {
-                description = `**Gather In Progress**\n` +
-                    `:a: **Alpha** - Tickets: ${alphaTickets} - Caps: ${alphaCaps}\n` +
-                    `:regional_indicator_b: **Bravo** - Tickets: ${bravoTickets} - Caps: ${bravoCaps}`
-            }
-
-            const alphaDiscordIds = currentGather.alphaTeam.map(user => user.id)
-            const bravoDiscordIds = currentGather.bravoTeam.map(user => user.id)
-
-            message.channel.send({
-                embed: {
-                    color: 0xff0000,
-                    title: "Gather Info",
-                    description: description,
-                    fields: [
-                        ...discord.getPlayerFields(alphaDiscordIds, bravoDiscordIds),
-                        discord.getMapField(serverInfo["mapName"])
-                    ]
-                }
-            });
-        })
-    })
+    message.channel.send({
+        embed: {
+            color: 0xff0000,
+            title: "Gather Info",
+            description: description,
+            fields: [
+                ...discord.getPlayerFields(alphaDiscordIds, bravoDiscordIds),
+                discord.getMapField(currentGather.serverInfo["mapName"])
+            ]
+        }
+    });
 }
 
 
@@ -97,9 +89,7 @@ displayServerInfo = (message) => {
 
 
 displayQueueWithServerInfo = (message) => {
-    currentSoldatClient.getServerInfo(serverInfo => {
-        currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue, serverInfo["mapName"])
-    })
+    currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue, currentGather.serverInfo["mapName"])
 }
 
 
