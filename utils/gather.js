@@ -85,6 +85,8 @@ class Gather {
 
         const allUsers = [...alphaDiscordUsers, ...bravoDiscordUsers]
 
+        this.startTime = this.getCurrentTimestamp()
+
         allUsers.forEach(user => {
             user.send({
                 embed: {
@@ -111,7 +113,7 @@ class Gather {
         })
     }
 
-    endGame(winningTeam) {
+    endGame(alphaCaps, bravoCaps) {
         this.endTime = this.getCurrentTimestamp()
 
         const alphaDiscordIds = this.alphaTeam.map(user => user.id)
@@ -123,7 +125,10 @@ class Gather {
             startTime: this.startTime,
             endTime: this.endTime,
             size: this.currentSize,
-            winningTeam: winningTeam
+            alphaCaps: alphaCaps,
+            bravoCaps: bravoCaps,
+            mapName: this.serverInfo["mapName"],
+            events: [],
         }
 
         this.statsDb.insertGame(game).then().catch(e => logger.log.error(`Error when saving game to DB: ${e}`))
