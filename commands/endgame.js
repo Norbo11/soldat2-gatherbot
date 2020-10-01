@@ -10,14 +10,15 @@ module.exports = {
             return
         }
 
-        if (args.length !== 2) {
-            message.channel.send("Please specify two numbers, alpha caps and bravo caps, e.g. !endgame 5 3")
+        if (args.length !== 3) {
+            message.channel.send("Please specify a map name, alpha caps and bravo caps, e.g. !endgame ctf_ash 5 3")
             return
         }
 
-        const alphaCaps = parseInt(args[0])
-        const bravoCaps = parseInt(args[1])
+        const mapName = args[0]
+        const alphaCaps = parseInt(args[1])
+        const bravoCaps = parseInt(args[2])
 
-        currentGather.endGame(alphaCaps, bravoCaps)
+        currentGather.endGame(mapName, alphaCaps, bravoCaps)
     },
 };

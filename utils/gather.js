@@ -26,7 +26,7 @@ class Gather {
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.serverInfo = {
-            "mapName": "some_soldat_2_map.ctf"
+            "mapName": "Decided in-game"
         }
         this.password = "placeholder_password"
     }
@@ -113,7 +113,7 @@ class Gather {
         })
     }
 
-    endGame(alphaCaps, bravoCaps) {
+    endGame(mapName, alphaCaps, bravoCaps) {
         this.endTime = this.getCurrentTimestamp()
 
         const alphaDiscordIds = this.alphaTeam.map(user => user.id)
@@ -127,7 +127,7 @@ class Gather {
             size: this.currentSize,
             alphaCaps: alphaCaps,
             bravoCaps: bravoCaps,
-            mapName: this.serverInfo["mapName"],
+            mapName: mapName,
             events: [],
         }
 
