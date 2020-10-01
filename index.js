@@ -21,10 +21,6 @@ client.on("ready", (...args) => logger.log.info("Received Discord ready event.")
 client.login(process.env.BOT_TOKEN)
 
 cleanUp =  () => {
-    logger.log.info("Closing connection to Soldat Server...")
-    currentSoldatClient.client.end()
-    logger.log.info("Connection successfully terminated.")
-    process.exit(0)
 }
 
 process.on("SIGINT", cleanUp)
