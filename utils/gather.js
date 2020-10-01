@@ -21,7 +21,7 @@ class Gather {
     startTime = undefined
     endTime = undefined
 
-    constructor(discordChannel, getCurrentTimestamp, statsDb) {
+    constructor(discordChannel, statsDb, getCurrentTimestamp) {
         this.discordChannel = discordChannel
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
@@ -63,7 +63,7 @@ class Gather {
     changeSize(newSize) {
         this.currentSize = newSize
         this.currentQueue = []
-        util.displayQueueWithServerInfo(message)
+        currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue, currentGather.serverInfo["mapName"])
     }
 
     startNewGame() {

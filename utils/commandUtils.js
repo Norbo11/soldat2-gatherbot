@@ -88,7 +88,7 @@ displayServerInfo = (message) => {
 }
 
 
-displayQueueWithServerInfo = (message) => {
+displayQueueWithServerInfo = () => {
     currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue, currentGather.serverInfo["mapName"])
 }
 

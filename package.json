@@ -1,7 +1,7 @@
 {
-    "name": "TTW-Gatherbot",
+    "name": "Soldat2-GatherBot",
     "version": "1.0.0",
-    "description": "A Discord bot for organising Soldat TTW gather games.",
+    "description": "A Discord bot for organising Soldat 2 gather games.",
     "keywords": [
         "discord",
         "bot"

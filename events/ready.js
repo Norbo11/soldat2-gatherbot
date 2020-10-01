@@ -10,7 +10,7 @@ module.exports = client => {
     db.getDbConnection().then(async (dbConnection) => {
         global.currentStatsDb = new db.StatsDB(dbConnection)
         global.currentDiscordChannel = client.channels.get(process.env.DISCORD_CHANNEL_ID)
-        global.currentGather = new gather.Gather()
+        global.currentGather = new gather.Gather(global.currentDiscordChannel, global.currentStatsDb, () => Date.now())
         currentDiscordChannel.send("GatherBot Initialised.")
     })
 }
