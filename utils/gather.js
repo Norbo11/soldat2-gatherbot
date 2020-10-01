@@ -111,7 +111,7 @@ class Gather {
         })
     }
 
-    endGame() {
+    endGame(winningTeam) {
         this.endTime = this.getCurrentTimestamp()
 
         const alphaDiscordIds = this.alphaTeam.map(user => user.id)
@@ -123,6 +123,7 @@ class Gather {
             startTime: this.startTime,
             endTime: this.endTime,
             size: this.currentSize,
+            winningTeam: winningTeam
         }
 
         this.statsDb.insertGame(game).then().catch(e => logger.log.error(`Error when saving game to DB: ${e}`))
