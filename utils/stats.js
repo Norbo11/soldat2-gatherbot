@@ -243,11 +243,11 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
                     name: `**Overall Stats for ${playerName}**`,
                     value: overallStats.join("\n")
                 },
-                {
-                    name: "**Favourite Weapons**",
-                    value: favouriteWeapons.join("\n"),
-                    inline: true
-                },
+                // {
+                //     name: "**Favourite Weapons**",
+                //     value: favouriteWeapons.join("\n"),
+                //     inline: true
+                // },
             ]
         }
     }
