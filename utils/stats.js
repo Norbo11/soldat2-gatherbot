@@ -222,8 +222,8 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
         `**Gathers Played**: ${playerStats.totalGames}`,
         `**Total Gather Time**: ${formatMilliseconds(playerStats.totalGatherTime)}`,
         `**Won/Lost**: ${playerStats.wonGames}/${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}%)`,
-        `**Kills/Deaths**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`,
-        `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
+        // `**Kills/Deaths**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`,
+        // `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
         `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
         `**Last Gather**: ${moment(playerStats.lastGameTimestamp).from(moment())}`,
     ]
@@ -357,11 +357,11 @@ const formatTopPlayers = (topPlayers, discordIdToUsername) => {
                     value: topPlayersByWinRate.length > 0 ? topPlayersByWinRate.join("\n") : "No Players",
                     inline: true
                 },
-                {
-                    name: "**KDA**",
-                    value: topPlayersByKda.length > 0 ? topPlayersByKda.join("\n") : "No Players",
-                    inline: true
-                },
+                // {
+                //     name: "**KDA**",
+                //     value: topPlayersByKda.length > 0 ? topPlayersByKda.join("\n") : "No Players",
+                //     inline: true
+                // },
                 {
                     name: "**Total Games**",
                     value: topPlayersByTotalGames.length > 0 ? topPlayersByTotalGames.join("\n") : "No Players",
