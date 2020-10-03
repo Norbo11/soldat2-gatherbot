@@ -11,7 +11,7 @@ module.exports = {
         }
 
         if (args.length !== 3) {
-            message.channel.send("Please specify a map name, red caps and blue caps, e.g. !endgame ctf_ash 5 3")
+            message.channel.send("Please specify a map name, blue caps and red caps, e.g. !endgame ctf_ash 5 3")
             return
         }
 
@@ -21,8 +21,8 @@ module.exports = {
         }
 
         const mapName = args[0]
-        const redCaps = parseInt(args[1])
-        const blueCaps = parseInt(args[2])
+        const blueCaps = parseInt(args[1])
+        const redCaps = parseInt(args[2])
 
         const maps = ["ctf_ash", "ctf_cobra", "ctf_division", "ctf_nubya"]
 
