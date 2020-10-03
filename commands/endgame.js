@@ -15,9 +15,26 @@ module.exports = {
             return
         }
 
+        if (!currentGather.currentQueue.includes(message.author)) {
+            message.channel.send("You must have played this gather in order to end it.")
+            return
+        }
+
         const mapName = args[0]
         const alphaCaps = parseInt(args[1])
         const bravoCaps = parseInt(args[2])
+
+        const maps = ["ctf_ash", "ctf_cobra", "ctf_division"]
+
+        if (!maps.includes(mapName)){
+            message.channel.send(`Please pick one of the following: ${maps.join(', ')}`)
+            return
+        }
+
+        if (alphaCaps > 10 || bravoCaps > 10 || alphaCaps < 0 || bravoCaps < 0) {
+            message.channel.send("Caps should be between 0 and 10.")
+            return
+        }
 
         currentGather.endGame(mapName, alphaCaps, bravoCaps)
     },
