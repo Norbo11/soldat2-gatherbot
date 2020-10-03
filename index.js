@@ -4,6 +4,7 @@ const Discord = require("discord.js")
 const fs = require("fs")
 const message = require("./events/message")
 const ready = require("./events/ready")
+const presenceUpdate = require("./events/presenceUpdate")
 
 const client = new Discord.Client()
 client.commands = []
@@ -17,8 +18,10 @@ for (const file of commandFiles) {
 
 client.on("message", (...args) => message(client, ...args))
 client.once("ready", (...args) => ready(client, ...args))
-client.on("ready", (...args) => logger.log.info("Received Discord ready event."))
+client.on("presenceUpdate", (...args) => presenceUpdate(client, ...args))
+
 client.login(process.env.BOT_TOKEN)
+
 
 cleanUp =  () => {
 }
