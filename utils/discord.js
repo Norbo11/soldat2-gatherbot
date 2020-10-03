@@ -85,7 +85,7 @@ getGatherEndFields = (game) => {
 getServerLinkField = (password = "") => {
     return {
         name: "Link",
-        value: `soldat://${process.env.SERVER_IP}:${process.env.SERVER_PORT}/${password}`,
+        value: `IP: ${process.env.SERVER_IP} - Port: ${process.env.SERVER_PORT}`,
     }
 }
 
