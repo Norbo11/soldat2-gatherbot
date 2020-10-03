@@ -24,7 +24,7 @@ module.exports = {
         const alphaCaps = parseInt(args[1])
         const bravoCaps = parseInt(args[2])
 
-        const maps = ["ctf_ash", "ctf_cobra", "ctf_division"]
+        const maps = ["ctf_ash", "ctf_cobra", "ctf_division", "ctf_nubya"]
 
         if (!maps.includes(mapName)){
             message.channel.send(`Please pick one of the following: ${maps.join(', ')}`)
