@@ -213,13 +213,13 @@ class SoldatClient {
                 return false
             }
 
-            const alphaTickets = parseInt(parts[2])
-            const bravoTickets = parseInt(parts[3])
+            const redTickets = parseInt(parts[2])
+            const blueTickets = parseInt(parts[3])
 
-            const alphaCaps = parseInt(parts[4])
-            const bravoCaps = parseInt(parts[5])
+            const redCaps = parseInt(parts[4])
+            const blueCaps = parseInt(parts[5])
 
-            callback(alphaTickets, bravoTickets, alphaCaps, bravoCaps)
+            callback(redTickets, blueTickets, redCaps, blueCaps)
             return true;
         });
 

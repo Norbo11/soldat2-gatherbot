@@ -38,14 +38,14 @@ PASSIVE_EVENTS = [
     },
     {
         name: "conquer",
-        pattern: /--- conquer (?<conqueringTeam>.*?) (?<alphaTickets>.*?) (?<bravoTickets>.*?) (?<currentAlphaBunker>.*?) (?<currentBravoBunker>.*?) (?<sabotaging>.*)/,
+        pattern: /--- conquer (?<conqueringTeam>.*?) (?<redTickets>.*?) (?<blueTickets>.*?) (?<currentRedBunker>.*?) (?<currentBlueBunker>.*?) (?<sabotaging>.*)/,
         handler: (gather, match) =>
             gather.conquer(
                 constants.TEAMS[parseInt(match.groups["conqueringTeam"])],
-                parseInt(match.groups["alphaTickets"]),
-                parseInt(match.groups["bravoTickets"]),
-                parseInt(match.groups["currentAlphaBunker"]),
-                parseInt(match.groups["currentBravoBunker"]),
+                parseInt(match.groups["redTickets"]),
+                parseInt(match.groups["blueTickets"]),
+                parseInt(match.groups["currentRedBunker"]),
+                parseInt(match.groups["currentBlueBunker"]),
                 match.groups["sabotaging"] !== "0"),
         condition: gather => gather.gatherHasStarted()
     },
@@ -70,12 +70,12 @@ PASSIVE_EVENTS = [
     },
     {
         name: "gather end",
-        pattern: /--- gatherend (?<alphaTickets>\d*?) (?<bravoTickets>\d*?) (?<alphaCaps>\d*?) (?<bravoCaps>\d*)/,
+        pattern: /--- gatherend (?<redTickets>\d*?) (?<blueTickets>\d*?) (?<redCaps>\d*?) (?<blueCaps>\d*)/,
         handler: (gather, match) => gather.endGame(
-            parseInt(match.groups["alphaTickets"]),
-            parseInt(match.groups["bravoTickets"]),
-            parseInt(match.groups["alphaCaps"]),
-            parseInt(match.groups["bravoCaps"])
+            parseInt(match.groups["redTickets"]),
+            parseInt(match.groups["blueTickets"]),
+            parseInt(match.groups["redCaps"]),
+            parseInt(match.groups["blueCaps"])
         ),
         condition: gather => gather.gatherInProgress()
     },

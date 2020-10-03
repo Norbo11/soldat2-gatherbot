@@ -15,11 +15,11 @@ const main = async () => {
     const games = await statsDb.getAllGames()
 
     games.forEach(game => {
-        if (game.alphaPlayers.length !== game.bravoPlayers.length) {
+        if (game.redPlayers.length !== game.bluePlayers.length) {
             throw new Error()
         }
 
-        if (game.size !== game.alphaPlayers.length * 2) {
+        if (game.size !== game.redPlayers.length * 2) {
             throw new Error()
         }
 

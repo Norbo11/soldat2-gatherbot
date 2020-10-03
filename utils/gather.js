@@ -15,8 +15,8 @@ class Gather {
     currentSize = 6
     currentQueue = []
     rematchQueue = []
-    alphaTeam = []
-    bravoTeam = []
+    redTeam = []
+    blueTeam = []
     inGameState = IN_GAME_STATES["NO_GATHER"]
     startTime = undefined
     endTime = undefined
@@ -69,21 +69,21 @@ class Gather {
     startNewGame() {
         const shuffledQueue = _.shuffle(this.currentQueue)
 
-        const alphaDiscordUsers = _.slice(shuffledQueue, 0, this.currentSize / 2)
-        const bravoDiscordUsers = _.slice(shuffledQueue, this.currentSize / 2, this.currentSize)
+        const redDiscordUsers = _.slice(shuffledQueue, 0, this.currentSize / 2)
+        const blueDiscordUsers = _.slice(shuffledQueue, this.currentSize / 2, this.currentSize)
 
-        this.startGame(alphaDiscordUsers, bravoDiscordUsers)
+        this.startGame(redDiscordUsers, blueDiscordUsers)
     }
 
-    startGame(alphaDiscordUsers, bravoDiscordUsers) {
-        this.alphaTeam = alphaDiscordUsers
-        this.bravoTeam = bravoDiscordUsers
+    startGame(redDiscordUsers, blueDiscordUsers) {
+        this.redTeam = redDiscordUsers
+        this.blueTeam = blueDiscordUsers
         this.inGameState = IN_GAME_STATES["GATHER_PRE_RESET"]
 
-        const alphaDiscordIds = this.alphaTeam.map(user => user.id)
-        const bravoDiscordIds = this.bravoTeam.map(user => user.id)
+        const redDiscordIds = this.redTeam.map(user => user.id)
+        const blueDiscordIds = this.blueTeam.map(user => user.id)
 
-        const allUsers = [...alphaDiscordUsers, ...bravoDiscordUsers]
+        const allUsers = [...redDiscordUsers, ...blueDiscordUsers]
 
         this.startTime = this.getCurrentTimestamp()
 
@@ -94,7 +94,7 @@ class Gather {
                     color: 0xff0000,
                     fields: [
                         discord.getServerLinkField(this.password),
-                        ...discord.getPlayerFields(alphaDiscordIds, bravoDiscordIds),
+                        ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
                         discord.getMapField(this.serverInfo["mapName"])
                     ]
                 }
@@ -106,27 +106,27 @@ class Gather {
                 title: "Gather Started",
                 color: 0xff0000,
                 fields: [
-                    ...discord.getPlayerFields(alphaDiscordIds, bravoDiscordIds),
+                    ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
                     discord.getMapField(this.serverInfo["mapName"])
                 ]
             }
         })
     }
 
-    endGame(mapName, alphaCaps, bravoCaps) {
+    endGame(mapName, redCaps, blueCaps) {
         this.endTime = this.getCurrentTimestamp()
 
-        const alphaDiscordIds = this.alphaTeam.map(user => user.id)
-        const bravoDiscordIds = this.bravoTeam.map(user => user.id)
+        const redDiscordIds = this.redTeam.map(user => user.id)
+        const blueDiscordIds = this.blueTeam.map(user => user.id)
 
         const game = {
-            alphaPlayers: alphaDiscordIds,
-            bravoPlayers: bravoDiscordIds,
+            redPlayers: redDiscordIds,
+            bluePlayers: blueDiscordIds,
             startTime: this.startTime,
             endTime: this.endTime,
             size: this.currentSize,
-            alphaCaps: alphaCaps,
-            bravoCaps: bravoCaps,
+            redCaps: redCaps,
+            blueCaps: blueCaps,
             mapName: mapName,
             events: [],
         }
@@ -160,7 +160,7 @@ class Gather {
 
     playerRematchAdd(discordUser) {
         this.statsDb.getLastGame().then(lastGame => {
-            if (![...lastGame.alphaPlayers, ...lastGame.bravoPlayers].includes(discordUser.id)) {
+            if (![...lastGame.redPlayers, ...lastGame.bluePlayers].includes(discordUser.id)) {
                 discordUser.reply("you did not play in the last gather.")
                 return
             }
@@ -170,12 +170,12 @@ class Gather {
 
                 if (this.rematchQueue.length === lastGame.size) {
                     // Flip teams
-                    const alphaDiscordUsers = _.filter(this.rematchQueue, user => lastGame.bravoPlayers.includes(user.id))
-                    const bravoDiscordUsers = _.filter(this.rematchQueue, user => lastGame.alphaPlayers.includes(user.id))
+                    const redDiscordUsers = _.filter(this.rematchQueue, user => lastGame.bluePlayers.includes(user.id))
+                    const blueDiscordUsers = _.filter(this.rematchQueue, user => lastGame.redPlayers.includes(user.id))
 
                     this.currentSize = lastGame.size
 
-                    this.startGame(alphaDiscordUsers, bravoDiscordUsers)
+                    this.startGame(redDiscordUsers, blueDiscordUsers)
                 } else {
                     this.displayQueue(lastGame.size, this.rematchQueue, lastGame.mapName, true)
                 }

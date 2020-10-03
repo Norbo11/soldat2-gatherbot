@@ -90,13 +90,13 @@ getPlayerStats = async (statsDb, discordId) => {
 
         let winningTeam = "tie"
 
-        if (game.alphaCaps > game.bravoCaps) {
-            winningTeam = "Alpha"
-        } else if (game.bravoCaps > game.alphaCaps) {
-            winningTeam = "Bravo"
+        if (game.redCaps > game.blueCaps) {
+            winningTeam = "Red"
+        } else if (game.blueCaps > game.redCaps) {
+            winningTeam = "Blue"
         }
 
-        const playerTeam = game.alphaPlayers.includes(discordId) ? "Alpha" : "Bravo"
+        const playerTeam = game.redPlayers.includes(discordId) ? "Red" : "Blue"
 
         if (!(game.size in sizeStats)) {
             sizeStats[game.size] = {

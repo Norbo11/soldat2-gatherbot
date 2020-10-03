@@ -49,8 +49,8 @@ class StatsDB {
         const games = await this.getAllGames()
         const discordIds = new Set()
         games.forEach(game => {
-            game.alphaPlayers.forEach(player => discordIds.add(player))
-            game.bravoPlayers.forEach(player => discordIds.add(player))
+            game.redPlayers.forEach(player => discordIds.add(player))
+            game.bluePlayers.forEach(player => discordIds.add(player))
         })
 
         return [...discordIds] // Convert back to an array so that we can use things like .map
@@ -66,8 +66,8 @@ class StatsDB {
     async getGamesWithPlayer(discordId) {
         const result = await this.db.collection("Game").find({
             $or: [
-                {alphaPlayers: discordId},
-                {bravoPlayers: discordId}
+                {redPlayers: discordId},
+                {bluePlayers: discordId}
             ]
         })
         return result.toArray()

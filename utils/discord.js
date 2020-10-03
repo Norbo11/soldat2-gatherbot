@@ -4,34 +4,34 @@ const stats = require("../utils/stats")
 const _ = require("lodash")
 
 teamEmoji = (teamName) => {
-    if (teamName === "Alpha") {
+    if (teamName === "Red") {
         return ":a:"
-    } else if (teamName === "Bravo") {
+    } else if (teamName === "Blue") {
         return ":regional_indicator_b:"
     } else {
         logger.log.error(`Invalid team name ${teamName}`)
     }
 }
 
-getPlayerStrings = (alphaTeamIds, bravoTeamIds, delim = "\n") => {
-    const alphaPlayersString = alphaTeamIds.length > 0 ? alphaTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
-    const bravoPlayersString = bravoTeamIds.length > 0 ? bravoTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
+getPlayerStrings = (redTeamIds, blueTeamIds, delim = "\n") => {
+    const redPlayersString = redTeamIds.length > 0 ? redTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
+    const bluePlayersString = blueTeamIds.length > 0 ? blueTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
 
-    return {alphaPlayersString, bravoPlayersString}
+    return {redPlayersString, bluePlayersString}
 }
 
-getPlayerFields = (alphaTeamIds, bravoTeamIds) => {
-    const {alphaPlayersString, bravoPlayersString} = getPlayerStrings(alphaTeamIds, bravoTeamIds)
+getPlayerFields = (redTeamIds, blueTeamIds) => {
+    const {redPlayersString, bluePlayersString} = getPlayerStrings(redTeamIds, blueTeamIds)
 
     return [
         {
-            name: `${teamEmoji("Alpha")} Alpha Team`,
-            value: `${alphaPlayersString}`,
+            name: `${teamEmoji("Red")} Red Team`,
+            value: `${redPlayersString}`,
             inline: true
         },
         {
-            name: `${teamEmoji("Bravo")} Bravo Team`,
-            value: `${bravoPlayersString}`,
+            name: `${teamEmoji("Blue")} Blue Team`,
+            value: `${bluePlayersString}`,
             inline: true
         }
     ];
@@ -74,10 +74,10 @@ getGatherEndFields = (game) => {
         getGatherLengthField(game.startTime, game.endTime, true),
         getMapField(game.mapName, true),
         ...getWinnerAndLoserFields(
-            game.alphaCaps,
-            game.bravoCaps,
-            game.alphaPlayers,
-            game.bravoPlayers,
+            game.redCaps,
+            game.blueCaps,
+            game.redPlayers,
+            game.bluePlayers,
         ),
     ]
 }
@@ -102,11 +102,11 @@ getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     })
 }
 
-getWinnerAndLoserFields = (alphaCaps, bravoCaps, alphaDiscordIds, bravoDiscordIds) => {
+getWinnerAndLoserFields = (redCaps, blueCaps, redDiscordIds, blueDiscordIds) => {
 
     // TODO: Hook this up
     const playerKillsAndDeaths = {}
-    const allPlayers = [...alphaDiscordIds, ...bravoDiscordIds]
+    const allPlayers = [...redDiscordIds, ...blueDiscordIds]
 
     allPlayers.forEach(discordId => {
         playerKillsAndDeaths[discordId] = {
@@ -115,15 +115,15 @@ getWinnerAndLoserFields = (alphaCaps, bravoCaps, alphaDiscordIds, bravoDiscordId
         }
     })
 
-    const alphaPlayersString = getPlayerFieldsWithKillsAndDeaths(alphaDiscordIds, playerKillsAndDeaths).join("\n")
-    const bravoPlayersString = getPlayerFieldsWithKillsAndDeaths(bravoDiscordIds, playerKillsAndDeaths).join("\n")
+    const redPlayersString = getPlayerFieldsWithKillsAndDeaths(redDiscordIds, playerKillsAndDeaths).join("\n")
+    const bluePlayersString = getPlayerFieldsWithKillsAndDeaths(blueDiscordIds, playerKillsAndDeaths).join("\n")
 
-    const winningTeam = alphaCaps > bravoCaps ? "Alpha" : "Bravo"
-    const losingTeam = alphaCaps > bravoCaps ? "Bravo" : "Alpha"
-    const winnerCaps = alphaCaps > bravoCaps ? alphaCaps : bravoCaps
-    const loserCaps = alphaCaps > bravoCaps ? bravoCaps : alphaCaps
-    const winningPlayersString = alphaCaps > bravoCaps ? alphaPlayersString : bravoPlayersString
-    const losingPlayersString = alphaCaps > bravoCaps ? bravoPlayersString : alphaPlayersString
+    const winningTeam = redCaps > blueCaps ? "Red" : "Blue"
+    const losingTeam = redCaps > blueCaps ? "Blue" : "Red"
+    const winnerCaps = redCaps > blueCaps ? redCaps : blueCaps
+    const loserCaps = redCaps > blueCaps ? blueCaps : redCaps
+    const winningPlayersString = redCaps > blueCaps ? redPlayersString : bluePlayersString
+    const losingPlayersString = redCaps > blueCaps ? bluePlayersString : redPlayersString
 
     return [
         {

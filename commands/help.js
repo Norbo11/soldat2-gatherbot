@@ -15,7 +15,7 @@ module.exports = {
             "everyone is ready. If they are, cap for the 10th time to start the gather.\n" +
 
             "**Ending the game**: when the game finishes, exit the server and end the gather with !endgame " +
-            "[map played] [alpha score] [bravo score].\n" +
+            "[map played] [red score] [blue score].\n" +
 
             "All of this will soon be automated as Soldat 2 server features get added. Use !commands for a list of " +
             "commands."

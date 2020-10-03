@@ -100,8 +100,8 @@ const backloadGames = async () => {
     const loadConPattern = /^\/loadcon.*$/m
 
     const playersPerTeam = {
-        alpha: [],
-        bravo: []
+        red: [],
+        blue: []
     }
 
     let sortedFileNames = []
@@ -140,49 +140,49 @@ const backloadGames = async () => {
             const playerJoinMatch = message.match(playerJoinPattern)
 
             if (playerJoinMatch !== null) {
-                _.remove(playersPerTeam["bravo"], elem => elem === playerJoinMatch.groups["playerName"])
-                _.remove(playersPerTeam["alpha"], elem => elem === playerJoinMatch.groups["playerName"])
+                _.remove(playersPerTeam["blue"], elem => elem === playerJoinMatch.groups["playerName"])
+                _.remove(playersPerTeam["red"], elem => elem === playerJoinMatch.groups["playerName"])
 
-                if (playerJoinMatch.groups["teamName"] === "alpha") {
-                    playersPerTeam["alpha"].push(playerJoinMatch.groups["playerName"])
+                if (playerJoinMatch.groups["teamName"] === "red") {
+                    playersPerTeam["red"].push(playerJoinMatch.groups["playerName"])
                 }
 
-                if (playerJoinMatch.groups["teamName"] === "bravo") {
-                    playersPerTeam["bravo"].push(playerJoinMatch.groups["playerName"])
+                if (playerJoinMatch.groups["teamName"] === "blue") {
+                    playersPerTeam["blue"].push(playerJoinMatch.groups["playerName"])
                 }
             }
 
             const playerLeaveMatch = message.match(playerLeavePattern)
             if (playerLeaveMatch !== null) {
-                _.remove(playersPerTeam["bravo"], elem => elem === playerLeaveMatch.groups["playerName"])
-                _.remove(playersPerTeam["alpha"], elem => elem === playerLeaveMatch.groups["playerName"])
+                _.remove(playersPerTeam["blue"], elem => elem === playerLeaveMatch.groups["playerName"])
+                _.remove(playersPerTeam["red"], elem => elem === playerLeaveMatch.groups["playerName"])
             }
 
             const playerKickedMatch = message.match(playerKickPattern)
             if (playerKickedMatch !== null) {
-                _.remove(playersPerTeam["bravo"], elem => elem === playerKickedMatch.groups["playerName"])
-                _.remove(playersPerTeam["alpha"], elem => elem === playerKickedMatch.groups["playerName"])
+                _.remove(playersPerTeam["blue"], elem => elem === playerKickedMatch.groups["playerName"])
+                _.remove(playersPerTeam["red"], elem => elem === playerKickedMatch.groups["playerName"])
             }
 
             const playerJoinedSpectatorsMatch = message.match(playerJoinSpectatorsPattern)
             if (playerJoinedSpectatorsMatch !== null) {
-                _.remove(playersPerTeam["bravo"], elem => elem === playerJoinedSpectatorsMatch.groups["playerName"])
-                _.remove(playersPerTeam["alpha"], elem => elem === playerJoinedSpectatorsMatch.groups["playerName"])
+                _.remove(playersPerTeam["blue"], elem => elem === playerJoinedSpectatorsMatch.groups["playerName"])
+                _.remove(playersPerTeam["red"], elem => elem === playerJoinedSpectatorsMatch.groups["playerName"])
             }
 
             const gatherStartMatch = message.match(gatherStartPattern)
             if (gatherStartMatch !== null) {
-                currentGather.currentSize = playersPerTeam["alpha"].length * 2
-                currentGather.currentQueue = [...playersPerTeam["alpha"], ...playersPerTeam["bravo"]].map(name => {
+                currentGather.currentSize = playersPerTeam["red"].length * 2
+                currentGather.currentQueue = [...playersPerTeam["red"], ...playersPerTeam["blue"]].map(name => {
                     return getDiscordUser(hwidToDiscordId, playerNameToHwid, name);
                 })
 
                 currentGather.inGameState = gather.IN_GAME_STATES["GATHER_PRE_RESET"]
 
-                currentGather.alphaTeam = [...playersPerTeam["alpha"]].map(name => {
+                currentGather.redTeam = [...playersPerTeam["red"]].map(name => {
                     return getDiscordUser(hwidToDiscordId, playerNameToHwid, name);
                 })
-                currentGather.bravoTeam = [...playersPerTeam["bravo"]].map(name => {
+                currentGather.blueTeam = [...playersPerTeam["blue"]].map(name => {
                     return getDiscordUser(hwidToDiscordId, playerNameToHwid, name);
                 })
                 currentGather.playerNameToHwid = playerNameToHwid
@@ -197,8 +197,8 @@ const backloadGames = async () => {
 
             const loadConMatch = message.match(loadConPattern)
             if (loadConMatch !== null) {
-                playersPerTeam.alpha = []
-                playersPerTeam.bravo = []
+                playersPerTeam.red = []
+                playersPerTeam.blue = []
             }
 
             netClient.emit("data", message)

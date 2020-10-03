@@ -11,7 +11,7 @@ module.exports = {
         }
 
         if (args.length !== 3) {
-            message.channel.send("Please specify a map name, alpha caps and bravo caps, e.g. !endgame ctf_ash 5 3")
+            message.channel.send("Please specify a map name, red caps and blue caps, e.g. !endgame ctf_ash 5 3")
             return
         }
 
@@ -21,8 +21,8 @@ module.exports = {
         }
 
         const mapName = args[0]
-        const alphaCaps = parseInt(args[1])
-        const bravoCaps = parseInt(args[2])
+        const redCaps = parseInt(args[1])
+        const blueCaps = parseInt(args[2])
 
         const maps = ["ctf_ash", "ctf_cobra", "ctf_division", "ctf_nubya"]
 
@@ -31,11 +31,11 @@ module.exports = {
             return
         }
 
-        if (alphaCaps > 10 || bravoCaps > 10 || alphaCaps < 0 || bravoCaps < 0) {
+        if (redCaps > 10 || blueCaps > 10 || redCaps < 0 || blueCaps < 0) {
             message.channel.send("Caps should be between 0 and 10.")
             return
         }
 
-        currentGather.endGame(mapName, alphaCaps, bravoCaps)
+        currentGather.endGame(mapName, redCaps, blueCaps)
     },
 };

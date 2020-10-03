@@ -12,8 +12,8 @@ displayGatherStatus = (message) => {
         description = `**Gather In Progress**\n`
     }
 
-    const alphaDiscordIds = currentGather.alphaTeam.map(user => user.id)
-    const bravoDiscordIds = currentGather.bravoTeam.map(user => user.id)
+    const redDiscordIds = currentGather.redTeam.map(user => user.id)
+    const blueDiscordIds = currentGather.blueTeam.map(user => user.id)
 
     message.channel.send({
         embed: {
@@ -21,7 +21,7 @@ displayGatherStatus = (message) => {
             title: "Gather Info",
             description: description,
             fields: [
-                ...discord.getPlayerFields(alphaDiscordIds, bravoDiscordIds),
+                ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
                 discord.getMapField(currentGather.serverInfo["mapName"])
             ]
         }
@@ -31,8 +31,8 @@ displayGatherStatus = (message) => {
 
 displayServerInfo = (message) => {
     currentSoldatClient.getServerInfo(serverInfo => {
-        const alphaPlayerStrings = []
-        const bravoPlayerStrings = []
+        const redPlayerStrings = []
+        const bluePlayerStrings = []
 
         for (let i = 0; i < 32; i++) {
             const playerNameLength = serverInfo["names"][i]["playerName"]
@@ -48,15 +48,15 @@ displayServerInfo = (message) => {
             const playerPing = serverInfo["pings"][i]["playerPing"]
 
             if (playerTeam === 1) {
-                alphaPlayerStrings.push(`**${playerName}** (${playerPing}ms): ${playerKills}/${playerDeaths}`)
+                redPlayerStrings.push(`**${playerName}** (${playerPing}ms): ${playerKills}/${playerDeaths}`)
             }
             if (playerTeam === 2) {
-                bravoPlayerStrings.push(`**${playerName}** (${playerPing}ms): ${playerKills}/${playerDeaths}`)
+                bluePlayerStrings.push(`**${playerName}** (${playerPing}ms): ${playerKills}/${playerDeaths}`)
             }
         }
 
-        logger.log.info(alphaPlayerStrings.join("\n"))
-        logger.log.info(bravoPlayerStrings.join("\n"))
+        logger.log.info(redPlayerStrings.join("\n"))
+        logger.log.info(bluePlayerStrings.join("\n"))
 
         message.channel.send({
             embed: {
@@ -72,13 +72,13 @@ displayServerInfo = (message) => {
                         value: serverInfo["nextMap"],
                     },
                     {
-                        name: `Alpha Team`,
-                        value: alphaPlayerStrings.length > 0 ? alphaPlayerStrings.join("\n") : "No players",
+                        name: `Red Team`,
+                        value: redPlayerStrings.length > 0 ? redPlayerStrings.join("\n") : "No players",
                         inline: true
                     },
                     {
-                        name: `Bravo Team`,
-                        value: bravoPlayerStrings.length > 0 ? bravoPlayerStrings.join("\n") : "No players",
+                        name: `Blue Team`,
+                        value: bluePlayerStrings.length > 0 ? bluePlayerStrings.join("\n") : "No players",
                         inline: true
                     },
                 ]

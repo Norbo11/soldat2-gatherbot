@@ -33,10 +33,10 @@ describe('Stats', () => {
 
     it('should return stats of players', async () => {
         const game = {
-            alphaPlayers: ["Player1", "Player2"],
-            bravoPlayers: ["Player3", "Player4"],
-            alphaTickets: 565,
-            bravoTickets: 0,
+            redPlayers: ["Player1", "Player2"],
+            bluePlayers: ["Player3", "Player4"],
+            redTickets: 565,
+            blueTickets: 0,
             startTime: 1000,
             endTime: 1000 + 20 * 60e+3, // 20 minute game
             size: 4,
@@ -57,19 +57,19 @@ describe('Stats', () => {
                     timestamp: 1000 + 60e+3,
                     type: TTW_EVENTS.BUNKER_CONQUER,
                     discordId: "Player2",
-                    conqueringTeam: "Alpha",
-                    alphaTickets: "1000",
-                    bravoTickets: "900",
-                    currentAlphaBunker: 1,
-                    currentBravoBunker: 4,
+                    conqueringTeam: "Red",
+                    redTickets: "1000",
+                    blueTickets: "900",
+                    currentRedBunker: 1,
+                    currentBlueBunker: 4,
                     sabotaging: false
                 },
                 {
                     timestamp: 1000 + 2 * 60e+3,
                     type: TTW_EVENTS.PLAYER_KILL,
-                    killerTeam: "Alpha",
+                    killerTeam: "Red",
                     killerDiscordId: "Player2",
-                    victimTeam: "Bravo",
+                    victimTeam: "Blue",
                     victimDiscordId: "Player3",
                     weaponId: SOLDAT_WEAPONS.AK_74.id,
                 },
@@ -89,7 +89,7 @@ describe('Stats', () => {
                     timestamp: 1000 + 9 * 60e+3,
                     type: TTW_EVENTS.FLAG_CAP,
                     discordId: "Player2",
-                    teamName: "Alpha"
+                    teamName: "Red"
                 }
             ]
         }
@@ -181,30 +181,30 @@ describe('Stats', () => {
     it('should return stats of gathers', async () => {
         const games = [
             {
-                alphaPlayers: ["Player1", "Player2"],
-                bravoPlayers: ["Player3", "Player4"],
-                alphaTickets: 565,
-                bravoTickets: 0,
+                redPlayers: ["Player1", "Player2"],
+                bluePlayers: ["Player3", "Player4"],
+                redTickets: 565,
+                blueTickets: 0,
                 startTime: 1000,
                 endTime: 1000 + 20 * 60e+3, // 20 minute game
                 events: [],
                 mapName: "ttw_one",
             },
             {
-                alphaPlayers: ["Player1", "Player2"],
-                bravoPlayers: ["Player3", "Player4"],
-                alphaTickets: 201,
-                bravoTickets: 0,
+                redPlayers: ["Player1", "Player2"],
+                bluePlayers: ["Player3", "Player4"],
+                redTickets: 201,
+                blueTickets: 0,
                 startTime: 1000 + 30 * 60e+3,
                 endTime: 1000 + 40 * 60e+3, // 10 minute game
                 events: [],
                 mapName: "ttw_two",
             },
             {
-                alphaPlayers: ["Player1", "Player2", "Player3"],
-                bravoPlayers: ["Player4", "Player5", "Player6"],
-                alphaTickets: 0,
-                bravoTickets: 1004,
+                redPlayers: ["Player1", "Player2", "Player3"],
+                bluePlayers: ["Player4", "Player5", "Player6"],
+                redTickets: 0,
+                blueTickets: 1004,
                 startTime: 1000 + 60 * 60e+3,
                 endTime: 1000 + 75 * 60e+3, // 15 minute game
                 events: [],
@@ -233,39 +233,39 @@ describe('Stats', () => {
     it('should return stats of top players', async () => {
         const games = [
             {
-                alphaPlayers: ["Player1", "Player2"],
-                bravoPlayers: ["Player3", "Player4"],
-                alphaTickets: 565,
-                bravoTickets: 0,
+                redPlayers: ["Player1", "Player2"],
+                bluePlayers: ["Player3", "Player4"],
+                redTickets: 565,
+                blueTickets: 0,
                 startTime: 1000,
                 endTime: 1000 + 20 * 60e+3, // 20 minute game
                 events: [],
                 mapName: "ttw_one",
             },
             {
-                alphaPlayers: ["Player1", "Player2"],
-                bravoPlayers: ["Player3", "Player4"],
-                alphaTickets: 201,
-                bravoTickets: 0,
+                redPlayers: ["Player1", "Player2"],
+                bluePlayers: ["Player3", "Player4"],
+                redTickets: 201,
+                blueTickets: 0,
                 startTime: 1000 + 30 * 60e+3,
                 endTime: 1000 + 40 * 60e+3, // 10 minute game
                 events: [],
                 mapName: "ttw_two",
             },
             {
-                alphaPlayers: ["Player1", "Player2", "Player3"],
-                bravoPlayers: ["Player4", "Player5", "Player6"],
-                alphaTickets: 0,
-                bravoTickets: 1004,
+                redPlayers: ["Player1", "Player2", "Player3"],
+                bluePlayers: ["Player4", "Player5", "Player6"],
+                redTickets: 0,
+                blueTickets: 1004,
                 startTime: 1000 + 60 * 60e+3,
                 endTime: 1000 + 75 * 60e+3, // 15 minute game
                 events: [
                     {
                         timestamp: 1000 + 2 * 60e+3,
                         type: TTW_EVENTS.PLAYER_KILL,
-                        killerTeam: "Alpha",
+                        killerTeam: "Red",
                         killerDiscordId: "Player2",
-                        victimTeam: "Bravo",
+                        victimTeam: "Blue",
                         victimDiscordId: "Player3",
                         weaponId: SOLDAT_WEAPONS.AK_74.id,
                     },

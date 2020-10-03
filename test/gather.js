@@ -144,23 +144,23 @@ describe('Gather', () => {
         currentGather.startNewGame()
         currentGather.gatherStart('ttw_Test', 4, 5)
 
-        netClient.emit("data", "Norbo11 scores for Alpha Team")
+        netClient.emit("data", "Norbo11 scores for Red Team")
         expect(currentGather.events.length).equal(1)
         expect(currentGather.events[0]).containSubset(
             {
                 type: TTW_EVENTS.FLAG_CAP,
                 discordId: "Norbo11",
-                teamName: "Alpha"
+                teamName: "Red"
             }
         )
 
-        netClient.emit("data", "Someone scores for Bravo Team")
+        netClient.emit("data", "Someone scores for Blue Team")
         expect(currentGather.events.length).equal(2)
         expect(currentGather.events[1]).containSubset(
             {
                 type: TTW_EVENTS.FLAG_CAP,
                 discordId: "Someone",
-                teamName: "Bravo"
+                teamName: "Blue"
             }
         )
     });
@@ -209,11 +209,11 @@ describe('Gather', () => {
         expect(currentGather.events[1]).containSubset(
             {
                 type: TTW_EVENTS.BUNKER_CONQUER,
-                conqueringTeam: "Alpha",
-                alphaTickets: 100,
-                bravoTickets: 500,
-                currentAlphaBunker: 3,
-                currentBravoBunker: 5,
+                conqueringTeam: "Red",
+                redTickets: 100,
+                blueTickets: 500,
+                currentRedBunker: 3,
+                currentBlueBunker: 5,
                 sabotaging: false
             }
         )
@@ -230,9 +230,9 @@ describe('Gather', () => {
         expect(currentGather.events.length).equal(1)
         expect(currentGather.events[0]).containSubset({
             type: TTW_EVENTS.PLAYER_KILL,
-            killerTeam: "Bravo",
+            killerTeam: "Blue",
             killerDiscordId: "[WP] NamelessWolf",
-            victimTeam: "Alpha",
+            victimTeam: "Red",
             victimDiscordId: "SethGecko",
             weaponId: SOLDAT_WEAPONS.AK_74.id,
         })
@@ -241,8 +241,8 @@ describe('Gather', () => {
     it('should handle class switching prior to reset', async () => {
         currentGather.currentSize = 4
         currentGather.currentQueue = [{id: "1"}, {id: "2"}, {id: "3"}, {id: "4"}]
-        currentGather.alphaTeam = [{id: "1"}, {id: "2"}]
-        currentGather.bravoTeam = [{id: "3"}, {id: "4"}]
+        currentGather.redTeam = [{id: "1"}, {id: "2"}]
+        currentGather.blueTeam = [{id: "3"}, {id: "4"}]
 
         currentGather.startNewGame()
         fourPlayersJoin(currentGather, netClient);
