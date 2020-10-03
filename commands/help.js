@@ -11,7 +11,8 @@ module.exports = {
             "**Getting into teams**: when the server is full, 1 person from team A leaves and 1 person from team B " +
             "switches teams.\n" +
 
-            "**Starting the game**: ask if everyone is ready. If they are, cap 10 times to start the game.\n" +
+            "**Starting the game**: while you wait for people to get into teams, have a team cap up to 9 times. Ask if " +
+            "everyone is ready. If they are, cap for the 10th time to start the gather.\n" +
 
             "**Ending the game**: when the game finishes, exit the server and end the gather with !endgame " +
             "[map played] [alpha score] [bravo score].\n" +
