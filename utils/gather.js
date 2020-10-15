@@ -21,10 +21,11 @@ class Gather {
     startTime = undefined
     endTime = undefined
 
-    constructor(discordChannel, statsDb, getCurrentTimestamp) {
+    constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
         this.discordChannel = discordChannel
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
+        this.soldatClient = soldatClient
         this.serverInfo = {
             "mapName": "Decided in-game"
         }
