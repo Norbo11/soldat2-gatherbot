@@ -1,0 +1,52 @@
+{
+  "Objects": {
+    "CaptureTheFlag": {
+      "Match": {
+        "MinimumPlayers": 6,
+        "ScoreLimit": 0,
+        "TeamScoreLimit": 10,
+        "MatchSecs": 600,
+        "WarmupSecs": 30,
+        "EndGameSecs": 10,
+        "MultiplayerOnlyWarmup": true,
+        "NoDamageDuringWarmup": false,
+        "ShowWeaponsDuringWarmup": false,
+        "ResetProperties": [
+          "score",
+          "kills",
+          "deaths"
+        ]
+      },
+      "MatchEffects": {
+        "ShowScoreboardOnEnd": false,
+        "OnWarmupText": "",
+        "OnWaitingText": "Waiting for players... {0} to go",
+        "OnStartText": "Gather started!",
+        "OnEndedText": "Gather round finished!"
+      },
+      "Handicaps": {
+        "SpawnHealth": 1.0,
+        "InvincibleAfterSpawnDuration": 0.5,
+        "InvincibleAfterSpawnColor": "B1C0B2FF",
+        "DecreaseOverDefaultHealthInterval": 1.0,
+        "DecreaseOverDefaultHealthAmount": 0.05,
+        "OnlyHumans": false
+      },
+      "TeamRespawning": {
+        "RespawnType": 0,
+        "JoinDelaySecs": 2.0,
+        "RespawnSecs": 3.0,
+        "MaxRespawnSecs": 5.0,
+        "PlayerIncreaseRespawnSecs": 0.2,
+        "WeaponryPrefab": "StandardWeaponry",
+        "ShowWeaponry": true
+      },
+    }
+  },
+  "Meta": {
+    "Description": "A competitive gather config",
+    "Thumbnail": "",
+    "Author": "Norbo",
+    "Version": 0.1
+  }
+}

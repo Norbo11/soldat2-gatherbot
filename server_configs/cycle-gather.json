@@ -1,0 +1,27 @@
+/*CTF GAMES CYCLE*/
+[  
+  {
+    "Rules": "CaptureTheFlag",
+    "Level": "ctf_cobra",
+    "Modifiers": ["Gather"],
+    "Condition": ""
+  },
+  {
+    "Rules": "CaptureTheFlag",
+    "Level": "ctf_ash",
+    "Modifiers": ["Gather"],
+    "Condition": ""
+  },
+  {
+    "Rules": "CaptureTheFlag",
+    "Level": "ctf_nubya",
+    "Modifiers": ["Gather"],
+    "Condition": ""
+  },
+  {
+    "Rules": "CaptureTheFlag",
+    "Level": "ctf_division",
+    "Modifiers": ["Gather"],
+    "Condition": ""
+  }
+]
