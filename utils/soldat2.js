@@ -247,5 +247,5 @@ class NetworkMessage {
 }
 
 module.exports = {
-    Soldat2Client
+    Soldat2Client, NetworkMessage, MessageType, toArrayBuffer
 }

@@ -185,6 +185,16 @@ class Gather {
             }
         })
     }
+
+    playerCommand(playerName, command) {
+        const parts = command.split(/ +/);
+
+        if (parts[0] === "map") {
+            if (parts.length === 2){
+                this.soldatClient.changeMap(parts[1], "CaptureTheFlag")
+            }
+        }
+    }
 }
 
 module.exports = {

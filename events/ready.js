@@ -21,6 +21,8 @@ module.exports = client => {
             global.currentSoldatClient,
             () => Date.now())
 
+        soldatEvents.registerSoldatEventListeners(global.currentGather, global.currentSoldatClient)
+
         currentDiscordChannel.send("GatherBot Initialised.")
         git.postChangelog()
     })
