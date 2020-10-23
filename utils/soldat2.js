@@ -1,7 +1,14 @@
 const logger = require("../utils/logger")
 const WebSocket = require('ws');
 
-const WEBSOCKET_URL = 'ws://webrcon.com:8006'
+// const sslRootCAs = require('ssl-root-cas/latest')
+// sslRootCAs.inject().addFile(__dirname + "/../certs/webrcon.com")
+
+// TODO: For some reason we are unable to validate the webrcon.com certificate. I am not too sure
+//  about how this should work, this is a temporary workaround. Above is a hint of what we should possibly be doing.
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+
+const WEBSOCKET_URL = 'wss://www.webrcon.com:8006'
 
 class Soldat2Client {
 
@@ -17,7 +24,13 @@ class Soldat2Client {
             logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
             let loginMessage = NetworkMessage.Login(sessionId, ckey)
             ws.send(loginMessage.raw);
+
         });
+
+        // For debugging
+        // ws.addListener("message", (data) =>
+        //     console.log(data)
+        // )
     }
 
     listenForServerResponse(processData,
