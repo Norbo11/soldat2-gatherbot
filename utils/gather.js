@@ -17,6 +17,8 @@ class Gather {
     rematchQueue = []
     redTeam = []
     blueTeam = []
+    redCaps = 0
+    blueCaps = 0
     inGameState = IN_GAME_STATES["NO_GATHER"]
     startTime = undefined
     endTime = undefined
@@ -27,17 +29,13 @@ class Gather {
         this.statsDb = statsDb
         this.soldatClient = soldatClient
         this.serverInfo = {
-            "mapName": "Decided in-game"
+            mapName: "Decided in-game"
         }
         this.password = "placeholder_password"
     }
 
     gatherInProgress() {
         return this.inGameState !== IN_GAME_STATES.NO_GATHER
-    }
-
-    gatherHasStarted() {
-        return this.inGameState === IN_GAME_STATES.GATHER_STARTED
     }
 
     displayQueue(size, queue, mapName, rematch = false) {
@@ -86,8 +84,6 @@ class Gather {
 
         const allUsers = [...redDiscordUsers, ...blueDiscordUsers]
 
-        this.startTime = this.getCurrentTimestamp()
-
         allUsers.forEach(user => {
             user.send({
                 embed: {
@@ -114,7 +110,26 @@ class Gather {
         })
     }
 
-    endGame(mapName, redCaps, blueCaps) {
+    redFlagCaptured() {
+        this.blueCaps += 1;
+    }
+
+    blueFlagCaptured() {
+        this.redCaps += 1;
+    }
+
+    changeMap(mapName) {
+        this.serverInfo.mapName = mapName;
+        this.startTime = this.getCurrentTimestamp();
+        this.redCaps = 0;
+        this.blueCaps = 0;
+    }
+
+    endGame() {
+        const mapName = this.serverInfo.mapName
+        const redCaps = this.redCaps
+        const blueCaps = this.blueCaps
+
         this.endTime = this.getCurrentTimestamp()
 
         const redDiscordIds = this.redTeam.map(user => user.id)

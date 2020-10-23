@@ -3,7 +3,6 @@ const moment = require("moment")
 
 const logger = require("./logger")
 const constants = require("./constants")
-const soldat = require("./soldat")
 
 const TTW_CLASSES = constants.TTW_CLASSES
 const TTW_EVENTS = constants.TTW_EVENTS

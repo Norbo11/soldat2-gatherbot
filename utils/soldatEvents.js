@@ -10,6 +10,35 @@ const PASSIVE_EVENTS = [
         condition: gather => true,
         deduplicate: true
     },
+    {
+        name: "match end",
+        pattern: /\[(?<time>.*?)] Match state: Ended/,
+        handler: (gather, match) => gather.endGame(),
+        condition: gather => gather.gatherInProgress(),
+        deduplicate: false
+    },
+    {
+        name: "red flag cap",
+        pattern: /\[(?<time>.*?)] Red flag captured/,
+        handler: (gather, match) => gather.redFlagCaptured(),
+        condition: gather => gather.gatherInProgress(),
+        deduplicate: false
+    },
+    {
+        name: "blue flag cap",
+        pattern: /\[(?<time>.*?)] Blue flag captured/,
+        handler: (gather, match) => gather.blueFlagCaptured(),
+        condition: gather => gather.gatherInProgress(),
+        deduplicate: false
+    },
+    // TODO: This should be replaced with an rcon command to get the server info, such as current map, etc.
+    {
+        name: "change map",
+        pattern: /\[(?<time>.*?)] Popup: Loading\.\.\. (?<mapName>.*)/,
+        handler: (gather, match) => gather.changeMap(match.groups["mapName"]),
+        condition: gather => true,
+        deduplicate: false
+    },
 ]
 
 const DEDUPLICATE_INTERVAL_MS = 1000
