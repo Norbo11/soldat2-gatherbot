@@ -190,9 +190,14 @@ class Gather {
         const parts = command.split(/ +/);
 
         if (parts[0] === "map") {
-            if (parts.length === 2){
+            if (parts.length === 2) {
                 this.soldatClient.changeMap(parts[1], "CaptureTheFlag")
             }
+        }
+
+        if (parts[0] === "say") {
+            const message = _.slice(parts, 1)
+            this.discordChannel.send(`[${playerName}] ${message}`)
         }
     }
 }
