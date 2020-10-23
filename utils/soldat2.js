@@ -1,5 +1,6 @@
 const logger = require("../utils/logger")
 const WebSocket = require('ws');
+const random = require("../utils/random")
 
 // const sslRootCAs = require('ssl-root-cas/latest')
 // sslRootCAs.inject().addFile(__dirname + "/../certs/webrcon.com")
@@ -9,22 +10,42 @@ const WebSocket = require('ws');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 const WEBSOCKET_URL = 'wss://www.webrcon.com:8006'
+const DEFAULT_RESPONSE_TIMEOUT = 7000
 
 class Soldat2Client {
 
     constructor() {
-        this.ws = undefined
+        this.ws = undefined;
+        this.initialized = false;
     }
 
     connect(sessionId, ckey) {
         const ws = new WebSocket(WEBSOCKET_URL);
         this.ws = ws;
+        const client = this;
 
         ws.on('open', function open() {
             logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
             let loginMessage = NetworkMessage.Login(sessionId, ckey)
-            ws.send(loginMessage.raw);
+            let randomString = random.getRandomString()
 
+            client.sendMessage(loginMessage);
+
+            // Upon connecting, webrcon is going to replay us all of the messages since this webrcon session started.
+            // We don't want to handle any events that have happened in the past. Thus we use the "echotest" command
+            // that simply replies with whatever input we give it. We embed a random string in order to ensure we read the correct
+            // response from echotest for this invocation of the bot, without having to deal with the message timestamp
+            // or anything else more messy. Once we receive our echo, we can set the "initialized" flag to true; this is
+            // used to kick off the soldat events handlers.
+
+            client.listenForServerResponse((text) => {
+                const regex = new RegExp("\\[(?<time>.*)] Return value: dummy_initialization_command_" + randomString)
+                return !!text.match(regex);
+            }, () => {
+                logger.log.info("Received the initialization command; setting initialized = true.")
+                client.initialized = true;
+            }, DEFAULT_RESPONSE_TIMEOUT, false);
+            client.sendMessage(NetworkMessage.Command(0, "echotest dummy_initialization_command_" + randomString))
         });
 
         // For debugging
@@ -36,32 +57,32 @@ class Soldat2Client {
     listenForServerResponse(processData,
                             callback = () => {
                             },
-                            timeout = 7000) {
+                            timeout = DEFAULT_RESPONSE_TIMEOUT,
+                            verbose = true) {
 
         const listener = (data) => {
-            data = toArrayBuffer(data)
-            const dataView = new DataView(data);
-            const message = new NetworkMessage(dataView.buffer);
-            const type = message.ReadMessageType();
-            let eventText = undefined;
+            const eventText = maybeGetLogLine(data);
 
-            if (type === MessageType.LogLine) {
-                eventText = NetworkMessage.ProcessLogLine(message);
+            if (eventText === false) {
+                return;
+            }
+
+            if (verbose) {
                 logger.log.info(`Received active event from server: ${eventText.trim()}`)
-                const result = processData(eventText)
+            }
 
-                if (result !== undefined && result !== false) {
-                    logger.log.info(`Got the data that we wanted: ${eventText}`)
+            const result = processData(eventText)
 
-                    this.ws.removeListener("message", listener)
-                    callback(result)
-                }
+            if (result !== undefined && result !== false) {
+                logger.log.info(`Got the data that we wanted: ${eventText}`)
+
+                this.ws.removeListener("message", listener)
+                callback(result)
             }
         }
 
         this.ws.addListener("message", listener)
 
-        // TODO: Currently this removal happens even if the data is found. The extra logging message is okay for now.
         setTimeout(() => {
             logger.log.info(`${timeout}ms has passed, removing listener.`)
             this.ws.removeListener("message", listener)
@@ -110,7 +131,22 @@ function toBuffer(ab) {
     return buf;
 }
 
-MessageType = {
+
+function maybeGetLogLine(data) {
+    data = toArrayBuffer(data)
+    const dataView = new DataView(data);
+    const message = new NetworkMessage(dataView.buffer);
+    const type = message.ReadMessageType();
+
+    if (type === MessageType.LogLine) {
+        return NetworkMessage.ProcessLogLine(message);
+    }
+
+    return false;
+}
+
+
+const MessageType = {
     Login: {value: 0xA0},
     SetState: {value: 0xA1},
     Error: {value: 0x02},
@@ -260,5 +296,5 @@ class NetworkMessage {
 }
 
 module.exports = {
-    Soldat2Client, NetworkMessage, MessageType, toArrayBuffer
+    Soldat2Client, maybeGetLogLine
 }
