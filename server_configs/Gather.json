@@ -6,7 +6,7 @@
         "ScoreLimit": 0,
         "TeamScoreLimit": 10,
         "MatchSecs": 600,
-        "WarmupSecs": 30,
+        "WarmupSecs": 10,
         "EndGameSecs": 10,
         "MultiplayerOnlyWarmup": true,
         "NoDamageDuringWarmup": false,
