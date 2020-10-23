@@ -110,6 +110,16 @@ class Soldat2Client {
 
         this.sendMessage(message)
     }
+
+    restart(callback) {
+        const message = NetworkMessage.Command(0, `restart`)
+
+        this.listenForServerResponse((text) => {
+            return !!text.match(/MAP CLEAR/);
+        }, callback)
+
+        this.sendMessage(message)
+    }
 }
 
 function toArrayBuffer(buf) {

@@ -199,6 +199,10 @@ class Gather {
             const message = _.slice(parts, 1)
             this.discordChannel.send(`[${playerName}] ${message}`)
         }
+
+        if (parts[0] === "restart" || parts[0] === "r") {
+            this.soldatClient.restart();
+        }
     }
 }
 
