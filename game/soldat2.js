@@ -26,8 +26,9 @@ class Soldat2Client {
 
     static fromWebRcon(sessionId, ckey) {
         const ws = new WebSocket(WEBSOCKET_URL);
+        const client = new Soldat2Client(ws, false)
 
-        ws.on('open', function open() {
+        ws.on('open', () => {
             logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
             let loginMessage = NetworkMessage.Login(sessionId, ckey)
             let randomString = random.getRandomString()
@@ -51,7 +52,28 @@ class Soldat2Client {
             client.sendMessage(NetworkMessage.Command(0, "echotest dummy_initialization_command_" + randomString))
         });
 
-        return new Soldat2Client(ws, false)
+        ws.on('message', (data) => {
+            const networkMessage = getNetworkMessage(data);
+            const messageType = networkMessage.ReadMessageType();
+
+            if (messageType === MessageType.Error) {
+                logger.log.error(`Received error from server: ${networkMessage.ReadString()}`)
+            } else if (messageType === MessageType.SetState) {
+                const value = networkMessage.ReadUint8();
+                let state;
+                for (var x in ConnectionState) {
+                    if (ConnectionState[x].value === value) {
+                        state = ConnectionState[x];
+                        break;
+                    }
+                }
+                logger.log.info(`Received new state from server: ${state.name}`)
+            } else if (messageType !== MessageType.LogLine) {
+                logger.log.info(`Received unhandled message type from server: ${messageType.name}`)
+            }
+        })
+
+        return client;
     }
 
     listenForServerResponse(processData,
@@ -143,10 +165,14 @@ function toBuffer(ab) {
 }
 
 
-function maybeGetLogLine(data) {
+function getNetworkMessage(data) {
     data = toArrayBuffer(data)
     const dataView = new DataView(data);
-    const message = new NetworkMessage(dataView.buffer);
+    return new NetworkMessage(dataView.buffer);
+}
+
+function maybeGetLogLine(data) {
+    const message = getNetworkMessage(data);
     const type = message.ReadMessageType();
 
     if (type === MessageType.LogLine) {
@@ -158,15 +184,22 @@ function maybeGetLogLine(data) {
 
 
 const MessageType = {
-    Login: {value: 0xA0},
-    SetState: {value: 0xA1},
-    Error: {value: 0x02},
-    LoginOk: {value: 0x03},
-    NewTab: {value: 0x04},
-    LogLine: {value: 0x06},
-    Command: {value: 0x09},
-    CommandInfo: {value: 0xA2},
-    CloseTab: {value: 0xA3}
+    Login: {value: 0xA0, name: "Login"},
+    SetState: {value: 0xA1, name: "SetState"},
+    Error: {value: 0x02, name: "Error"},
+    LoginOk: {value: 0x03, name: "LoginOk"},
+    NewTab: {value: 0x04, name: "NewTab"},
+    LogLine: {value: 0x06, name: "LogLine"},
+    Command: {value: 0x09, name: "Command"},
+    CommandInfo: {value: 0xA2, name: "CommandInfo"},
+    CloseTab: {value: 0xA3, name: "CloseTab"}
+};
+
+
+const ConnectionState = {
+    Unlinked: {value: 0x00, name: "Unlinked"},
+    Linked: {value: 0x01, name: "Linked"},
+    Disconnected: {value: -0x01, name: "Disconnected"}
 };
 
 
