@@ -1,9 +1,9 @@
 const _ = require("lodash")
-const logger = require("./logger")
-const discord = require("./discord")
-const random = require("./random")
+const logger = require("../utils/logger")
+const discord = require("../utils/discord")
+const random = require("../utils/random")
 const util = require("util")
-const constants = require("./constants")
+const constants = require("../utils/constants")
 
 const IN_GAME_STATES = constants.IN_GAME_STATES
 const TTW_EVENTS = constants.TTW_EVENTS

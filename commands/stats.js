@@ -1,5 +1,5 @@
 const logger = require("../utils/logger")
-const stats = require("../utils/stats")
+const stats = require("../game/stats")
 const utils = require("util")
 
 

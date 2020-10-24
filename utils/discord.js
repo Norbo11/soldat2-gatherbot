@@ -1,6 +1,5 @@
 const logger = require("./logger")
 const moment = require("moment")
-const stats = require("../utils/stats")
 const _ = require("lodash")
 
 teamEmoji = (teamName) => {

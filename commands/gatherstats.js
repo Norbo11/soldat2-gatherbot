@@ -1,6 +1,6 @@
 const logger = require("../utils/logger")
 const utils = require("../utils/commandUtils")
-const stats = require("../utils/stats")
+const stats = require("../game/stats")
 
 
 module.exports = {

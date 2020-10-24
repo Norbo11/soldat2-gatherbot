@@ -8,8 +8,8 @@ const expect = chai.expect
 
 const moment = require("moment")
 
-const stats = require("../utils/stats")
-const db = require("../utils/db")
+const stats = require("../game/stats")
+const db = require("../game/db")
 const constants = require("../utils/constants")
 
 const TTW_CLASSES = constants.TTW_CLASSES

@@ -1,5 +1,5 @@
-const logger = require("./logger")
-const constants = require("./constants")
+const logger = require("../utils/logger")
+const constants = require("../utils/constants")
 const soldat = require("./soldat2")
 
 const PASSIVE_EVENTS = [

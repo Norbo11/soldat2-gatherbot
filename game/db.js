@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const _ = require("lodash")
-const logger = require("./logger")
+const logger = require("../utils/logger")
 
 getUrl = () => {
     return process.env.MONGO_URL

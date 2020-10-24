@@ -1,8 +1,8 @@
-const gather = require("../utils/gather")
+const gather = require("../game/gather")
 const logger = require("../utils/logger")
-const soldat = require("../utils/soldat2")
-const soldatEvents = require("../utils/soldatEvents")
-const db = require("../utils/db")
+const soldat = require("../game/soldat2")
+const soldatEvents = require("../game/soldatEvents")
+const db = require("../game/db")
 const git = require("../utils/git")
 
 module.exports = client => {

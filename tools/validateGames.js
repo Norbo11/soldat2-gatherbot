@@ -1,7 +1,7 @@
 require("dotenv").config()
 const util = require("util")
 const MongoClient = require('mongodb').MongoClient;
-const db = require("../utils/db")
+const db = require("../game/db")
 const _ = require("lodash")
 
 

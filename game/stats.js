@@ -1,8 +1,8 @@
 const _ = require("lodash")
 const moment = require("moment")
 
-const logger = require("./logger")
-const constants = require("./constants")
+const logger = require("../utils/logger")
+const constants = require("../utils/constants")
 
 const TTW_CLASSES = constants.TTW_CLASSES
 const TTW_EVENTS = constants.TTW_EVENTS

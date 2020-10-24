@@ -7,11 +7,11 @@ const sinon = require("sinon")
 const events = require("events")
 const MongoClient = require('mongodb').MongoClient;
 
-const gather = require("../utils/gather")
+const gather = require("../game/gather")
 const soldat = require("../utils/soldat")
 const logger = require("../utils/logger")
-const soldatEvents = require("../utils/soldatEvents")
-const db = require("../utils/db")
+const soldatEvents = require("../game/soldatEvents")
+const db = require("../game/db")
 
 function getDiscordUser(hwidToDiscordId, playerNameToHwid, name) {
     if (!(name in playerNameToHwid)) {

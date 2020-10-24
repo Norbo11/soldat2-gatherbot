@@ -9,12 +9,12 @@ const expect = chai.expect
 const sinon = require("sinon")
 const logger = require("../utils/logger")
 
-const stats = require("../utils/stats")
-const db = require("../utils/db")
+const stats = require("../game/stats")
+const db = require("../game/db")
 
 const events = require("events");
 
-const gather = require("../utils/gather")
+const gather = require("../game/gather")
 const constants = require("../utils/constants")
 
 const TTW_CLASSES = constants.TTW_CLASSES
@@ -23,7 +23,7 @@ const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
 const IN_GAME_STATES = constants.IN_GAME_STATES
 
 const soldat = require("../utils/soldat")
-const soldatEvents = require("../utils/soldatEvents")
+const soldatEvents = require("../game/soldatEvents")
 
 
 function fourPlayersJoin(currentGather, netClient) {
