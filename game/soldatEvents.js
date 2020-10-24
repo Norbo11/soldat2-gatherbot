@@ -1,5 +1,5 @@
 const logger = require("../utils/logger")
-const constants = require("../utils/constants")
+const constants = require("./constants")
 const soldat = require("./soldat2")
 
 const PASSIVE_EVENTS = [
@@ -13,7 +13,7 @@ const PASSIVE_EVENTS = [
     {
         name: "match end",
         pattern: /\[(?<time>.*?)] Match state: Ended/,
-        handler: (gather, match) => gather.endGame(),
+        handler: (gather, match) => gather.endRound(),
         condition: gather => gather.gatherInProgress(),
         deduplicate: false
     },

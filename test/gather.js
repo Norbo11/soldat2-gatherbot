@@ -15,14 +15,15 @@ const db = require("../game/db")
 const events = require("events");
 
 const gather = require("../game/gather")
-const constants = require("../utils/constants")
+const constants = require("../game/constants")
 
-const TTW_CLASSES = constants.TTW_CLASSES
-const TTW_EVENTS = constants.TTW_EVENTS
+
+const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
+const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
 const IN_GAME_STATES = constants.IN_GAME_STATES
 
-const soldat = require("../utils/soldat")
+const soldat = require("../game/soldat2")
 const soldatEvents = require("../game/soldatEvents")
 
 
@@ -42,6 +43,17 @@ function fourPlayersJoin(currentGather, netClient) {
     netClient.emit("data", "--- hwid D d")
 }
 
+class MockDiscordUser {
+
+    constructor(id) {
+        this.id = id
+    }
+
+    send(message) {
+        logger.log.info(`Sending message to ${this.username}:\n${message}`)
+    }
+}
+
 
 describe('Gather', () => {
     let currentGather = undefined
@@ -50,6 +62,7 @@ describe('Gather', () => {
     let discordChannel = undefined
     let statsDb = undefined
     let mongoConn = undefined
+    let currentTime = 0;
 
     beforeEach(async () => {
         const mongoClient = await MongoClient.connect("mongodb://localhost:27017")
@@ -70,191 +83,214 @@ describe('Gather', () => {
         discordChannel.client.fetchUser = async _ => {
             return {username: "TestDiscordUser"}
         }
+        //
+        // await statsDb.mapHwidToDiscordId("A", "1")
+        // await statsDb.mapHwidToDiscordId("B", "2")
+        // await statsDb.mapHwidToDiscordId("C", "3")
+        // await statsDb.mapHwidToDiscordId("D", "4")
 
-        await statsDb.mapHwidToDiscordId("A", "1")
-        await statsDb.mapHwidToDiscordId("B", "2")
-        await statsDb.mapHwidToDiscordId("C", "3")
-        await statsDb.mapHwidToDiscordId("D", "4")
+        // const hwidToDiscordId = await statsDb.getHwidToDiscordIdMap()
 
-        const hwidToDiscordId = await statsDb.getHwidToDiscordIdMap()
+        const mockCurrentTimestamp = () => {
+            return currentTime;
+        }
 
-        soldatClient = new soldat.SoldatClient(netClient)
-        currentGather = new gather.Gather(soldatClient, discordChannel, statsDb, hwidToDiscordId, () => Date.now())
-        soldatEvents.registerSoldatEventListeners(currentGather, netClient)
+        soldatClient = new soldat.Soldat2Client(netClient, true)
+        currentGather = new gather.Gather(discordChannel, statsDb, soldatClient, mockCurrentTimestamp)
+        soldatEvents.registerSoldatEventListeners(currentGather, soldatClient)
     });
 
     afterEach(async () => {
         await mongoConn.dropDatabase()
     })
 
-    it('should handle gather beginnings and endings', async () => {
-        expect(currentGather.inGameState).equal(IN_GAME_STATES["NO_GATHER"])
+    it('should handle an entire gather', async () => {
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
 
         // TODO: Refactor into methods on the gather class
         currentGather.currentSize = 4
-        currentGather.currentQueue = ["a", "b", "c", "d"]
+        currentGather.currentQueue = [
+            new MockDiscordUser("a"),
+            new MockDiscordUser("b"),
+            new MockDiscordUser("c"),
+            new MockDiscordUser("d")
+        ]
 
         currentGather.startNewGame()
-        expect(currentGather.inGameState).equal(IN_GAME_STATES["GATHER_PRE_RESET"])
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
+        expect(currentGather.endedRounds.length).equal(0)
+        expect(currentGather.currentRound).not.equal(undefined)
 
-        netClient.emit("data", "--- gatherstart ttw_test 5")
-        expect(currentGather.inGameState).equal(IN_GAME_STATES["GATHER_STARTED"])
-        expect(currentGather.numberOfBunkers).equal(5)
+        let round = currentGather.currentRound
+        currentTime = 1000;
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_ash").raw))
+        expect(round.mapName).equal("ctf_ash")
+        expect(round.startTime).equal(1000)
 
-        netClient.emit("data", "--- gatherend 333 0 2 0")
-        expect(currentGather.inGameState).equal(IN_GAME_STATES["NO_GATHER"])
-    });
-
-    it('should handle class changes', async () => {
-        currentGather.currentSize = 4
-        currentGather.currentQueue = ["a", "b", "c", "d"]
-
-        currentGather.startNewGame()
-        fourPlayersJoin(currentGather, netClient);
-
-        currentGather.gatherStart()
-
-        netClient.emit("data", `<New TTW> a assigned to task ${TTW_CLASSES.GENERAL.id}`)
-        expect(currentGather.events.length).equal(1)
-        expect(currentGather.events[0]).containSubset({
-            type: TTW_EVENTS.PLAYER_CLASS_SWITCH,
-            discordId: "1",
-            newClassId: TTW_CLASSES.GENERAL.id
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        expect(round.blueCaps).equal(1)
+        expect(round.events[0]).containSubset({
+            timestamp: 1000,
+            type: SOLDAT_EVENTS.FLAG_CAP,
+            cappingTeam: SOLDAT_TEAMS.BLUE
         })
 
-        netClient.emit("data", `<New TTW> a assigned to task ${TTW_CLASSES.RADIOMAN.id}`)
-        expect(currentGather.events.length).equal(2)
-        expect(currentGather.events[0]).containSubset({
-            type: TTW_EVENTS.PLAYER_CLASS_SWITCH,
-            discordId: "1",
-            newClassId: TTW_CLASSES.GENERAL.id
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured").raw))
+        expect(round.redCaps).equal(1)
+        expect(round.events[1]).containSubset({
+            timestamp: 1000,
+            type: SOLDAT_EVENTS.FLAG_CAP,
+            cappingTeam: SOLDAT_TEAMS.RED
         })
 
-        expect(currentGather.events[1]).containSubset({
-            type: TTW_EVENTS.PLAYER_CLASS_SWITCH,
-            discordId: "1",
-            newClassId: TTW_CLASSES.RADIOMAN.id
-        })
-    });
+        currentTime = 5000;
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
+        expect(currentGather.endedRounds.length).equal(1)
+        expect(currentGather.currentRound).not.equal(undefined)
 
-    it('should handle flag caps', async () => {
-        currentGather.currentSize = 4
-        currentGather.currentQueue = ["a", "b", "c", "d"]
+        expect(round.winner).equal(SOLDAT_TEAMS.TIE)
+        expect(round.startTime).equal(1000)
+        expect(round.endTime).equal(5000)
 
-        currentGather.startNewGame()
-        currentGather.gatherStart('ttw_Test', 4, 5)
+        round = currentGather.currentRound
+        currentTime = 6000;
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_division").raw))
+        expect(round.mapName).equal("ctf_division")
+        expect(round.startTime).equal(6000)
 
-        netClient.emit("data", "Norbo11 scores for Red Team")
-        expect(currentGather.events.length).equal(1)
-        expect(currentGather.events[0]).containSubset(
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        expect(round.blueCaps).equal(1)
+
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        expect(round.blueCaps).equal(2)
+
+        currentTime = 8000;
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
+        expect(currentGather.endedRounds.length).equal(2)
+        expect(currentGather.currentRound).not.equal(undefined)
+
+        round = currentGather.currentRound
+        currentTime = 9000
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_magpie").raw))
+        expect(round.mapName).equal("ctf_magpie")
+        expect(round.startTime).equal(9000)
+
+        round = currentGather.endedRounds[1]
+        expect(round.winner).equal(SOLDAT_TEAMS.BLUE)
+
+        currentTime = 10000
+        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
+        expect(currentGather.endedRounds.length).equal(3)
+        expect(currentGather.currentRound).equal(undefined)
+
+        round = currentGather.endedRounds[2]
+        expect(round.winner).equal(SOLDAT_TEAMS.TIE)
+
+        const game = await statsDb.getLastGame()
+        expect(game.startTime).equal(1000)
+        expect(game.endTime).equal(10000)
+        expect(game.winner).equal(SOLDAT_TEAMS.BLUE)
+        expect(game.size).equal(4)
+        expect(game.rounds[0]).deep.equal(
             {
-                type: TTW_EVENTS.FLAG_CAP,
-                discordId: "Norbo11",
-                teamName: "Red"
+                startTime: 1000,
+                endTime: 5000,
+                mapName: "ctf_ash",
+                blueCaps: 1,
+                redCaps: 1,
+                winner: "Tie",
+                events: [
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.FLAG_CAP,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    },
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.FLAG_CAP,
+                        cappingTeam: SOLDAT_TEAMS.RED
+                    }
+                ]
             }
         )
-
-        netClient.emit("data", "Someone scores for Blue Team")
-        expect(currentGather.events.length).equal(2)
-        expect(currentGather.events[1]).containSubset(
+        expect(game.rounds[1]).deep.equal(
             {
-                type: TTW_EVENTS.FLAG_CAP,
-                discordId: "Someone",
-                teamName: "Blue"
+                startTime: 6000,
+                endTime: 8000,
+                mapName: "ctf_division",
+                blueCaps: 2,
+                redCaps: 0,
+                winner: "Blue",
+                events: [
+                    {
+                        timestamp: 6000,
+                        type: SOLDAT_EVENTS.FLAG_CAP,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    },
+                    {
+                        timestamp: 6000,
+                        type: SOLDAT_EVENTS.FLAG_CAP,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    }
+                ]
+            }
+        )
+        expect(game.rounds[2]).deep.equal(
+            {
+                startTime: 9000,
+                endTime: 10000,
+                mapName: "ctf_magpie",
+                events: [],
+                blueCaps: 0,
+                redCaps: 0,
+                winner: "Tie",
             }
         )
     });
 
-    it('should handle gather pausing/unpausing', async () => {
-        currentGather.currentSize = 4
-        currentGather.currentQueue = ["a", "b", "c", "d"]
-
-        currentGather.startNewGame()
-        currentGather.gatherStart('ttw_Test', 4, 5)
-
-        netClient.emit("data", "--- gatherpause")
-        expect(currentGather.events.length).equal(1)
-        expect(currentGather.events[0]).containSubset(
-            {
-                type: TTW_EVENTS.GATHER_PAUSE,
-            }
-        )
-
-        netClient.emit("data", "--- gatherunpause")
-        expect(currentGather.events.length).equal(2)
-        expect(currentGather.events[1]).containSubset(
-            {
-                type: TTW_EVENTS.GATHER_UNPAUSE,
-            }
-        )
-    });
-
-    it('should handle conquering bunkers', async () => {
-        currentGather.currentSize = 4
-        currentGather.currentQueue = ["a", "b", "c", "d"]
-
-        currentGather.startNewGame()
-        currentGather.gatherStart('ttw_Test', 4, 5)
-
-        netClient.emit("data", `<New TTW> SethGecko assigned to task ${TTW_CLASSES.GENERAL.id}`)
-        expect(currentGather.events.length).equal(1)
-        expect(currentGather.events[0]).containSubset({
-            type: TTW_EVENTS.PLAYER_CLASS_SWITCH,
-            discordId: "SethGecko",
-            newClassId: TTW_CLASSES.GENERAL.id
-        })
-
-        netClient.emit("data", "--- conquer 1 100 500 3 5 0")
-        expect(currentGather.events.length).equal(2)
-        expect(currentGather.events[1]).containSubset(
-            {
-                type: TTW_EVENTS.BUNKER_CONQUER,
-                conqueringTeam: "Red",
-                redTickets: 100,
-                blueTickets: 500,
-                currentRedBunker: 3,
-                currentBlueBunker: 5,
-                sabotaging: false
-            }
-        )
-    });
-
-    it('should handle kills and deaths', async () => {
-        currentGather.currentSize = 4
-        currentGather.currentQueue = ["a", "b", "c", "d"]
-
-        currentGather.startNewGame()
-        currentGather.gatherStart('ttw_Test', 4, 5)
-
-        netClient.emit("data", "(2) [WP] NamelessWolf killed (1) SethGecko with Ak-74")
-        expect(currentGather.events.length).equal(1)
-        expect(currentGather.events[0]).containSubset({
-            type: TTW_EVENTS.PLAYER_KILL,
-            killerTeam: "Blue",
-            killerDiscordId: "[WP] NamelessWolf",
-            victimTeam: "Red",
-            victimDiscordId: "SethGecko",
-            weaponId: SOLDAT_WEAPONS.AK_74.id,
-        })
-    });
-
-    it('should handle class switching prior to reset', async () => {
-        currentGather.currentSize = 4
-        currentGather.currentQueue = [{id: "1"}, {id: "2"}, {id: "3"}, {id: "4"}]
-        currentGather.redTeam = [{id: "1"}, {id: "2"}]
-        currentGather.blueTeam = [{id: "3"}, {id: "4"}]
-
-        currentGather.startNewGame()
-        fourPlayersJoin(currentGather, netClient);
-        netClient.emit("data", `<New TTW> a assigned to task ${TTW_CLASSES.GENERAL.id}`)
-        currentGather.gatherStart('ttw_Test', 4, 5)
-
-        expect(currentGather.events.length).equal(1)
-        expect(currentGather.events[0]).containSubset({
-            timestamp: currentGather.startTime,
-            type: TTW_EVENTS.PLAYER_CLASS_SWITCH,
-            discordId: "1",
-            newClassId: TTW_CLASSES.GENERAL.id
-        })
-    });
+    // it('should handle gather pausing/unpausing', async () => {
+    //     currentGather.currentSize = 4
+    //     currentGather.currentQueue = ["a", "b", "c", "d"]
+    //
+    //     currentGather.startNewGame()
+    //     currentGather.gatherStart('ttw_Test', 4, 5)
+    //
+    //     netClient.emit("data", "--- gatherpause")
+    //     expect(currentGather.events.length).equal(1)
+    //     expect(currentGather.events[0]).containSubset(
+    //         {
+    //             type: SOLDAT_EVENTS.GATHER_PAUSE,
+    //         }
+    //     )
+    //
+    //     netClient.emit("data", "--- gatherunpause")
+    //     expect(currentGather.events.length).equal(2)
+    //     expect(currentGather.events[1]).containSubset(
+    //         {
+    //             type: SOLDAT_EVENTS.GATHER_UNPAUSE,
+    //         }
+    //     )
+    // });
+    //
+    // it('should handle kills and deaths', async () => {
+    //     currentGather.currentSize = 4
+    //     currentGather.currentQueue = ["a", "b", "c", "d"]
+    //
+    //     currentGather.startNewGame()
+    //     currentGather.gatherStart('ttw_Test', 4, 5)
+    //
+    //     netClient.emit("data", "(2) [WP] NamelessWolf killed (1) SethGecko with Ak-74")
+    //     expect(currentGather.events.length).equal(1)
+    //     expect(currentGather.events[0]).containSubset({
+    //         type: SOLDAT_EVENTS.PLAYER_KILL,
+    //         killerTeam: "Blue",
+    //         killerDiscordId: "[WP] NamelessWolf",
+    //         victimTeam: "Red",
+    //         victimDiscordId: "SethGecko",
+    //         weaponId: SOLDAT_WEAPONS.AK_74.id,
+    //     })
+    // });
 });

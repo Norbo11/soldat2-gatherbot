@@ -1,12 +1,15 @@
 const logger = require("./logger")
 const moment = require("moment")
 const _ = require("lodash")
+const constants = require("../game/constants")
 
 teamEmoji = (teamName) => {
-    if (teamName === "Red") {
+    if (teamName === constants.SOLDAT_TEAMS.RED) {
         return ":a:"
-    } else if (teamName === "Blue") {
+    } else if (teamName === constants.SOLDAT_TEAMS.BLUE) {
         return ":regional_indicator_b:"
+    } else if (teamName === constants.SOLDAT_TEAMS.TIE) {
+        return ":poop:"
     } else {
         logger.log.error(`Invalid team name ${teamName}`)
     }
@@ -68,16 +71,21 @@ getKillAndDeathFields = (playerKillsAndDeaths, discordIdToUsername) => {
     ]
 }
 
+getResultField = (winner) => {
+    const roundResult = winner !== constants.SOLDAT_TEAMS.TIE ? `${winner} win` : `Tie`
+
+    return {
+        name: "Result",
+        value: roundResult
+    }
+}
+
+
 getGatherEndFields = (game) => {
     return [
+        getResultField(game.winner),
         getGatherLengthField(game.startTime, game.endTime, true),
-        getMapField(game.mapName, true),
-        ...getWinnerAndLoserFields(
-            game.redCaps,
-            game.blueCaps,
-            game.redPlayers,
-            game.bluePlayers,
-        ),
+        ...game.rounds.flatMap(round => getRoundEndFields(game.redPlayers, game.bluePlayers, round.winner, round.blueCaps, round.redCaps)),
     ]
 }
 
@@ -101,7 +109,7 @@ getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     })
 }
 
-getWinnerAndLoserFields = (redCaps, blueCaps, redDiscordIds, blueDiscordIds) => {
+getRoundEndFields = (redDiscordIds, blueDiscordIds, winner, blueCaps, redCaps) => {
 
     // TODO: Hook this up
     const playerKillsAndDeaths = {}
@@ -117,21 +125,15 @@ getWinnerAndLoserFields = (redCaps, blueCaps, redDiscordIds, blueDiscordIds) => 
     const redPlayersString = getPlayerFieldsWithKillsAndDeaths(redDiscordIds, playerKillsAndDeaths).join("\n")
     const bluePlayersString = getPlayerFieldsWithKillsAndDeaths(blueDiscordIds, playerKillsAndDeaths).join("\n")
 
-    const winningTeam = redCaps > blueCaps ? "Red" : "Blue"
-    const losingTeam = redCaps > blueCaps ? "Blue" : "Red"
-    const winnerCaps = redCaps > blueCaps ? redCaps : blueCaps
-    const loserCaps = redCaps > blueCaps ? blueCaps : redCaps
-    const winningPlayersString = redCaps > blueCaps ? redPlayersString : bluePlayersString
-    const losingPlayersString = redCaps > blueCaps ? bluePlayersString : redPlayersString
-
     return [
+        getResultField(winner),
         {
-            name: `${teamEmoji(winningTeam)} **Winning Team (${winnerCaps} caps)**`,
-            value: `${winningPlayersString}`,
+            name: `${teamEmoji(constants.SOLDAT_TEAMS.BLUE)} Blue Team (${blueCaps} caps)`,
+            value: `${bluePlayersString}`,
         },
         {
-            name: `${teamEmoji(losingTeam)} Losing Team (${loserCaps} caps)`,
-            value: `${losingPlayersString}`,
+            name: `${teamEmoji(constants.SOLDAT_TEAMS.RED)} Red Team (${redCaps} caps)`,
+            value: `${redPlayersString}`,
         },
     ]
 }
@@ -148,6 +150,6 @@ getDiscordIdToUsernameMap = async (client, discordIdToUsername, discordIds) => {
 }
 
 module.exports = {
-    teamEmoji, getPlayerStrings, getPlayerFields, getWinnerAndLoserFields, getGatherLengthField, getGatherEndFields,
+    teamEmoji, getPlayerStrings, getPlayerFields, getWinnerAndLoserFields: getRoundEndFields, getGatherLengthField, getGatherEndFields,
     getMapField, getServerLinkField, getDiscordIdToUsernameMap
 }

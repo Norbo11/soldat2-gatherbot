@@ -12,8 +12,7 @@ module.exports = client => {
         global.currentStatsDb = new db.StatsDB(dbConnection)
         global.currentDiscordChannel = client.channels.get(process.env.DISCORD_CHANNEL_ID)
 
-        global.currentSoldatClient = new soldat.Soldat2Client()
-        global.currentSoldatClient.connect(process.env.WEBRCON_SESSION_ID, process.env.WEBRCON_CKEY_ID)
+        global.currentSoldatClient = soldat.Soldat2Client.fromWebRcon(process.env.WEBRCON_SESSION_ID, process.env.WEBRCON_CKEY_ID)
 
         global.currentGather = new gather.Gather(
             global.currentDiscordChannel,

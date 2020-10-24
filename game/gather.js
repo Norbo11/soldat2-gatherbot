@@ -3,10 +3,12 @@ const logger = require("../utils/logger")
 const discord = require("../utils/discord")
 const random = require("../utils/random")
 const util = require("util")
-const constants = require("../utils/constants")
+const constants = require("./constants")
+const gatherRound = require("./gatherRound")
 
-const IN_GAME_STATES = constants.IN_GAME_STATES
-const TTW_EVENTS = constants.TTW_EVENTS
+const IN_GAME_STATES = constants.IN_GAME_STATES;
+const SOLDAT_EVENTS = constants.SOLDAT_EVENTS;
+const SOLDAT_TEAMS = constants.SOLDAT_TEAMS;
 
 
 class Gather {
@@ -17,28 +19,23 @@ class Gather {
     rematchQueue = []
     redTeam = []
     blueTeam = []
-    redCaps = 0
-    blueCaps = 0
+    currentRound = undefined
+    endedRounds = []
     inGameState = IN_GAME_STATES["NO_GATHER"]
-    startTime = undefined
-    endTime = undefined
-
+    n
     constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
         this.discordChannel = discordChannel
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
-        this.serverInfo = {
-            mapName: "Decided in-game"
-        }
-        this.password = "placeholder_password"
+        // this.password = "placeholder_password"
     }
 
     gatherInProgress() {
         return this.inGameState !== IN_GAME_STATES.NO_GATHER
     }
 
-    displayQueue(size, queue, mapName, rematch = false) {
+    displayQueue(size, queue, rematch = false) {
         const queueMembers = queue.map(user => `<@${user.id}>`)
         for (let i = 0; i < size - queue.length; i++) {
             queueMembers.push(":bust_in_silhouette:")
@@ -53,7 +50,6 @@ class Gather {
                         name: "Current Queue" + (rematch ? " (rematch)" : ""),
                         value: `${queueMembers.join(" - ")}`
                     },
-                    discord.getMapField(mapName),
                 ]
             }
         })
@@ -62,7 +58,7 @@ class Gather {
     changeSize(newSize) {
         this.currentSize = newSize
         this.currentQueue = []
-        currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue, currentGather.serverInfo["mapName"])
+        currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue)
     }
 
     startNewGame() {
@@ -77,7 +73,8 @@ class Gather {
     startGame(redDiscordUsers, blueDiscordUsers) {
         this.redTeam = redDiscordUsers
         this.blueTeam = blueDiscordUsers
-        this.inGameState = IN_GAME_STATES["GATHER_PRE_RESET"]
+        this.inGameState = IN_GAME_STATES.GATHER_STARTED
+        this.currentRound = new gatherRound.GatherRound(this.getCurrentTimestamp)
 
         const redDiscordIds = this.redTeam.map(user => user.id)
         const blueDiscordIds = this.blueTeam.map(user => user.id)
@@ -92,7 +89,6 @@ class Gather {
                     fields: [
                         discord.getServerLinkField(this.password),
                         ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
-                        discord.getMapField(this.serverInfo["mapName"])
                     ]
                 }
             })
@@ -104,47 +100,81 @@ class Gather {
                 color: 0xff0000,
                 fields: [
                     ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
-                    discord.getMapField(this.serverInfo["mapName"])
                 ]
             }
         })
     }
 
     redFlagCaptured() {
-        this.blueCaps += 1;
+        this.currentRound.redFlagCaptured();
     }
 
     blueFlagCaptured() {
-        this.redCaps += 1;
+        this.currentRound.blueFlagCaptured();
     }
 
     changeMap(mapName) {
-        this.serverInfo.mapName = mapName;
-        this.startTime = this.getCurrentTimestamp();
-        this.redCaps = 0;
-        this.blueCaps = 0;
+        this.currentRound.changeMap(mapName);
     }
 
-    endGame() {
-        const mapName = this.serverInfo.mapName
-        const redCaps = this.redCaps
-        const blueCaps = this.blueCaps
+    endRound() {
+        this.currentRound.end()
+        this.endedRounds.push(this.currentRound);
 
-        this.endTime = this.getCurrentTimestamp()
+        const totalRounds = this.endedRounds.length;
 
+        let redRoundWins = 0;
+        let blueRoundWins = 0;
+
+        this.endedRounds.forEach(round => {
+            if (round.winner === SOLDAT_TEAMS.RED) {
+                redRoundWins += 1;
+            } else if (round.winner === SOLDAT_TEAMS.BLUE) {
+                blueRoundWins += 1;
+            }
+        })
+
+        if (redRoundWins === 2 || blueRoundWins === 2 || totalRounds === 3) {
+            this.currentRound = undefined
+
+            let gameWinner;
+
+            if (redRoundWins > blueRoundWins) {
+                gameWinner = SOLDAT_TEAMS.RED
+            } else if (blueRoundWins > redRoundWins) {
+                gameWinner = SOLDAT_TEAMS.BLUE
+            } else {
+                gameWinner = SOLDAT_TEAMS.TIE
+            }
+
+            this.endGame(gameWinner)
+        } else {
+            this.currentRound = new gatherRound.GatherRound(this.getCurrentTimestamp)
+        }
+    }
+
+    endGame(gameWinner) {
         const redDiscordIds = this.redTeam.map(user => user.id)
         const blueDiscordIds = this.blueTeam.map(user => user.id)
 
         const game = {
             redPlayers: redDiscordIds,
             bluePlayers: blueDiscordIds,
-            startTime: this.startTime,
-            endTime: this.endTime,
             size: this.currentSize,
-            redCaps: redCaps,
-            blueCaps: blueCaps,
-            mapName: mapName,
-            events: [],
+            startTime: this.endedRounds[0].startTime,
+            endTime: this.endedRounds[this.endedRounds.length - 1].endTime,
+            winner: gameWinner,
+            rounds: this.endedRounds.map(round => {
+                return {
+                    startTime: round.startTime,
+                    endTime: round.endTime,
+                    mapName: round.mapName,
+                    events: round.events,
+                    blueCaps: round.blueCaps,
+                    redCaps: round.redCaps,
+                    winner: round.winner,
+                }
+            }),
         }
 
         this.statsDb.insertGame(game).then().catch(e => logger.log.error(`Error when saving game to DB: ${e}`))
@@ -169,7 +199,7 @@ class Gather {
             if (this.currentQueue.length === this.currentSize) {
                 this.startNewGame()
             } else {
-                this.displayQueue(this.currentSize, this.currentQueue, this.serverInfo["mapName"])
+                this.displayQueue(this.currentSize, this.currentQueue)
             }
         }
     }

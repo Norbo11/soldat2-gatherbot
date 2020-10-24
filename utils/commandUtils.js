@@ -1,14 +1,12 @@
 const logger = require("./logger")
-const constants = require("../utils/constants")
+const constants = require("../game/constants")
 const discord = require("../utils/discord")
 
 
 displayGatherStatus = (message) => {
     let description = undefined;
 
-    if (currentGather.inGameState === constants.IN_GAME_STATES["GATHER_PRE_RESET"]) {
-        description = `**Gather Waiting for Reset**`
-    } else if (currentGather.inGameState === constants.IN_GAME_STATES["GATHER_STARTED"]) {
+    if (currentGather.inGameState === constants.IN_GAME_STATES.GATHER_STARTED) {
         description = `**Gather In Progress**\n`
     }
 
@@ -22,7 +20,6 @@ displayGatherStatus = (message) => {
             description: description,
             fields: [
                 ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
-                discord.getMapField(currentGather.serverInfo["mapName"])
             ]
         }
     });
@@ -89,7 +86,7 @@ displayServerInfo = (message) => {
 
 
 displayQueueWithServerInfo = () => {
-    currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue, currentGather.serverInfo["mapName"])
+    currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue)
 }
 
 

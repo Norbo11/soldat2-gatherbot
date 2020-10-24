@@ -14,15 +14,18 @@ const DEFAULT_RESPONSE_TIMEOUT = 7000
 
 class Soldat2Client {
 
-    constructor() {
-        this.ws = undefined;
-        this.initialized = false;
+    constructor(ws, initialized) {
+        this.ws = ws;
+        this.initialized = initialized;
+
+        // For debugging
+        // ws.addListener("message", (data) =>
+        //     console.log(data)
+        // )
     }
 
-    connect(sessionId, ckey) {
+    static fromWebRcon(sessionId, ckey) {
         const ws = new WebSocket(WEBSOCKET_URL);
-        this.ws = ws;
-        const client = this;
 
         ws.on('open', function open() {
             logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
@@ -48,10 +51,7 @@ class Soldat2Client {
             client.sendMessage(NetworkMessage.Command(0, "echotest dummy_initialization_command_" + randomString))
         });
 
-        // For debugging
-        // ws.addListener("message", (data) =>
-        //     console.log(data)
-        // )
+        return new Soldat2Client(ws, false)
     }
 
     listenForServerResponse(processData,
@@ -131,7 +131,8 @@ function toArrayBuffer(buf) {
     return ab;
 }
 
-// probably not needed, included for completeness
+
+// For tests
 function toBuffer(ab) {
     var buf = Buffer.alloc(ab.byteLength);
     var view = new Uint8Array(ab);
@@ -303,8 +304,17 @@ class NetworkMessage {
         message.Build(MessageType.Command);
         return message;
     };
+
+    // For tests
+    static LogLine(text) {
+        var message = new NetworkMessage();
+        message.WriteUint16(0);
+        message.WriteString(text);
+        message.Build(MessageType.LogLine);
+        return message;
+    }
 }
 
 module.exports = {
-    Soldat2Client, maybeGetLogLine
+    Soldat2Client, maybeGetLogLine, NetworkMessage, toBuffer
 }
