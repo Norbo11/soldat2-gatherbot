@@ -23,13 +23,13 @@
     "Level": "ctf_division",
     "Modifiers": ["Gather"],
     "Condition": ""
-  }
+  },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_strike",
     "Modifiers": ["Gather"],
     "Condition": ""
-  }
+  },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_magpie",
