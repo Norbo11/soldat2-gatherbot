@@ -4,7 +4,7 @@ const stats = require("../game/stats")
 
 
 module.exports = {
-    aliases: ["gatherstats"],
+    aliases: ["gatherstats", "gstats"],
     description: "Show overall gather statistics.",
     execute(client, message, args) {
         stats.getGatherStats(currentStatsDb).then((gatherStats) => {

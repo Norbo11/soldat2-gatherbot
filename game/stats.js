@@ -76,6 +76,7 @@ getPlayerStats = async (statsDb, discordId) => {
     let totalDeaths = 0
     let totalGatherTime = 0
     let totalCaps = 0
+    let totalRounds = 0
     const weaponStats = {}
     const sizeStats = {}
 
@@ -115,6 +116,7 @@ getPlayerStats = async (statsDb, discordId) => {
 
         totalCaps += getCaps(discordId, game.events)
         totalTeamKills += getTeamKills(discordId, game.events)
+        totalRounds += game.totalRounds
 
         // const killsAndDeathsPerWeapon = getKillsAndDeathsPerWeapon(discordId, game.events)
         const gameTime = game.endTime - game.startTime
@@ -134,7 +136,7 @@ getPlayerStats = async (statsDb, discordId) => {
 
     return {
         totalGames, wonGames, lostGames, weaponStats, totalKills, totalDeaths, totalGatherTime, totalCaps,
-        sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills
+        sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds
     }
 }
 
@@ -142,6 +144,7 @@ const getGatherStats = async (statsDb) => {
     const games = await statsDb.getAllGames()
 
     let totalGames = games.length
+    let totalRounds = _.sum(games.map(game => game.rounds.length))
     let totalGatherTime = _.sum(games.map(game => game.endTime - game.startTime))
     let firstGameTimestamp = totalGames > 0 ? _.sortBy(games, game => game.startTime)[0].startTime : 0
     let lastGameTimestamp = totalGames > 0 ? _.sortBy(games, game => -game.startTime)[0].startTime : 0
@@ -161,7 +164,7 @@ const getGatherStats = async (statsDb) => {
     })
 
     return {
-        totalGames, totalGatherTime, mapStats, firstGameTimestamp, lastGameTimestamp
+        totalGames, totalGatherTime, mapStats, firstGameTimestamp, lastGameTimestamp, totalRounds
     }
 }
 
@@ -217,6 +220,7 @@ const formatMilliseconds = (millis) => {
 const formatGeneralStatsForPlayer = (playerName, playerStats) => {
     const overallStats = [
         `**Gathers Played**: ${playerStats.totalGames}`,
+        `**Rounds Played**: ${playerStats.totalRounds}`,
         `**Total Gather Time**: ${formatMilliseconds(playerStats.totalGatherTime)}`,
         `**W-T-L**: ${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}% winrate)`,
         // `**Kills/Deaths**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`,
@@ -253,6 +257,7 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
 const formatGatherStats = (gatherStats) => {
     const overallStats = [
         `**Gathers Played**: ${gatherStats.totalGames}`,
+        `**Rounds Played**: ${gatherStats.totalRounds}`,
         `**Total Gather Time**: ${formatMilliseconds(gatherStats.totalGatherTime)}`,
         `**Average Gather Time**: ${formatMilliseconds(Math.round(gatherStats.totalGatherTime / gatherStats.totalGames))}`,
         `**First Gather**: ${moment(gatherStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
@@ -263,9 +268,9 @@ const formatGatherStats = (gatherStats) => {
         return {mapName, ...gatherStats.mapStats[mapName]}
     })
 
-    favouriteMaps = _.sortBy(favouriteMaps, mapStats => -mapStats.totalGames)
+    favouriteMaps = _.sortBy(favouriteMaps, mapStats => -mapStats.totalRounds)
     favouriteMaps = _.take(favouriteMaps, 5)
-    favouriteMaps = favouriteMaps.map(mapStat => `**${mapStat.mapName}**: ${mapStat.totalGames} games`)
+    favouriteMaps = favouriteMaps.map(mapStat => `**${mapStat.mapName}**: ${mapStat.totalRounds} rounds`)
 
     return {
         embed: {

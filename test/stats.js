@@ -281,6 +281,7 @@ describe('Stats Formatter', () => {
             wonGames: 2,
             lostGames: 1,
             tiedGames: 0,
+            totalRounds: 6,
             // totalKills: 12,
             // totalDeaths: 7,
             // totalCaps: 2,
@@ -317,6 +318,7 @@ describe('Stats Formatter', () => {
                         name: "**Overall Stats for Player**",
                         value:
                             "**Gathers Played**: 3\n" +
+                            "**Rounds Played**: 6\n" +
                             "**Total Gather Time**: an hour\n" +
                             "**W-T-L**: 2-0-1 (67% winrate)\n" +
                             // "**Kills/Deaths**: 12/7 (1.71)\n" +
@@ -342,12 +344,13 @@ describe('Stats Formatter', () => {
         const gatherStats = {
             totalGames: 3,
             totalGatherTime: 45 * 60e+3,
+            totalRounds: 5,
             mapStats: {
                 ttw_one: {
-                    totalGames: 1
+                    totalRounds: 3
                 },
                 ttw_two: {
-                    totalGames: 2
+                    totalRounds: 2
                 }
             }
         }
@@ -361,6 +364,7 @@ describe('Stats Formatter', () => {
                         name: "**Overall Stats**",
                         value:
                             "**Gathers Played**: 3\n" +
+                            "**Rounds Played**: 5\n" +
                             "**Total Gather Time**: an hour\n" +
                             "**Average Gather Time**: 15 minutes\n" +
                             `**First Gather**: ${moment().format("DD-MM-YYYY")}\n` +
@@ -369,8 +373,8 @@ describe('Stats Formatter', () => {
                     {
                         name: "**Favourite Maps**",
                         value:
-                            "**ttw_two**: 2 games\n" +
-                            "**ttw_one**: 1 games",
+                            "**ttw_one**: 3 rounds\n" +
+                            "**ttw_two**: 2 rounds",
                     },
                 ]
             }

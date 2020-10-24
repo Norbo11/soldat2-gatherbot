@@ -183,11 +183,8 @@ describe('Gather', () => {
         currentTime = 10000
         netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
         expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
-        expect(currentGather.endedRounds.length).equal(3)
+        expect(currentGather.endedRounds.length).equal(0)
         expect(currentGather.currentRound).equal(undefined)
-
-        round = currentGather.endedRounds[2]
-        expect(round.winner).equal(SOLDAT_TEAMS.TIE)
 
         const game = await statsDb.getLastGame()
         expect(game.startTime).equal(1000)

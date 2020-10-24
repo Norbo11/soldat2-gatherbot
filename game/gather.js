@@ -22,7 +22,7 @@ class Gather {
     currentRound = undefined
     endedRounds = []
     inGameState = IN_GAME_STATES["NO_GATHER"]
-    n
+
     constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
         this.discordChannel = discordChannel
         this.getCurrentTimestamp = getCurrentTimestamp
@@ -119,6 +119,18 @@ class Gather {
 
     endRound() {
         this.currentRound.end()
+
+        const redDiscordIds = this.redTeam.map(user => user.id)
+        const blueDiscordIds = this.blueTeam.map(user => user.id)
+
+        this.discordChannel.send({
+            embed: {
+                title: "Round Finished",
+                color: 0xff0000,
+                fields: discord.getRoundEndFields(redDiscordIds, blueDiscordIds, this.currentRound),
+            }
+        })
+
         this.endedRounds.push(this.currentRound);
 
         const totalRounds = this.endedRounds.length;
@@ -135,8 +147,6 @@ class Gather {
         })
 
         if (redRoundWins === 2 || blueRoundWins === 2 || totalRounds === 3) {
-            this.currentRound = undefined
-
             let gameWinner;
 
             if (redRoundWins > blueRoundWins) {
@@ -164,6 +174,9 @@ class Gather {
             startTime: this.endedRounds[0].startTime,
             endTime: this.endedRounds[this.endedRounds.length - 1].endTime,
             winner: gameWinner,
+            totalRounds: this.endedRounds.length,
+            redRoundWins: _.filter(this.endedRounds, round => round.winner === SOLDAT_TEAMS.RED).length,
+            blueRoundWins: _.filter(this.endedRounds, round => round.winner === SOLDAT_TEAMS.BLUE).length,
             rounds: this.endedRounds.map(round => {
                 return {
                     startTime: round.startTime,
@@ -182,6 +195,8 @@ class Gather {
         this.inGameState = IN_GAME_STATES.NO_GATHER
         this.currentQueue = []
         this.rematchQueue = []
+        this.endedRounds = []
+        this.currentRound = undefined
 
         this.discordChannel.send({
             embed: {
