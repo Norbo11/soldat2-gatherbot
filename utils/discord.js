@@ -27,15 +27,15 @@ getPlayerFields = (redTeamIds, blueTeamIds) => {
 
     return [
         {
+            name: `${teamEmoji("Blue")} Blue Team`,
+            value: `${bluePlayersString}`,
+            inline: true
+        },
+        {
             name: `${teamEmoji("Red")} Red Team`,
             value: `${redPlayersString}`,
             inline: true
         },
-        {
-            name: `${teamEmoji("Blue")} Blue Team`,
-            value: `${bluePlayersString}`,
-            inline: true
-        }
     ];
 }
 
