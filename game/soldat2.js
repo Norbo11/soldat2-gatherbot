@@ -1,6 +1,7 @@
 const logger = require("../utils/logger")
 const WebSocket = require('ws');
 const random = require("../utils/random")
+const util = require('util')
 
 // const sslRootCAs = require('ssl-root-cas/latest')
 // sslRootCAs.inject().addFile(__dirname + "/../certs/webrcon.com")
@@ -28,7 +29,7 @@ class Soldat2Client {
         const ws = new WebSocket(WEBSOCKET_URL);
         const client = new Soldat2Client(ws, false)
 
-        ws.on('open', () => {
+        ws.on("open", () => {
             logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
             let loginMessage = NetworkMessage.Login(sessionId, ckey)
             let randomString = random.getRandomString()
@@ -52,7 +53,7 @@ class Soldat2Client {
             client.sendMessage(NetworkMessage.Command(0, "echotest dummy_initialization_command_" + randomString))
         });
 
-        ws.on('message', (data) => {
+        ws.on("message", (data) => {
             const networkMessage = getNetworkMessage(data);
             const messageType = networkMessage.ReadMessageType();
 
@@ -71,6 +72,14 @@ class Soldat2Client {
             } else if (messageType !== MessageType.LogLine) {
                 logger.log.info(`Received unhandled message type from server: ${messageType.name}`)
             }
+        })
+
+        ws.on("error", error => {
+            logger.log.error(`Received error from server: ${error.message}\n${error.stack}`)
+        })
+
+        ws.on("close", (code, reason) => {
+            logger.log.error(`WebSocket connection was closed (code ${code}, reason ${reason})`)
         })
 
         return client;
