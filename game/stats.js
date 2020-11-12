@@ -333,12 +333,12 @@ const getKillsAndDeathsPerPlayer = (events) => {
 const formatTopPlayers = (topPlayers, discordIdToUsername) => {
     const topPlayersByWinRate = topPlayers.topPlayersByWinRate.map(topPlayer => {
         const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.wonGames}/${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}%)`
+        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}%)`
     })
 
     const topPlayersByKda = topPlayers.topPlayersByKda.map(topPlayer => {
         const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
+        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}-${playerStats.tiedGames}-${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
     })
 
     const topPlayersByTotalGames = topPlayers.topPlayersByTotalGames.map(topPlayer => {
