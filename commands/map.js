@@ -17,9 +17,9 @@ module.exports = {
 
         const mapName = args[0];
 
-        currentSoldatClient.changeMap(mapName, "CaptureTheFlag", (result) => {
+        currentSoldatClient.changeMap(mapName, currentGather.gameMode, (result) => {
             if (result === "found") {
-                message.channel.send(`Map changed to **${mapName}**.`)
+                message.channel.send(`Map changed to **${mapName}** (game mode **${currentGather.gameMode}**).`)
             }
 
             if (result === "not_found") {

@@ -22,6 +22,7 @@ class Gather {
     currentRound = undefined
     endedRounds = []
     inGameState = IN_GAME_STATES["NO_GATHER"]
+    gameMode = "CaptureTheFlag"
 
     constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
         this.discordChannel = discordChannel
@@ -46,6 +47,10 @@ class Gather {
                 title: "Gather Info",
                 color: 0xff0000,
                 fields: [
+                    {
+                        name: "Game Mode",
+                        value: this.gameMode
+                    },
                     {
                         name: "Current Queue" + (rematch ? " (rematch)" : ""),
                         value: `${queueMembers.join(" - ")}`
@@ -113,8 +118,31 @@ class Gather {
         this.currentRound.blueFlagCaptured();
     }
 
-    changeMap(mapName) {
-        this.currentRound.changeMap(mapName);
+    onMapChange(mapName) {
+        this.currentRound.changeMap(mapName, this.gameMode);
+    }
+
+    changeGameMode(gameMode) {
+
+        let map = undefined
+
+        if (gameMode === "CaptureTheFlag") {
+            map = "ctf_ash"
+        } else if (gameMode === "CaptureTheBases") {
+            map = "ctb_gen_cobra"
+        }
+
+        this.gameMode = gameMode
+
+        this.soldatClient.changeMap(map, this.gameMode, result => {
+            if (result === "found") {
+                this.discordChannel.send(`Changed game mode to **${gameMode}.**`)
+            }
+
+            if (result === "not_found") {
+                this.discordChannel.send(`There was a problem changing game mode to **${gameMode}**!`)
+            }
+        })
     }
 
     endRound() {
@@ -168,6 +196,7 @@ class Gather {
         const blueDiscordIds = this.blueTeam.map(user => user.id)
 
         const game = {
+            gameMode: this.gameMode,
             redPlayers: redDiscordIds,
             bluePlayers: blueDiscordIds,
             size: this.currentSize,
@@ -251,7 +280,7 @@ class Gather {
 
         if (parts[0] === "map") {
             if (parts.length === 2) {
-                this.soldatClient.changeMap(parts[1], "CaptureTheFlag")
+                this.soldatClient.changeMap(parts[1], this.gameMode)
             }
         }
 
