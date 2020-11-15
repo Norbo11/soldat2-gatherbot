@@ -5,13 +5,19 @@ const SOLDAT_EVENTS = {
     FLAG_CAP: "FLAG_CAP",
     GATHER_PAUSE: "GATHER_PAUSE",
     GATHER_UNPAUSE: "GATHER_UNPAUSE",
-    PLAYER_KILL: "PLAYER_KILL"
+    PLAYER_KILL: "PLAYER_KILL",
+    BASE_CAPTURE: "BASE_CAPTURE"
 }
 
 const SOLDAT_TEAMS = {
     BLUE: "Blue",
     RED: "Red",
     TIE: "Tie",
+}
+
+const GAME_MODES = {
+    CAPTURE_THE_FLAG: "CaptureTheFlag",
+    CAPTURE_THE_BASES: "CaptureTheBases"
 }
 
 // The IDs here are arbitrary - they don't necessarily match whatever IDs the game uses
@@ -101,6 +107,6 @@ getWeaponByFormattedName = (formattedName) => {
 }
 
 module.exports = {
-    SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, NOT_AUTHED_KICK_TIMER_SECONDS, SOLDAT_TEAMS,
+    SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, NOT_AUTHED_KICK_TIMER_SECONDS, SOLDAT_TEAMS, GAME_MODES,
     getWeaponById, getWeaponByFormattedName
 }

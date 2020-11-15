@@ -1,5 +1,6 @@
-const logger = require("../utils/logger")
-const discord = require("../utils/discord")
+const constants = require("../game/constants")
+
+const GAME_MODES = constants.GAME_MODES
 
 module.exports = {
     aliases: ["mode", "gamemode", "game"],
@@ -19,9 +20,9 @@ module.exports = {
         let inGameMode = undefined
 
         if (gameMode === "CTF") {
-            inGameMode = "CaptureTheFlag"
+            inGameMode = GAME_MODES.CAPTURE_THE_FLAG
         } else if (gameMode === "CTB") {
-            inGameMode = "CaptureTheBases"
+            inGameMode = GAME_MODES.CAPTURE_THE_BASES
         } else {
             currentDiscordChannel.send("Please choose one of these gamemodes: CTF, CTB")
             return

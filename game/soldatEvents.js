@@ -2,6 +2,9 @@ const logger = require("../utils/logger")
 const constants = require("./constants")
 const soldat = require("./soldat2")
 
+const GAME_MODES = constants.GAME_MODES
+const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
+
 const PASSIVE_EVENTS = [
     {
         name: "player command",
@@ -14,23 +17,52 @@ const PASSIVE_EVENTS = [
         name: "match end",
         pattern: /\[(?<time>.*?)] Match state: Ended/,
         handler: (gather, match) => gather.endRound(),
-        condition: gather => gather.gatherInProgress(),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },
     {
         name: "red flag cap",
         pattern: /\[(?<time>.*?)] Red flag captured/,
         handler: (gather, match) => gather.redFlagCaptured(),
-        condition: gather => gather.gatherInProgress(),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },
     {
         name: "blue flag cap",
         pattern: /\[(?<time>.*?)] Blue flag captured/,
         handler: (gather, match) => gather.blueFlagCaptured(),
-        condition: gather => gather.gatherInProgress(),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },
+    {
+        name: "red base capture",
+        pattern: /\[(?<time>.*?)] RPC_Capture 0 1 flag (?<flagNum>.*)/,
+        handler: (gather, match) => gather.onRedBaseCapture(),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_BASES,
+        deduplicate: false
+    },
+    {
+        name: "blue base capture",
+        pattern: /\[(?<time>.*?)] RPC_Capture 1 0 flag (?<flagNum>.*)/,
+        handler: (gather, match) => gather.onBlueBaseCapture(),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_BASES,
+        deduplicate: false
+    },
+    {
+        name: "red win",
+        pattern: /\[(?<time>.*?)] Red WON!/,
+        handler: (gather, match) => gather.endRound(SOLDAT_TEAMS.RED),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_BASES,
+        deduplicate: false
+    },
+    {
+        name: "blue win",
+        pattern: /\[(?<time>.*?)] Blue WON!/,
+        handler: (gather, match) => gather.endRound(SOLDAT_TEAMS.BLUE),
+        condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_BASES,
+        deduplicate: false
+    },
+
     // TODO: This should be replaced with an rcon command to get the server info, such as current map, etc.
     {
         name: "change map",

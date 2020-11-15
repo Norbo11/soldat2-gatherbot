@@ -22,6 +22,7 @@ const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
 const IN_GAME_STATES = constants.IN_GAME_STATES
+const GAME_MODES = constants.GAME_MODES
 
 const soldat = require("../game/soldat2")
 const soldatEvents = require("../game/soldatEvents")
@@ -58,7 +59,7 @@ class MockDiscordUser {
 describe('Gather', () => {
     let currentGather = undefined
     let soldatClient = undefined
-    let netClient = undefined
+    let ws = undefined
     let discordChannel = undefined
     let statsDb = undefined
     let mongoConn = undefined
@@ -69,9 +70,9 @@ describe('Gather', () => {
         mongoConn = mongoClient.db("testDb")
         statsDb = new db.StatsDB(mongoConn)
 
-        netClient = new events.EventEmitter()
-        netClient.write = (data) => {
-            logger.log.info(`Wrote to server: ${data.trim()}`)
+        ws = new events.EventEmitter()
+        ws.send = (data) => {
+            logger.log.info(`Wrote to server: ${data}`)
         }
 
         discordChannel = sinon.stub()
@@ -95,7 +96,7 @@ describe('Gather', () => {
             return currentTime;
         }
 
-        soldatClient = new soldat.Soldat2Client(netClient, true)
+        soldatClient = new soldat.Soldat2Client(ws, true)
         currentGather = new gather.Gather(discordChannel, statsDb, soldatClient, mockCurrentTimestamp)
         soldatEvents.registerSoldatEventListeners(currentGather, soldatClient)
     });
@@ -104,7 +105,7 @@ describe('Gather', () => {
         await mongoConn.dropDatabase()
     })
 
-    it('should handle an entire gather', async () => {
+    it('should handle an entire ctf gather', async () => {
         expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
 
         // TODO: Refactor into methods on the gather class
@@ -123,11 +124,11 @@ describe('Gather', () => {
 
         let round = currentGather.currentRound
         currentTime = 1000;
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_ash").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_ash").raw))
         expect(round.mapName).equal("ctf_ash")
         expect(round.startTime).equal(1000)
 
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
         expect(round.blueCaps).equal(1)
         expect(round.events[0]).containSubset({
             timestamp: 1000,
@@ -135,7 +136,7 @@ describe('Gather', () => {
             cappingTeam: SOLDAT_TEAMS.BLUE
         })
 
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured").raw))
         expect(round.redCaps).equal(1)
         expect(round.events[1]).containSubset({
             timestamp: 1000,
@@ -144,7 +145,7 @@ describe('Gather', () => {
         })
 
         currentTime = 5000;
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
         expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
         expect(currentGather.endedRounds.length).equal(1)
         expect(currentGather.currentRound).not.equal(undefined)
@@ -155,25 +156,25 @@ describe('Gather', () => {
 
         round = currentGather.currentRound
         currentTime = 6000;
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_division").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_division").raw))
         expect(round.mapName).equal("ctf_division")
         expect(round.startTime).equal(6000)
 
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
         expect(round.blueCaps).equal(1)
 
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
         expect(round.blueCaps).equal(2)
 
         currentTime = 8000;
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
         expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
         expect(currentGather.endedRounds.length).equal(2)
         expect(currentGather.currentRound).not.equal(undefined)
 
         round = currentGather.currentRound
         currentTime = 9000
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_magpie").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_magpie").raw))
         expect(round.mapName).equal("ctf_magpie")
         expect(round.startTime).equal(9000)
 
@@ -181,7 +182,7 @@ describe('Gather', () => {
         expect(round.winner).equal(SOLDAT_TEAMS.BLUE)
 
         currentTime = 10000
-        netClient.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Match state: Ended").raw))
         expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
         expect(currentGather.endedRounds.length).equal(0)
         expect(currentGather.currentRound).equal(undefined)
@@ -244,6 +245,141 @@ describe('Gather', () => {
                 blueCaps: 0,
                 redCaps: 0,
                 winner: "Tie",
+            }
+        )
+    });
+
+    it('should handle an entire ctb gather', async () => {
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
+
+        // TODO: Refactor into methods on the gather class
+        currentGather.currentSize = 4
+        currentGather.currentQueue = [
+            new MockDiscordUser("a"),
+            new MockDiscordUser("b"),
+            new MockDiscordUser("c"),
+            new MockDiscordUser("d")
+        ]
+
+        currentGather.changeGameMode(GAME_MODES.CAPTURE_THE_BASES)
+        currentGather.startNewGame()
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
+        expect(currentGather.endedRounds.length).equal(0)
+        expect(currentGather.currentRound).not.equal(undefined)
+
+        let round = currentGather.currentRound
+        currentTime = 1000;
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_gen_jarhead").raw))
+        expect(round.mapName).equal("ctf_gen_jarhead")
+        expect(round.startTime).equal(1000)
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] RPC_Capture 1 0 flag 10").raw))
+        expect(round.blueCaps).equal(1)
+        expect(round.events[0]).containSubset({
+            timestamp: 1000,
+            type: SOLDAT_EVENTS.BASE_CAPTURE,
+            cappingTeam: SOLDAT_TEAMS.BLUE
+        })
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] RPC_Capture 0 1 flag 10").raw))
+        expect(round.redCaps).equal(1)
+        expect(round.events[1]).containSubset({
+            timestamp: 1000,
+            type: SOLDAT_EVENTS.BASE_CAPTURE,
+            cappingTeam: SOLDAT_TEAMS.RED
+        })
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] RPC_Capture 1 0 flag 10").raw))
+        expect(round.blueCaps).equal(2)
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] RPC_Capture 1 0 flag 10").raw))
+        expect(round.blueCaps).equal(3)
+
+        currentTime = 5000;
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue WON!").raw))
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
+        expect(currentGather.endedRounds.length).equal(1)
+        expect(currentGather.currentRound).not.equal(undefined)
+
+        expect(round.winner).equal(SOLDAT_TEAMS.BLUE)
+        expect(round.startTime).equal(1000)
+        expect(round.endTime).equal(5000)
+
+        round = currentGather.currentRound
+        currentTime = 6000;
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Popup: Loading... ctf_gen_cobra").raw))
+        expect(round.mapName).equal("ctf_gen_cobra")
+        expect(round.startTime).equal(6000)
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] RPC_Capture 1 0 flag 10").raw))
+        expect(round.blueCaps).equal(1)
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] RPC_Capture 1 0 flag 10").raw))
+        expect(round.blueCaps).equal(2)
+
+        currentTime = 8000;
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue WON!").raw))
+        expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
+        expect(currentGather.endedRounds.length).equal(0)
+        expect(currentGather.currentRound).equal(undefined)
+
+        const game = await statsDb.getLastGame()
+        expect(game.startTime).equal(1000)
+        expect(game.endTime).equal(8000)
+        expect(game.winner).equal(SOLDAT_TEAMS.BLUE)
+        expect(game.size).equal(4)
+        expect(game.rounds[0]).deep.equal(
+            {
+                startTime: 1000,
+                endTime: 5000,
+                mapName: "ctf_gen_jarhead",
+                blueCaps: 3,
+                redCaps: 1,
+                winner: "Blue",
+                events: [
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.BASE_CAPTURE,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    },
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.BASE_CAPTURE,
+                        cappingTeam: SOLDAT_TEAMS.RED
+                    },
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.BASE_CAPTURE,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    },
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.BASE_CAPTURE,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    }
+                ]
+            }
+        )
+        expect(game.rounds[1]).deep.equal(
+            {
+                startTime: 6000,
+                endTime: 8000,
+                mapName: "ctf_gen_cobra",
+                blueCaps: 2,
+                redCaps: 0,
+                winner: "Blue",
+                events: [
+                    {
+                        timestamp: 6000,
+                        type: SOLDAT_EVENTS.BASE_CAPTURE,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    },
+                    {
+                        timestamp: 6000,
+                        type: SOLDAT_EVENTS.BASE_CAPTURE,
+                        cappingTeam: SOLDAT_TEAMS.BLUE
+                    }
+                ]
             }
         )
     });

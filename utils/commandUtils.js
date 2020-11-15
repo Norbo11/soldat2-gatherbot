@@ -3,29 +3,6 @@ const constants = require("../game/constants")
 const discord = require("../utils/discord")
 
 
-displayGatherStatus = (message) => {
-    let description = undefined;
-
-    if (currentGather.inGameState === constants.IN_GAME_STATES.GATHER_STARTED) {
-        description = `**Gather In Progress**\n`
-    }
-
-    const redDiscordIds = currentGather.redTeam.map(user => user.id)
-    const blueDiscordIds = currentGather.blueTeam.map(user => user.id)
-
-    message.channel.send({
-        embed: {
-            color: 0xff0000,
-            title: "Gather Info",
-            description: description,
-            fields: [
-                ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
-            ]
-        }
-    });
-}
-
-
 displayServerInfo = (message) => {
     currentSoldatClient.getServerInfo(serverInfo => {
         const redPlayerStrings = []

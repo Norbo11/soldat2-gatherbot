@@ -4,11 +4,13 @@ const discord = require("../utils/discord")
 const random = require("../utils/random")
 const util = require("util")
 const constants = require("./constants")
-const gatherRound = require("./gatherRound")
+const ctfRound = require("./ctfRound")
+const ctbRound = require("./ctbRound")
 
 const IN_GAME_STATES = constants.IN_GAME_STATES;
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS;
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS;
+const GAME_MODES = constants.GAME_MODES;
 
 
 class Gather {
@@ -21,8 +23,8 @@ class Gather {
     blueTeam = []
     currentRound = undefined
     endedRounds = []
-    inGameState = IN_GAME_STATES["NO_GATHER"]
-    gameMode = "CaptureTheFlag"
+    inGameState = IN_GAME_STATES.NO_GATHER
+    gameMode = GAME_MODES.CAPTURE_THE_FLAG
 
     constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
         this.discordChannel = discordChannel
@@ -47,10 +49,7 @@ class Gather {
                 title: "Gather Info",
                 color: 0xff0000,
                 fields: [
-                    {
-                        name: "Game Mode",
-                        value: this.gameMode
-                    },
+                    discord.getGameModeField(this.gameMode),
                     {
                         name: "Current Queue" + (rematch ? " (rematch)" : ""),
                         value: `${queueMembers.join(" - ")}`
@@ -79,7 +78,9 @@ class Gather {
         this.redTeam = redDiscordUsers
         this.blueTeam = blueDiscordUsers
         this.inGameState = IN_GAME_STATES.GATHER_STARTED
-        this.currentRound = new gatherRound.GatherRound(this.getCurrentTimestamp)
+        this.currentRound = this.gameMode === GAME_MODES.CAPTURE_THE_FLAG ?
+            new ctfRound.CtfRound(this.getCurrentTimestamp) :
+            new ctbRound.CtbRound(this.getCurrentTimestamp)
 
         const redDiscordIds = this.redTeam.map(user => user.id)
         const blueDiscordIds = this.blueTeam.map(user => user.id)
@@ -92,6 +93,7 @@ class Gather {
                     title: "Gather Started",
                     color: 0xff0000,
                     fields: [
+                        discord.getGameModeField(this.gameMode),
                         discord.getServerLinkField(this.password),
                         ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
                     ]
@@ -104,6 +106,7 @@ class Gather {
                 title: "Gather Started",
                 color: 0xff0000,
                 fields: [
+                    discord.getGameModeField(this.gameMode),
                     ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
                 ]
             }
@@ -118,17 +121,26 @@ class Gather {
         this.currentRound.blueFlagCaptured();
     }
 
+    onBlueBaseCapture() {
+        // TODO: need to implement a different gather round object?
+        this.currentRound.blueCapturedBase()
+    }
+
+    onRedBaseCapture() {
+        this.currentRound.redCapturedBase()
+    }
+
     onMapChange(mapName) {
-        this.currentRound.changeMap(mapName, this.gameMode);
+        this.currentRound.changeMap(mapName);
     }
 
     changeGameMode(gameMode) {
 
         let map = undefined
 
-        if (gameMode === "CaptureTheFlag") {
+        if (gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
             map = "ctf_ash"
-        } else if (gameMode === "CaptureTheBases") {
+        } else if (gameMode === GAME_MODES.CAPTURE_THE_BASES) {
             map = "ctb_gen_cobra"
         }
 
@@ -145,8 +157,17 @@ class Gather {
         })
     }
 
-    endRound() {
-        this.currentRound.end()
+    endRound(winner) {
+
+        // For CTF games, we determine the winner based on the flag cap events that we've kept track of.
+        // For CTB games, we get told in the logs who won.
+        if (this.gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
+            this.currentRound.end()
+        } else if (this.gameMode === GAME_MODES.CAPTURE_THE_BASES) {
+            this.currentRound.end(winner)
+        } else {
+            throw new Error(`Invalid game-mode detected: ${this.gameMode}`)
+        }
 
         const redDiscordIds = this.redTeam.map(user => user.id)
         const blueDiscordIds = this.blueTeam.map(user => user.id)
@@ -155,7 +176,7 @@ class Gather {
             embed: {
                 title: "Round Finished",
                 color: 0xff0000,
-                fields: discord.getRoundEndFields(redDiscordIds, blueDiscordIds, this.currentRound),
+                fields: discord.getRoundEndFields(this.gameMode, redDiscordIds, blueDiscordIds, this.currentRound),
             }
         })
 
@@ -187,7 +208,7 @@ class Gather {
 
             this.endGame(gameWinner)
         } else {
-            this.currentRound = new gatherRound.GatherRound(this.getCurrentTimestamp)
+            this.currentRound = this.currentRound.newRound()
         }
     }
 

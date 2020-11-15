@@ -3,6 +3,8 @@ const moment = require("moment")
 const _ = require("lodash")
 const constants = require("../game/constants")
 
+const GAME_MODES = constants.GAME_MODES
+
 teamEmoji = (teamName) => {
     if (teamName === constants.SOLDAT_TEAMS.RED) {
         return ":a:"
@@ -82,6 +84,19 @@ getResultField = (winner, inline=false) => {
 }
 
 
+getGameModeField = (gameMode) => {
+    if (gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
+        gameMode = "Capture The Flag"
+    } else {
+        gameMode = "Capture The Bases"
+    }
+
+    return {
+        name: "Game Mode",
+        value: gameMode
+    }
+}
+
 getGatherEndFields = (game) => {
     const redPlayersString = getPlayerFieldsWithKillsAndDeaths(game.redPlayers).join("\n")
     const bluePlayersString = getPlayerFieldsWithKillsAndDeaths(game.bluePlayers).join("\n")
@@ -89,6 +104,7 @@ getGatherEndFields = (game) => {
     return [
         getResultField(game.winner, true),
         getDurationField(game.startTime, game.endTime, true, "Gather"),
+        getGameModeField(game.gameMode),
         {
             name: `${teamEmoji(constants.SOLDAT_TEAMS.BLUE)} Blue Team (${game.blueRoundWins} round wins)`,
             value: `${bluePlayersString}`,
@@ -120,7 +136,7 @@ getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     })
 }
 
-getRoundEndFields = (redDiscordIds, blueDiscordIds, round) => {
+getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
 
     // TODO: Hook this up
     const playerKillsAndDeaths = {}
@@ -136,16 +152,18 @@ getRoundEndFields = (redDiscordIds, blueDiscordIds, round) => {
     const redPlayersString = getPlayerFieldsWithKillsAndDeaths(redDiscordIds, playerKillsAndDeaths).join("\n")
     const bluePlayersString = getPlayerFieldsWithKillsAndDeaths(blueDiscordIds, playerKillsAndDeaths).join("\n")
 
+    const flagsOrBases = gameMode === GAME_MODES.CAPTURE_THE_FLAG ? "flags" : "bases"
+
     return [
         getResultField(round.winner, true),
         getDurationField(round.startTime, round.endTime, true, "Round"),
         getMapField(round.mapName),
         {
-            name: `${teamEmoji(constants.SOLDAT_TEAMS.BLUE)} Blue Team (${round.blueCaps} caps)`,
+            name: `${teamEmoji(constants.SOLDAT_TEAMS.BLUE)} Blue Team (${round.blueCaps} ${flagsOrBases} captured)`,
             value: `${bluePlayersString}`,
         },
         {
-            name: `${teamEmoji(constants.SOLDAT_TEAMS.RED)} Red Team (${round.redCaps} caps)`,
+            name: `${teamEmoji(constants.SOLDAT_TEAMS.RED)} Red Team (${round.redCaps} ${flagsOrBases} captured)`,
             value: `${redPlayersString}`,
         },
     ]
@@ -164,5 +182,5 @@ getDiscordIdToUsernameMap = async (client, discordIdToUsername, discordIds) => {
 
 module.exports = {
     teamEmoji, getPlayerStrings, getPlayerFields, getRoundEndFields, getGatherLengthField: getDurationField, getGatherEndFields,
-    getMapField, getServerLinkField, getDiscordIdToUsernameMap
+    getMapField, getServerLinkField, getDiscordIdToUsernameMap, getGameModeField
 }
