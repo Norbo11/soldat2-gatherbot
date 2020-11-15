@@ -2,7 +2,7 @@
   "Objects": {
     "CaptureTheFlag": {
       "Match": {
-        "MinimumPlayers": 6,
+        "MinimumPlayers": 4,
         "ScoreLimit": 0,
         "TeamScoreLimit": 10,
         "MatchSecs": 600,
