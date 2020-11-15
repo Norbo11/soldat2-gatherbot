@@ -10,7 +10,7 @@ const util = require('util')
 //  about how this should work, this is a temporary workaround. Above is a hint of what we should possibly be doing.
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
-const WEBSOCKET_URL = 'wss://www.webrcon.com:8006'
+const WEBSOCKET_URL = 'wss://webrcon.com:8006'
 const DEFAULT_RESPONSE_TIMEOUT = 7000
 
 class Soldat2Client {
