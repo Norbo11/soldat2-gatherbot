@@ -49,7 +49,7 @@ class Soldat2Client {
             }, () => {
                 logger.log.info("Received the initialization command; setting initialized = true.")
                 client.initialized = true;
-            }, DEFAULT_RESPONSE_TIMEOUT, false);
+            }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
             client.sendMessage(NetworkMessage.Command(0, "echotest dummy_initialization_command_" + randomString))
         });
 
