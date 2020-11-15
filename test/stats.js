@@ -23,6 +23,7 @@ const GAME_MODES = constants.GAME_MODES
 getMockGames = () => {
     return [
         {
+            gameMode: GAME_MODES.CAPTURE_THE_FLAG,
             redPlayers: ["Player1", "Player2"],
             bluePlayers: ["Player3", "Player4"],
             startTime: 1000,
@@ -82,6 +83,7 @@ getMockGames = () => {
             ],
         },
         {
+            gameMode: GAME_MODES.CAPTURE_THE_FLAG,
             redPlayers: ["Player1", "Player2"],
             bluePlayers: ["Player3", "Player4"],
             startTime: 1000,
@@ -109,6 +111,7 @@ getMockGames = () => {
             ]
         },
         {
+            gameMode: GAME_MODES.CAPTURE_THE_FLAG,
             redPlayers: ["Player1", "Player2"],
             bluePlayers: ["Player3", "Player4"],
             startTime: 1000 + 30 * 60e+3,
@@ -136,6 +139,7 @@ getMockGames = () => {
             ]
         },
         {
+            gameMode: GAME_MODES.CAPTURE_THE_FLAG,
             redPlayers: ["Player1", "Player2", "Player3"],
             bluePlayers: ["Player4", "Player5", "Player6"],
             startTime: 1000 + 60 * 60e+3,
@@ -294,6 +298,20 @@ describe('Stats Formatter', () => {
                     totalGames: 2
                 }
             },
+            gameModeStats: {
+                [GAME_MODES.CAPTURE_THE_FLAG]: {
+                    totalGames: 3,
+                    wonGames: 2,
+                    lostGames: 1,
+                    tiedGames: 0
+                },
+                [GAME_MODES.CAPTURE_THE_BASES]: {
+                    totalGames: 0,
+                    wonGames: 0,
+                    lostGames: 0,
+                    tiedGames: 0
+                }
+            }
             // weaponStats: {
             //     [SOLDAT_WEAPONS.AK_74.id]: {
             //         kills: 12,
@@ -321,7 +339,8 @@ describe('Stats Formatter', () => {
                             "**Gathers Played**: 3\n" +
                             "**Rounds Played**: 6\n" +
                             "**Total Gather Time**: an hour\n" +
-                            "**W-T-L**: 2-0-1 (67% winrate)\n" +
+                            "**CTF W-T-L**: 2-0-1 (67% winrate)\n" +
+                            "**CTB W-T-L**: 0-0-0 (NaN% winrate)\n" +
                             // "**Kills/Deaths**: 12/7 (1.71)\n" +
                             // "**Caps**: 2 (0.67 per game)\n" +
                             `**First Gather**: ${moment().format("DD-MM-YYYY")}\n` +
