@@ -316,7 +316,11 @@ class Gather {
         }
 
         if (firstPart === "restart" || firstPart === "r") {
-            this.soldatClient.restart();
+            if (this.currentRound === undefined) {
+                this.soldatClient.restart();
+            } else {
+                this.soldatClient.changeMap(this.currentRound.mapName, this.gameMode)
+            }
         }
     }
 }
