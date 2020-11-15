@@ -2,6 +2,7 @@ const _ = require("lodash")
 const logger = require("../utils/logger")
 const discord = require("../utils/discord")
 const random = require("../utils/random")
+const maps = require("../utils/maps")
 const util = require("util")
 const constants = require("./constants")
 const ctfRound = require("./ctfRound")
@@ -49,11 +50,11 @@ class Gather {
                 title: "Gather Info",
                 color: 0xff0000,
                 fields: [
-                    discord.getGameModeField(this.gameMode),
                     {
                         name: "Current Queue" + (rematch ? " (rematch)" : ""),
                         value: `${queueMembers.join(" - ")}`
                     },
+                    discord.getGameModeField(this.gameMode),
                 ]
             }
         })
@@ -298,19 +299,23 @@ class Gather {
 
     playerCommand(playerName, command) {
         const parts = command.split(/ +/);
+        const firstPart = parts[0].toLowerCase()
 
-        if (parts[0] === "map") {
+        if (firstPart === "map") {
             if (parts.length === 2) {
-                this.soldatClient.changeMap(parts[1], this.gameMode)
+                const mapName = parts[1]
+                if (maps.verifyMap(mapName, this.gameMode)) {
+                    this.soldatClient.changeMap(parts[1], this.gameMode)
+                }
             }
         }
 
-        if (parts[0] === "say") {
+        if (firstPart === "say") {
             const message = _.slice(parts, 1)
             this.discordChannel.send(`[${playerName}] ${message}`)
         }
 
-        if (parts[0] === "restart" || parts[0] === "r") {
+        if (firstPart === "restart" || firstPart === "r") {
             this.soldatClient.restart();
         }
     }

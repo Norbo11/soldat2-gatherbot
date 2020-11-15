@@ -1,5 +1,6 @@
 const logger = require("../utils/logger")
 const utils = require("../utils/commandUtils")
+const maps = require("../utils/maps")
 
 module.exports = {
     aliases: ["map"],
@@ -16,6 +17,11 @@ module.exports = {
         }
 
         const mapName = args[0];
+
+        if (!(maps.verifyMap(mapName, currentGather.gameMode))) {
+            message.channel.send(`**${mapName}** is an invalid map for current game mode **${currentGather.gameMode}**.`)
+            return
+        }
 
         currentSoldatClient.changeMap(mapName, currentGather.gameMode, (result) => {
             if (result === "found") {
