@@ -85,15 +85,9 @@ getResultField = (winner, inline=false) => {
 
 
 getGameModeField = (gameMode) => {
-    if (gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
-        gameMode = "Capture The Flag"
-    } else {
-        gameMode = "Capture The Bases"
-    }
-
     return {
         name: "Game Mode",
-        value: gameMode
+        value: constants.formatGameMode(gameMode)
     }
 }
 

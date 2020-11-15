@@ -20,6 +20,17 @@ const GAME_MODES = {
     CAPTURE_THE_BASES: "CaptureTheBases"
 }
 
+
+const formatGameMode = (gameMode) => {
+    if (gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
+        gameMode = "Capture The Flag"
+    } else {
+        gameMode = "Capture The Bases"
+    }
+    return gameMode
+}
+
+
 // The IDs here are arbitrary - they don't necessarily match whatever IDs the game uses
 const SOLDAT_WEAPONS = {
     DESERT_EAGLES: {
@@ -108,5 +119,5 @@ getWeaponByFormattedName = (formattedName) => {
 
 module.exports = {
     SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, NOT_AUTHED_KICK_TIMER_SECONDS, SOLDAT_TEAMS, GAME_MODES,
-    getWeaponById, getWeaponByFormattedName
+    getWeaponById, getWeaponByFormattedName, formatGameMode
 }

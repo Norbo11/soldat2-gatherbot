@@ -8,6 +8,7 @@ const constants = require("./constants")
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
+const GAME_MODES = constants.GAME_MODES
 
 getCaps = (discordId, events) => {
     events = _.filter(events, event =>
@@ -79,6 +80,7 @@ getPlayerStats = async (statsDb, discordId) => {
     let totalRounds = 0
     const weaponStats = {}
     const sizeStats = {}
+    const gameModeStats = {}
 
    /*  Object.keys(SOLDAT_WEAPONS).forEach(weaponKey => {
         weaponStats[SOLDAT_WEAPONS[weaponKey].id] = {
@@ -86,6 +88,15 @@ getPlayerStats = async (statsDb, discordId) => {
             deaths: 0
         }
     })*/
+
+    Object.keys(GAME_MODES).forEach(gameMode => {
+        gameModeStats[GAME_MODES[gameMode]] = {
+            totalGames: 0,
+            wonGames: 0,
+            lostGames: 0,
+            tiedGames: 0
+        }
+    })
 
     games.forEach(game => {
         totalGames += 1
@@ -104,15 +115,19 @@ getPlayerStats = async (statsDb, discordId) => {
         if (game.winner === SOLDAT_TEAMS.TIE) {
             tiedGames += 1
             sizeStats[game.size].tiedGames += 1
+            gameModeStats[game.gameMode].tiedGames += 1
         } else if (game.winner === playerTeam) {
             wonGames += 1
             sizeStats[game.size].wonGames += 1
+            gameModeStats[game.gameMode].wonGames += 1
         } else {
             lostGames += 1
             sizeStats[game.size].lostGames += 1
+            gameModeStats[game.gameMode].lostGames += 1
         }
 
         sizeStats[game.size].totalGames += 1
+        gameModeStats[game.gameMode].totalGames += 1
 
         totalCaps += getCaps(discordId, game.events)
         totalTeamKills += getTeamKills(discordId, game.events)
@@ -136,7 +151,7 @@ getPlayerStats = async (statsDb, discordId) => {
 
     return {
         totalGames, wonGames, lostGames, weaponStats, totalKills, totalDeaths, totalGatherTime, totalCaps,
-        sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds
+        sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds, gameModeStats
     }
 }
 
@@ -168,7 +183,7 @@ const getGatherStats = async (statsDb) => {
     }
 }
 
-const getTopPlayers = async (statsDb, minimumGamesPlayed) => {
+const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     const discordIds = await statsDb.getAllDiscordIds()
     const allPlayerStats = await Promise.all(discordIds.map(async discordId => {
         return {
@@ -176,22 +191,22 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed) => {
             playerStats: await getPlayerStats(statsDb, discordId)
         }
     }))
-    const playersWithEnoughGames = _.filter(allPlayerStats, player => player.playerStats.totalGames >= minimumGamesPlayed)
+    const playersWithEnoughGames = _.filter(allPlayerStats, player => player.playerStats.gameModeStats[gameMode].totalGames >= minimumGamesPlayed)
 
-    let topPlayersByWinRate = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.wonGames / player.playerStats.totalGames))
+    let topPlayersByWinRate = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.gameModeStats[gameMode].wonGames / player.playerStats.gameModeStats[gameMode].totalGames))
     topPlayersByWinRate = _.take(topPlayersByWinRate, 5)
 
     // Take all players here
-    let topPlayersByTotalGames = _.sortBy(allPlayerStats, player => -player.playerStats.totalGames)
+    let topPlayersByTotalGames = _.sortBy(allPlayerStats, player => -player.playerStats.gameModeStats[gameMode].totalGames)
     topPlayersByTotalGames = _.take(topPlayersByTotalGames, 5)
 
-    let topPlayersByKda = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.totalKills / player.playerStats.totalDeaths))
-    topPlayersByKda = _.take(topPlayersByKda, 5)
-
-    let topPlayersByTeamKills = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.totalTeamKills / player.playerStats.totalKills))
-    topPlayersByTeamKills = _.take(topPlayersByTeamKills, 5)
-
-    let topPlayersByWeaponKills = {}
+    // let topPlayersByKda = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.totalKills / player.playerStats.totalDeaths))
+    // topPlayersByKda = _.take(topPlayersByKda, 5)
+    //
+    // let topPlayersByTeamKills = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.totalTeamKills / player.playerStats.totalKills))
+    // topPlayersByTeamKills = _.take(topPlayersByTeamKills, 5)
+    //
+    // let topPlayersByWeaponKills = {}
 
     // Object.keys(SOLDAT_WEAPONS).forEach(weaponKey => {
     //     const weaponId = SOLDAT_WEAPONS[weaponKey].id
@@ -203,8 +218,7 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed) => {
     const allDiscordIds = allPlayerStats.map(player => player.discordId)
 
     return {
-        topPlayersByWinRate, topPlayersByTotalGames, topPlayersByKda, allDiscordIds, topPlayersByWeaponKills,
-        topPlayersByTeamKills
+        topPlayersByWinRate, topPlayersByTotalGames, allDiscordIds
     }
 }
 
@@ -217,12 +231,22 @@ const formatMilliseconds = (millis) => {
     }
 }
 
+const formatWinsTiesLosses = (playerStats, gameMode) => {
+
+    const stats = playerStats.gameModeStats[gameMode]
+
+    return `${stats.wonGames}-${stats.tiedGames}-${stats.lostGames} (${Math.round(stats.wonGames / stats.totalGames * 100)}% winrate)`
+}
+
+
+
 const formatGeneralStatsForPlayer = (playerName, playerStats) => {
     const overallStats = [
         `**Gathers Played**: ${playerStats.totalGames}`,
         `**Rounds Played**: ${playerStats.totalRounds}`,
         `**Total Gather Time**: ${formatMilliseconds(playerStats.totalGatherTime)}`,
-        `**W-T-L**: ${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}% winrate)`,
+        `**CTF W-T-L**: ${formatWinsTiesLosses(playerStats, GAME_MODES.CAPTURE_THE_FLAG)}`,
+        `**CTB W-T-L**: ${formatWinsTiesLosses(playerStats, GAME_MODES.CAPTURE_THE_BASES)}`,
         // `**Kills/Deaths**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`,
         // `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
         `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
@@ -330,29 +354,30 @@ const getKillsAndDeathsPerPlayer = (events) => {
 }
 
 
-const formatTopPlayers = (topPlayers, discordIdToUsername) => {
+const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     const topPlayersByWinRate = topPlayers.topPlayersByWinRate.map(topPlayer => {
-        const playerStats = topPlayer.playerStats
+        const playerStats = topPlayer.playerStats.gameModeStats[gameMode]
         return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}%)`
     })
 
-    const topPlayersByKda = topPlayers.topPlayersByKda.map(topPlayer => {
-        const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}-${playerStats.tiedGames}-${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
-    })
+    // const topPlayersByKda = topPlayers.topPlayersByKda.map(topPlayer => {
+    //     const playerStats = topPlayer.playerStats
+    //     return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}-${playerStats.tiedGames}-${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
+    // })
 
     const topPlayersByTotalGames = topPlayers.topPlayersByTotalGames.map(topPlayer => {
-        const playerStats = topPlayer.playerStats
+        const playerStats = topPlayer.playerStats.gameModeStats[gameMode]
         return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalGames} games`
     })
 
-    const topPlayersByTeamKills = topPlayers.topPlayersByTeamKills.map(topPlayer => {
-        const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalTeamKills} team kills (${(playerStats.totalTeamKills / playerStats.totalKills * 100).toFixed(1)}% of kills)`
-    })
+    // const topPlayersByTeamKills = topPlayers.topPlayersByTeamKills.map(topPlayer => {
+    //     const playerStats = topPlayer.playerStats
+    //     return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalTeamKills} team kills (${(playerStats.totalTeamKills / playerStats.totalKills * 100).toFixed(1)}% of kills)`
+    // })
 
     return {
         embed: {
+            title: `Top ${constants.formatGameMode(gameMode)} Players`,
             fields: [
                 {
                     name: "**Win Rate**",

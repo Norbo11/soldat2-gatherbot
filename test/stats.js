@@ -17,6 +17,7 @@ const constants = require("../game/constants")
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
+const GAME_MODES = constants.GAME_MODES
 
 
 getMockGames = () => {
@@ -267,7 +268,7 @@ describe('Stats', () => {
         const games = getMockGames()
         await Promise.all(games.map(async game => statsDb.insertGame(game)))
 
-        const topPlayers = await stats.getTopPlayers(statsDb, 0)
+        const topPlayers = await stats.getTopPlayers(statsDb, 0, GAME_MODES.CAPTURE_THE_FLAG)
         expect(topPlayers.topPlayersByWinRate.map(player => player.discordId)).eql(["Player4", "Player5", "Player6", "Player3", "Player1"])
         expect(topPlayers.topPlayersByTotalGames.map(player => player.discordId)).eql(["Player1", "Player2", "Player3", "Player4", "Player5"])
     })
