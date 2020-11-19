@@ -316,7 +316,11 @@ class Gather {
         }
 
         if (firstPart === "restart" || firstPart === "r") {
-            if (this.currentRound === undefined) {
+            // There is an annoying "bug" that if you use !r during a CTB game, when that game ends, it won't
+            // print the "Red WON!" or "Blue WON!" message which we require to end the game. So we make !r act like
+            // the !map command whenever we can (currentRound is not null, so gather is running; and the currentRound
+            // knows about the current map).
+            if (this.currentRound === undefined || this.currentRound.mapName === undefined) {
                 this.soldatClient.restart();
             } else {
                 this.soldatClient.changeMap(this.currentRound.mapName, this.gameMode)
