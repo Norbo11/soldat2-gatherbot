@@ -24,6 +24,8 @@ const setUpCommands = () => {
 }
 
 const cleanUp = () => {
+    logger.log.info("GatherBot and Soldat 2 server are shutting down...")
+    process.exit(0)
 }
 
 const setUpEvents = (webrconCredentials) => {
@@ -31,6 +33,7 @@ const setUpEvents = (webrconCredentials) => {
     client.once("ready", (...args) => ready(client, webrconCredentials, ...args))
     client.on("presenceUpdate", (...args) => presenceUpdate(client, ...args))
     process.on("SIGINT", cleanUp)
+    process.on("SIGTERM", cleanUp)
 }
 
 const setUpServer = (webrconCredentials) => {
@@ -73,7 +76,7 @@ const setUpServer = (webrconCredentials) => {
 
     // After 10 seconds, resume bot initialization. This is to prevent us from connecting to WebRcon too soon (before
     // the server is up), etc.
-    setTimeout(afterServerSetup, 10_000)
+    setTimeout(afterServerSetup, 10000)
 })()
 
 
