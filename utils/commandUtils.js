@@ -10,16 +10,13 @@ displayGatherStatus = (message) => {
         description = `**Gather In Progress**\n`
     }
 
-    const redDiscordIds = currentGather.redTeam.map(user => user.id)
-    const blueDiscordIds = currentGather.blueTeam.map(user => user.id)
-
     message.channel.send({
         embed: {
             color: 0xff0000,
             title: "Gather Info",
             description: description,
             fields: [
-                ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
+                ...discord.getPlayerFields(currentGather.match),
             ]
         }
     });

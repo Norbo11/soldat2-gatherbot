@@ -2,7 +2,7 @@ require("dotenv").config()
 const db = require("../game/db")
 const _ = require("lodash")
 const Discord = require("discord.js")
-const trueskill = require("ts-trueskill")
+const ratings = require("../game/ratings")
 
 
 const backloadRatings = async () => {
@@ -14,8 +14,6 @@ const backloadRatings = async () => {
     const client = new Discord.Client()
     await client.login(process.env.BOT_TOKEN)
 
-    let ratings = {}
-
     // const trueSkill = new trueskill.TrueSkill(
     //     25.0,  // Initial mean of ratings
     //     25 / 3,  // Initial standard deviation of ratings, recommend 1/3 of mu
@@ -24,17 +22,24 @@ const backloadRatings = async () => {
     //     0.1,  // Probability of drawing
     // )
 
-    const names = {
-
-    }
-
-    const getRating = player => player in ratings ? ratings[player] : new trueskill.Rating()
-    const flipTeam = team => team === "Blue" ? "Red" : "Blue"
+    const names = {}
+    const discordIdToPlayer = {}
 
     const translateName = async discordId => {
         const username = (await client.fetchUser(discordId)).username
         names[discordId] = username
         return username
+    }
+
+    const addPlayer = discordId => {
+        if (!(discordId in discordIdToPlayer)) {
+            discordIdToPlayer[discordId] = ratings.createNewPlayer()
+        }
+    }
+
+    const getRating = discordId => {
+        const player = discordIdToPlayer[discordId]
+        return ratings.getRating(player)
     }
 
     for (let game of games) {
@@ -43,10 +48,11 @@ const backloadRatings = async () => {
             ["Red"]: game.redPlayers,
         }
 
-        const players = [...game.bluePlayers, ...game.redPlayers]
+        const allDiscordIds = [...game.bluePlayers, ...game.redPlayers]
 
-        for (let player of players) {
-            await translateName(player)
+        for (let discordId of allDiscordIds) {
+            await translateName(discordId)
+            addPlayer(discordId)
         }
 
         console.log(`Game ${game.startTime}`)
@@ -54,49 +60,21 @@ const backloadRatings = async () => {
         console.log(`Red Team: ${teams["Red"].map(player => `${names[player]} (${getRating(player)})`).join(", ")}`)
         console.log(`Winner: ${game.winner}`)
 
-        _.forEach(game.rounds, round => {
-            const blueRatings = _.map(game.bluePlayers, getRating)
-            const redRatings = _.map(game.redPlayers, getRating)
+        const newRatings = ratings.rateRounds(game, discordIdToPlayer)
 
-            const ratingGroups = [blueRatings, redRatings]
-            const matchQuality = trueskill.quality(ratingGroups)
-
-            const winProbability = trueskill.winProbability(blueRatings, redRatings)
-            let ranks;
-
-            if (round.winner === "Tie") {
-                ranks = [0, 0]
-            } else if (round.winner === "Blue") {
-                ranks = [0, 1]
-            } else {
-                ranks = [1, 0]
-            }
-
-            console.log(`Match quality ${matchQuality}`)
-            console.log(`Win probability ${winProbability}`)
-
-            const [newBlueRatings, newRedRatings] = trueskill.rate(ratingGroups, ranks)
-
-            _.forEach(newBlueRatings, (rating, i) => {
-                const player = game.bluePlayers[i]
-                console.log(`${names[player]}: ${rating}`)
-                ratings[player] = rating
-            })
-
-            _.forEach(newRedRatings, (rating, i) => {
-                const player = game.redPlayers[i]
-                console.log(`${names[player]}: ${rating}`)
-                ratings[player] = rating
-            })
+        _.forEach(newRatings, (newRating, discordId) => {
+            discordIdToPlayer[discordId] = ratings.getPlayer(newRating.mu, newRating.sigma)
         })
     }
 
     console.log("Final ratings:")
-    let sortedRatings = _.map(ratings, (rating, discordId) => {
+    let sortedRatings = _.map(discordIdToPlayer, (player, discordId) => {
         return {
-            rating: rating,
             name: names[discordId],
-            conservativeSkillEstimate: trueskill.expose(rating)
+            conservativeSkillEstimate: ratings.getSkillEstimate(ratings.getRating(player)),
+            rating: ratings.getRating(player),
+            player,
+            discordId
         }
     })
 
@@ -104,6 +82,7 @@ const backloadRatings = async () => {
 
     _.forEach(sortedRatings, (rating) => {
         console.log(`${rating.name}: ${rating.rating} = ${rating.conservativeSkillEstimate}`)
+        statsDb.upsertPlayer(rating.discordId, rating.rating.mu, rating.rating.sigma)
     })
 
 }

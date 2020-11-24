@@ -3,6 +3,7 @@ const moment = require("moment")
 
 const logger = require("../utils/logger")
 const constants = require("./constants")
+const ratings = require("./ratings")
 
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
@@ -66,7 +67,16 @@ getTeamKills = (discordId, events) => {
 }
 
 getPlayerStats = async (statsDb, discordId) => {
+    const player = await statsDb.getPlayer(discordId)
+
+    if (player === undefined) {
+        return false
+    }
+
     const games = await statsDb.getGamesWithPlayer(discordId)
+
+    const ratingMu = player.ratingMu
+    const ratingSigma = player.ratingSigma
 
     let totalGames = 0
     let wonGames = 0
@@ -151,7 +161,8 @@ getPlayerStats = async (statsDb, discordId) => {
 
     return {
         totalGames, wonGames, lostGames, weaponStats, totalKills, totalDeaths, totalGatherTime, totalCaps,
-        sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds, gameModeStats
+        sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds, gameModeStats,
+        ratingMu, ratingSigma
     }
 }
 
@@ -251,6 +262,7 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
         // `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
         `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
         `**Last Gather**: ${moment(playerStats.lastGameTimestamp).from(moment())}`,
+        `**Rating**: ${ratings.formatRating(playerStats.ratingMu, playerStats.ratingSigma)}`,
     ]
     //
     // let favouriteWeapons = Object.keys(playerStats.weaponStats).map(weaponId => {
