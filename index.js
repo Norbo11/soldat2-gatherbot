@@ -63,20 +63,27 @@ const setUpServer = (webrconCredentials) => {
 }
 
 (async () => {
-    const webrconCredentials = await webrcon.fetchNewWebrconCredentials();
-
-    const afterServerSetup = async () => {
+    const afterServerSetup = async (webrconCredentials) => {
         setUpCommands();
         setUpEvents(webrconCredentials);
 
         await client.login(process.env.BOT_TOKEN)
     }
 
-    setUpServer(webrconCredentials);
+    if (process.env.WEBRCON_CKEY_ID === "" || process.env.WEBRCON_SESSION_ID === "")  {
+        const webrconCredentials = await webrcon.fetchNewWebrconCredentials();
+        setUpServer(webrconCredentials);
 
-    // After 10 seconds, resume bot initialization. This is to prevent us from connecting to WebRcon too soon (before
-    // the server is up), etc.
-    setTimeout(afterServerSetup, 10000)
+        // After 10 seconds, resume bot initialization. This is to prevent us from connecting to WebRcon too soon (before
+        // the server is up), etc.
+        setTimeout(() => afterServerSetup(webrconCredentials), 10000)
+    } else {
+        const webrconCredentials = {
+            cKey: process.env.WEBRCON_CKEY_ID,
+            sessionId: process.env.WEBRCON_SESSION_ID
+        }
+        await afterServerSetup(webrconCredentials)
+    }
 })()
 
 
