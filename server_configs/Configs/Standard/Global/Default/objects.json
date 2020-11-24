@@ -1,4 +1,4 @@
-/*ver. 003*/
+/* 005 broken spraymovement */
 /*GAME OBJECTS*/{
   "Objects": {
     "Basecamp": {
@@ -45,7 +45,7 @@
       "StandardObject": {
         "DefaultHealth": 1.0
       },
-      "Grenade": {
+      "Throwable": {
         "ExplodeOnContactLayer": [
           "Bullets",
           "Hitbox"
@@ -55,6 +55,7 @@
         "InheritedVelocity": 1.0,
         "TrailOnlyWhenThrown": false,
         "MinimumContactVelocity": 0.0,
+        "MinimumContactVelocityAfterCollision": 0.0,
         "CollisionDamp": 0.1,
         "CollisionAngularDamp": 1.0,
         "StopVelocity": 0.5
@@ -432,7 +433,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.4,
         "SprayPercent": 0.0,
-        "MovementSprayPercent": 0.15,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.15,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -493,7 +494,7 @@
       "Weapon": {
         "AutoFire": 1,
         "MuzzleVelocity": 4.1,
-        "FireIntervalSecs": 0.34,
+        "FireIntervalSecs": 0.4,
         "BulletDamage": 0.5,
         "BulletForce": 580.0,
         "BulletForceUpwardsPercent": 0.5,
@@ -515,7 +516,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.4,
         "SprayPercent": 0.01,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.15,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -569,7 +570,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.0,
         "SprayPercent": 0.06,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.14,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -591,7 +592,7 @@
         "AutoFire": 0,
         "MuzzleVelocity": 3.1,
         "FireIntervalSecs": 0.145,
-        "BulletDamage": 0.22,
+        "BulletDamage": 0.2,
         "BulletForce": 270.0,
         "BulletForceUpwardsPercent": 0.5,
         "BulletForceOnlyDead": false,
@@ -612,7 +613,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.0,
         "SprayPercent": 0.017,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.12,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -665,7 +666,7 @@
           "IdleSound": ""
         }
       },
-      "Grenade": {
+      "Throwable": {
         "ExplodeOnContactLayer": [
           "Bullets",
           "Hitbox"
@@ -674,7 +675,8 @@
         "Bounciness": 0.0,
         "InheritedVelocity": 0.0,
         "TrailOnlyWhenThrown": true,
-        "MinimumContactVelocity": 14.0,
+        "MinimumContactVelocity": 0.0,
+        "MinimumContactVelocityAfterCollision": 13.0,
         "CollisionDamp": 0.0,
         "CollisionAngularDamp": 0.0,
         "StopVelocity": 4.0
@@ -720,7 +722,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.0,
         "SprayPercent": 0.01,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.13,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -742,7 +744,7 @@
         "AutoFire": 1,
         "MuzzleVelocity": 2.1,
         "FireIntervalSecs": 0.135,
-        "BulletDamage": 0.3,
+        "BulletDamage": 0.24,
         "BulletForce": 180.0,
         "BulletForceUpwardsPercent": 0.3,
         "BulletForceOnlyDead": false,
@@ -763,7 +765,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 0.8,
         "SprayPercent": 0.01,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.1,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -785,7 +787,7 @@
         "AutoFire": 0,
         "MuzzleVelocity": 3.1,
         "FireIntervalSecs": 0.13,
-        "BulletDamage": 0.249,
+        "BulletDamage": 0.23,
         "BulletForce": 360.0,
         "BulletForceUpwardsPercent": 0.5,
         "BulletForceOnlyDead": false,
@@ -806,7 +808,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.2,
         "SprayPercent": 0.096,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.13,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -828,7 +830,7 @@
         "AutoFire": 0,
         "MuzzleVelocity": 2.25,
         "FireIntervalSecs": 0.08,
-        "BulletDamage": 0.2,
+        "BulletDamage": 0.18,
         "BulletForce": 135.0,
         "BulletForceUpwardsPercent": 0.4,
         "BulletForceOnlyDead": false,
@@ -848,8 +850,8 @@
         "BulletRicochetCoef": -0.2,
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 0.9,
-        "SprayPercent": 0.06,
-        "MovementSprayPercent": 0.02,
+        "SprayPercent": 0.07,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.05,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -871,7 +873,7 @@
         "AutoFire": 0,
         "MuzzleVelocity": 3.1,
         "FireIntervalSecs": 0.166,
-        "BulletDamage": 0.24,
+        "BulletDamage": 0.216,
         "BulletForce": 360.0,
         "BulletForceUpwardsPercent": 0.5,
         "BulletForceOnlyDead": false,
@@ -892,7 +894,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 1.1,
         "SprayPercent": 0.054,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.13,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -935,7 +937,7 @@
         "BulletTrailTime": 0.5,
         "BulletTrailWidth": 0.75,
         "SprayPercent": 0.11,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.17,
         "BulletsInShot": 7,
         "InheritedVelocityMuliplier": 0.5,
@@ -957,7 +959,7 @@
         "AutoFire": 0,
         "MuzzleVelocity": 2.65,
         "FireIntervalSecs": 0.1,
-        "BulletDamage": 0.213,
+        "BulletDamage": 0.192,
         "BulletForce": 162.0,
         "BulletForceUpwardsPercent": 0.45,
         "BulletForceOnlyDead": false,
@@ -978,7 +980,7 @@
         "BulletTrailTime": 1.0,
         "BulletTrailWidth": 0.95,
         "SprayPercent": 0.043,
-        "MovementSprayPercent": 0.02,
+        "MovementSprayPercent": 0.0,
         "FlashSecs": 0.05,
         "BulletsInShot": 1,
         "InheritedVelocityMuliplier": 0.5,
@@ -1157,6 +1159,6 @@
     "Author": "MM",
     "Version": "1",
     "Game": "Soldat2",
-    "GameVersion": "0.7.16"
+    "GameVersion": "0.7.17"
   }
 }
