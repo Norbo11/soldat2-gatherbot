@@ -4,7 +4,7 @@ const moment = require("moment")
 const logger = require("../utils/logger")
 const constants = require("./constants")
 const ratings = require("./ratings")
-
+const discord = require("../utils/discord")
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
@@ -207,6 +207,9 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     let topPlayersByWinRate = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.gameModeStats[gameMode].wonGames / player.playerStats.gameModeStats[gameMode].totalGames))
     topPlayersByWinRate = _.take(topPlayersByWinRate, 5)
 
+    let topPlayersBySkillEstimate = _.sortBy(playersWithEnoughGames, player => -ratings.getSkillEstimate(ratings.getRating(player.playerStats.ratingMu, player.playerStats.ratingSigma)))
+    topPlayersBySkillEstimate = _.take(topPlayersBySkillEstimate, 5)
+
     // Take all players here
     let topPlayersByTotalGames = _.sortBy(allPlayerStats, player => -player.playerStats.gameModeStats[gameMode].totalGames)
     topPlayersByTotalGames = _.take(topPlayersByTotalGames, 5)
@@ -229,7 +232,7 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     const allDiscordIds = allPlayerStats.map(player => player.discordId)
 
     return {
-        topPlayersByWinRate, topPlayersByTotalGames, allDiscordIds
+        topPlayersByWinRate, topPlayersByTotalGames, allDiscordIds, topPlayersBySkillEstimate
     }
 }
 
@@ -262,7 +265,7 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
         // `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
         `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
         `**Last Gather**: ${moment(playerStats.lastGameTimestamp).from(moment())}`,
-        `**Rating**: ${ratings.formatRating(playerStats.ratingMu, playerStats.ratingSigma)}`,
+        `**Rating**: ${discord.formatRating(playerStats.ratingMu, playerStats.ratingSigma)}`,
     ]
     //
     // let favouriteWeapons = Object.keys(playerStats.weaponStats).map(weaponId => {
@@ -387,10 +390,22 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     //     return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalTeamKills} team kills (${(playerStats.totalTeamKills / playerStats.totalKills * 100).toFixed(1)}% of kills)`
     // })
 
+    const topPlayersBySkillEstimate = topPlayers.topPlayersBySkillEstimate.map(topPlayer => {
+        const skill = topPlayer.playerStats.ratingMu
+        const uncertainty = topPlayer.playerStats.ratingSigma
+        const estimate = ratings.getSkillEstimate(ratings.getRating(skill, uncertainty))
+        return `**${discordIdToUsername[topPlayer.discordId]}**: ${discord.roundSkill(estimate)}`
+    })
+
     return {
         embed: {
             title: `Top ${constants.formatGameMode(gameMode)} Players`,
             fields: [
+                {
+                    name: "**Rating Estimate**",
+                    value: topPlayersBySkillEstimate.length > 0 ? topPlayersBySkillEstimate.join("\n") : "No Players",
+                    inline: true
+                },
                 {
                     name: "**Win Rate**",
                     value: topPlayersByWinRate.length > 0 ? topPlayersByWinRate.join("\n") : "No Players",

@@ -101,7 +101,6 @@ class Gather {
                     fields: [
                         discord.getGameModeField(this.gameMode),
                         discord.getServerLinkField(this.password),
-                        discord.getMatchQualityField(match.matchQuality),
                         ...discord.getPlayerFields(match),
                     ]
                 }
@@ -114,7 +113,6 @@ class Gather {
                 color: 0xff0000,
                 fields: [
                     discord.getGameModeField(this.gameMode),
-                    discord.getMatchQualityField(match.matchQuality),
                     ...discord.getPlayerFields(match),
                 ]
             }
@@ -245,7 +243,7 @@ class Gather {
         }
 
         const discordIdToOldRating = _.reduce(this.match.allDiscordIds, (object, discordId) => {
-            object[discordId] = ratings.getRating(this.discordIdToPlayer[discordId])
+            object[discordId] = ratings.getRatingOfPlayer(this.discordIdToPlayer[discordId])
             return object
         }, {})
         const discordIdToNewRating = ratings.rateRounds(game, this.discordIdToPlayer)

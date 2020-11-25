@@ -2,6 +2,7 @@ const logger = require("./logger")
 const moment = require("moment")
 const _ = require("lodash")
 const constants = require("../game/constants")
+const ratings = require("../game/ratings")
 
 const GAME_MODES = constants.GAME_MODES
 
@@ -16,6 +17,46 @@ teamEmoji = (teamName) => {
         logger.log.error(`Invalid team name ${teamName}`)
     }
 }
+
+
+roundSkill = (skill) => {
+    return skill.toFixed(2)
+}
+
+
+formatRating = (mu, sigma) => {
+    const rating = ratings.getRating(mu, sigma)
+    const skillEstimate = ratings.getSkillEstimate(rating)
+    return `Skill ${roundSkill(mu)}, Uncertainty ${roundSkill(sigma)}, Rating Estimate ${roundSkill(skillEstimate)}`
+}
+
+skillChangeEmoji = (oldSkill, newSkill) => {
+    oldSkill = roundSkill(oldSkill)
+    newSkill = roundSkill(newSkill)
+
+    if (newSkill > oldSkill) {
+        return "<:green_arrow_up:780928985726582854>"
+    } else if (newSkill < oldSkill) {
+        return "<:red_arrow_down:780928963270279181>"
+    } else {
+        return "<:black_equals:780933358355611658>"
+    }
+}
+
+
+uncertaintyChangeEmoji = (oldUncertainty, newUncertainty) => {
+    oldUncertainty = roundSkill(oldUncertainty)
+    newUncertainty = roundSkill(newUncertainty)
+
+    if (newUncertainty > oldUncertainty) {
+        return ":arrow_up:"
+    } else if (newUncertainty < oldUncertainty) {
+        return ":arrow_down:"
+    } else {
+        return ":black_equals:"
+    }
+}
+
 
 getPlayerStrings = (redTeamIds, blueTeamIds, delim = "\n") => {
     const redPlayersString = redTeamIds.length > 0 ? redTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
@@ -32,12 +73,10 @@ getPlayerFields = (match) => {
         {
             name: `${teamEmoji("Blue")} Blue Team (${_.round(match.blueWinProbability * 100, 1)}% chance to win)`,
             value: `${bluePlayersString}`,
-            inline: true
         },
         {
             name: `${teamEmoji("Red")} Red Team (${_.round(match.redWinProbability * 100, 1)}% chance to win)`,
             value: `${redPlayersString}`,
-            inline: true
         },
     ];
 }
@@ -138,9 +177,11 @@ getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths, discordId
         if (discordIdToOldRating !== undefined && discordIdToNewRating !== undefined) {
             const oldRating = discordIdToOldRating[discordId]
             const newRating = discordIdToNewRating[discordId]
-            return `<@${discordId}> (${_.round(oldRating.mu, 1)} -> ${_.round(newRating.mu, 1)}, ${_.round(oldRating.sigma, 1)} -> ${_.round(newRating.sigma, 1)})`
+            // We are rounding before we take a difference in order to treat small differences as 0 and display an equals sign
+            let skillChange       = `${skillChangeEmoji(oldRating.mu, newRating.mu)} Skill ${roundSkill(roundSkill(newRating.mu) - roundSkill(oldRating.mu))}`;
+            let uncertaintyChange = `${uncertaintyChangeEmoji(oldRating.sigma, newRating.sigma)} Uncertainty ${roundSkill(roundSkill(newRating.sigma) - roundSkill(oldRating.sigma))}`;
+            return `<@${discordId}> ${skillChange} ${uncertaintyChange}`
         } else {
-
             return `<@${discordId}>`
         }
     })
@@ -190,6 +231,7 @@ getDiscordIdToUsernameMap = async (client, discordIdToUsername, discordIds) => {
     }))
 }
 
+
 module.exports = {
     teamEmoji,
     getPlayerStrings,
@@ -201,5 +243,7 @@ module.exports = {
     getServerLinkField,
     getDiscordIdToUsernameMap,
     getGameModeField,
-    getMatchQualityField
+    getMatchQualityField,
+    roundSkill,
+    formatRating
 }

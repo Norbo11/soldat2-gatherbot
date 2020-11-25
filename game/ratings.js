@@ -4,8 +4,13 @@ const _ = require("lodash")
 
 
 
-const getRating = (player) => {
-    return new trueskill.Rating(player.ratingMu, player.ratingSigma)
+const getRatingOfPlayer = (player) => {
+    return getRating(player.ratingMu, player.ratingSigma)
+}
+
+
+const getRating = (ratingMu, ratingSigma) => {
+    return new trueskill.Rating(ratingMu, ratingSigma)
 }
 
 const getPlayer = (ratingMu, ratingSigma) => {
@@ -18,7 +23,6 @@ const createRating = () => {
     return new trueskill.Rating()
 }
 
-
 const createNewPlayer = () => {
     const rating = createRating()
     return getPlayer(rating.mu, rating.sigma)
@@ -26,17 +30,11 @@ const createNewPlayer = () => {
 
 
 const getRatingGroups = (blueDiscordIds, redDiscordIds, discordIdToPlayer) => {
-    const blueRatings = _.map(blueDiscordIds, discordId => getRating(discordIdToPlayer[discordId]))
-    const redRatings = _.map(redDiscordIds, discordId => getRating(discordIdToPlayer[discordId]))
+    const blueRatings = _.map(blueDiscordIds, discordId => getRatingOfPlayer(discordIdToPlayer[discordId]))
+    const redRatings = _.map(redDiscordIds, discordId => getRatingOfPlayer(discordIdToPlayer[discordId]))
 
     return [blueRatings, redRatings]
 }
-
-
-const formatRating = (mu, sigma) => {
-    return `Skill ${_.round(mu, 1)}, Uncertainty ${_.round(sigma, 1)}`
-}
-
 
 const getSkillEstimate = (rating) => {
     return trueskill.expose(rating)
@@ -108,5 +106,6 @@ const getBalancedMatch = (discordIdToPlayer, size) => {
 }
 
 module.exports = {
-    createRating, createNewPlayer, rateRounds, getBalancedMatch, getRating, formatRating, getPlayer, getSkillEstimate
+    createRating, createNewPlayer, rateRounds, getBalancedMatch, getRatingOfPlayer, getPlayer,
+    getSkillEstimate, getRating
 }

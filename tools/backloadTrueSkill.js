@@ -39,7 +39,7 @@ const backloadRatings = async () => {
 
     const getRating = discordId => {
         const player = discordIdToPlayer[discordId]
-        return ratings.getRating(player)
+        return ratings.getRatingOfPlayer(player)
     }
 
     for (let game of games) {
@@ -71,8 +71,8 @@ const backloadRatings = async () => {
     let sortedRatings = _.map(discordIdToPlayer, (player, discordId) => {
         return {
             name: names[discordId],
-            conservativeSkillEstimate: ratings.getSkillEstimate(ratings.getRating(player)),
-            rating: ratings.getRating(player),
+            conservativeSkillEstimate: ratings.getSkillEstimate(ratings.getRatingOfPlayer(player)),
+            rating: ratings.getRatingOfPlayer(player),
             player,
             discordId
         }
