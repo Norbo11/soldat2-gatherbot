@@ -7,7 +7,7 @@
         "TeamScoreLimit": 10,
         "MatchSecs": 600,
         "WarmupSecs": 10,
-        "EndGameSecs": 10,
+        "EndGameSecs": 5,
         "MultiplayerOnlyWarmup": true,
         "NoDamageDuringWarmup": false,
         "ShowWeaponsDuringWarmup": false,
@@ -18,7 +18,7 @@
         ]
       },
       "MatchEffects": {
-        "ShowScoreboardOnEnd": false,
+        "ShowScoreboardOnEnd": true,
         "OnWarmupText": "",
         "OnWaitingText": "Waiting for players... {0} to go",
         "OnStartText": "Gather started!",
