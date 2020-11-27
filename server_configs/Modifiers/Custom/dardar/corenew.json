@@ -1,0 +1,110 @@
+/*generated*/{
+  "Objects": {
+    "Core Settings": {
+      "Physics2DSettings": {
+        "Gravity": {
+          "x": -1,
+          "y": -26
+        },
+        "VelocityIterations": 1,
+        "PositionIterations": 1,
+        "VelocityThreshold": 5.0,
+        "MaxLinearCorrection": 0.2,
+        "MaxAngularCorrection": 8.0,
+        "MaxTranslationSpeed": 100.0,
+        "MaxRotationSpeed": 120.0
+      },
+      "GameplaySettings": {
+        "DefaultPlayerHealthScale": 1.0,
+        "DamageScale": 0.9,
+        "SelfDamageScale": 0.5,
+        "FriendlyCollisions": false,
+        "EnemyCollisions": false,
+        "FriendlyFire": false,
+        "FriendlyBulletCollisions": false,
+        "Unavailable": [],
+        "Bridges": true,
+        "Ladders": true,
+        "WeaponMuzzleVelocityScale": 0.75,
+        "WeaponFireIntervalSecsScale": 1.0,
+        "WeaponBulletKnockOutScale": 1.0,
+        "WeaponBulletKickBackScale": 0.6,
+        "WeaponClipCountScale": 1.0,
+        "WeaponReloadSecsScale": 1.0,
+        "WeaponTimeOutSecsScale": 1.2,
+        "WeaponGravityScale": 0.715,
+        "WeaponDampScale": 0.995,
+        "WeaponCamShakeScale": 1.0,
+        "WeaponLightRangeScale": 1.4,
+        "WeaponLightIntensityScale": 1.0,
+        "BulletForceOnlyOnDead": false,
+        "BulletTimeOutSecs": 1.5,
+        "BulletDamageScale": 1.0,
+        "BulletForceScale": 0.75,
+        "BulletForceUpwardsScale": 1.0,
+        "BulletDropAfterDistanceScreenScale": 1.0,
+        "BulletDropGravityScale": 1.0,
+        "BulletDropDampScale": 1.0,
+        "BulletDamageDropScale": 1.0,
+        "BulletRicochetCoefScale": 1.0,
+        "BulletTrailTimeScale": 1.0,
+        "BulletTrailWidthScale": 1.25,
+        "ExplosionDamageScale": 1.0,
+        "ExplosionRadiusScale": 1.0,
+        "ExplosionForceScale": 1.0,
+        "ExplosionUpliftScale": 1.0,
+        "ExplosionCamShakeScale": 1.0,
+        "BotsReactionTimeScale": 1.0,
+        "BotsAimDispersionScale": 1.0,
+        "UnbalancedDifference": 1
+      },
+      "CameraSettings": {
+        "SmoothMovement": true,
+        "GlobalShakeScale": 0.0,
+        "FollowLerp": 1,
+        "AimScreenPercent": 1.1,
+        "AimScreenScale": {
+          "x": 1.2,
+          "y": 1.2
+        },
+        "PositionOffset": {
+          "x": 0.0,
+          "y": 2.0,
+          "z": 0.0
+        },
+        "RotationOffset": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "DefaultPlayFieldOfView": 5.0,
+        "MinPlayFieldOfView": 2.0,
+        "MaxPlayFieldOfView": 5.0,
+        "FOVAddBasedOnDistanceFactor": 0.1,
+        "FOVChangeSpeedFactor": 0.4,
+        "HeightRotationFactor": 0.04,
+        "HeightRotationHeight": -10.0,
+        "KeepInBoundsLeft": false,
+        "KeepInBoundsRight": false,
+        "KeepInBoundsTop": false,
+        "KeepInBoundsBottom": true,
+        "SpectatorLerp": 0.02,
+        "SpectatorFieldOfView": 8.0,
+        "SpectatorRotateFactor": 0.8
+      },
+      "NetworkSettings": {
+        "ReceivedPositionThresholdScale": 1.0,
+        "ReceivedRotationThresholdScale": 1.0,
+        "LerpSpeedScale": 1.0,
+        "TimeCorrectionSpeedScale": 1.0
+      }
+    }
+  },
+  "Meta": {
+    "Description": "Config for Core Settings 26/11/2020 18:25",
+    "Author": "local",
+    "Version": "N/A",
+    "Game": "Soldat2",
+    "GameVersion": "0.7.17"
+  }
+}
