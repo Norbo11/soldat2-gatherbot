@@ -68,7 +68,7 @@ class Gather {
     }
 
     async startNewGame() {
-        this.discordIdToPlayer = {}
+        this.discordIdToRating = {}
         const allDiscordUsers = []
 
         for (let discordUser of this.currentQueue) {
@@ -77,11 +77,11 @@ class Gather {
             if (player === undefined) {
                 player = ratings.createNewPlayer(discordId)
             }
-            this.discordIdToPlayer[discordId] = player
+            this.discordIdToRating[discordId] = ratings.getRatingOfPlayer(player)
             allDiscordUsers.push(discordUser)
         }
 
-        const balancedMatch = ratings.getBalancedMatch(this.discordIdToPlayer, this.currentSize)
+        const balancedMatch = ratings.getBalancedMatch(this.discordIdToRating, this.currentSize)
         balancedMatch.allDiscordUsers = allDiscordUsers
         this.startGame(balancedMatch)
     }
@@ -242,11 +242,7 @@ class Gather {
             }),
         }
 
-        const discordIdToOldRating = _.reduce(this.match.allDiscordIds, (object, discordId) => {
-            object[discordId] = ratings.getRatingOfPlayer(this.discordIdToPlayer[discordId])
-            return object
-        }, {})
-        const discordIdToNewRating = ratings.rateRounds(game, this.discordIdToPlayer)
+        const discordIdToNewRating = ratings.rateRounds(game, this.discordIdToRating)
 
         this.statsDb.insertGame(game).then().catch(e => logger.log.error(`Error when saving game to DB: ${e}`))
 
@@ -267,7 +263,7 @@ class Gather {
             embed: {
                 title: "Gather Finished",
                 color: 0xff0000,
-                fields: discord.getGatherEndFields(game, discordIdToOldRating, discordIdToNewRating),
+                fields: discord.getGatherEndFields(game, this.discordIdToRating, discordIdToNewRating),
             }
         })
     }
