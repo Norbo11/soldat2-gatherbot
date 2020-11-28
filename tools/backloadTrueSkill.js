@@ -14,14 +14,6 @@ const backloadRatings = async () => {
     const client = new Discord.Client()
     await client.login(process.env.BOT_TOKEN)
 
-    // const trueSkill = new trueskill.TrueSkill(
-    //     25.0,  // Initial mean of ratings
-    //     25 / 3,  // Initial standard deviation of ratings, recommend 1/3 of mu
-    //     4.166666667,  // Distance that guarantees about 76% chance of winning
-    //     0.08333334,  // Dynamic factor
-    //     0.1,  // Probability of drawing
-    // )
-
     const names = {}
     const discordIdToRating = {}
 
@@ -51,11 +43,12 @@ const backloadRatings = async () => {
         }
 
         console.log(`Game ${game.startTime}`)
-        console.log(`Blue Team: ${teams["Blue"].map(discordId => `${names[discordId]} (${ratings.getRating(discordId)})`).join(", ")}`)
-        console.log(`Red Team: ${teams["Red"].map(discordId => `${names[discordId]} (${ratings.getRating(discordId)})`).join(", ")}`)
-        console.log(`Winner: ${game.winner}`)
+        console.log(`Blue Team: ${teams["Blue"].map(discordId => `${names[discordId]} (${discordIdToRating[discordId]})`).join(", ")}`)
+        console.log(`Red Team: ${teams["Red"].map(discordId => `${names[discordId]} (${discordIdToRating[discordId]})`).join(", ")}`)
 
         for (let round of game.rounds) {
+            console.log(`Winner: ${round.winner}`)
+
             const newRatings = ratings.rateRound(game.bluePlayers, game.redPlayers, discordIdToRating, round)
 
             for (let discordId of _.keys(newRatings)) {
