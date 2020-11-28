@@ -374,11 +374,6 @@ const getKillsAndDeathsPerPlayer = (events) => {
 
 
 const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
-    const topPlayersByWinRate = topPlayers.topPlayersByWinRate.map(topPlayer => {
-        const playerStats = topPlayer.playerStats.gameModeStats[gameMode]
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames} (${Math.round(playerStats.wonGames / playerStats.totalGames * 100)}%)`
-    })
-
     // const topPlayersByKda = topPlayers.topPlayersByKda.map(topPlayer => {
     //     const playerStats = topPlayer.playerStats
     //     return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}-${playerStats.tiedGames}-${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
@@ -397,7 +392,8 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     const topPlayersBySkillEstimate = topPlayers.topPlayersBySkillEstimate.map(topPlayer => {
         const rating = topPlayer.rating
         const estimate = ratings.getSkillEstimate(rating)
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${discord.roundSkill(estimate)}`
+        const playerStats = topPlayer.playerStats
+        return `**${discordIdToUsername[topPlayer.discordId]}**: ${discord.roundSkill(estimate)} (${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames})`
     })
 
     return {
@@ -407,11 +403,6 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
                 {
                     name: "**Rating Estimate**",
                     value: topPlayersBySkillEstimate.length > 0 ? topPlayersBySkillEstimate.join("\n") : "No Players",
-                    inline: true
-                },
-                {
-                    name: "**Win Rate**",
-                    value: topPlayersByWinRate.length > 0 ? topPlayersByWinRate.join("\n") : "No Players",
                     inline: true
                 },
                 // {
