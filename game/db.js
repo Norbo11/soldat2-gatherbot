@@ -26,9 +26,9 @@ class StatsDB {
     }
 
     async getAllGames() {
-        let result = await this.db.collection("Game").find({})
-        result = result.sort({startTime: 1}) // Sort ascending by startTime
-        return result.toArray()
+        const result = await this.db.collection("Game").find({})
+        const games = await result.toArray()
+        return _.sortBy(games, game => game.startTime)
     }
 
     async getLastGame() {
@@ -71,7 +71,24 @@ class StatsDB {
                 {bluePlayers: discordId}
             ]
         })
-        return result.toArray()
+        const games = await result.toArray()
+        return _.sortBy(games, game => game.startTime)
+    }
+
+    async getPlayer(discordId) {
+        const result = await this.db.collection("Player").find({discordId})
+        const array = await result.toArray()
+        return array.length > 0 ? array[0] : undefined
+    }
+
+    async upsertPlayer(discordId, ratingMu, ratingSigma) {
+        const result = await this.db.collection("Player").updateOne({discordId}, {
+            $set: {discordId, ratingMu, ratingSigma}
+        }, {
+            upsert: true
+        })
+        logger.log.info(`Saved player ${discordId}`)
+        return result.insertedId
     }
 
     async getHwidToDiscordIdMap() {

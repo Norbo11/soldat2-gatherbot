@@ -24,21 +24,30 @@ getPlayerStrings = (redTeamIds, blueTeamIds, delim = "\n") => {
     return {redPlayersString, bluePlayersString}
 }
 
-getPlayerFields = (redTeamIds, blueTeamIds) => {
-    const {redPlayersString, bluePlayersString} = getPlayerStrings(redTeamIds, blueTeamIds)
+getPlayerFields = (match) => {
+    const {redDiscordIds, blueDiscordIds} = match
+    const {redPlayersString, bluePlayersString} = getPlayerStrings(redDiscordIds, blueDiscordIds)
 
     return [
         {
-            name: `${teamEmoji("Blue")} Blue Team`,
+            name: `${teamEmoji("Blue")} Blue Team (${_.round(match.blueWinProbability * 100, 1)}% chance to win)`,
             value: `${bluePlayersString}`,
             inline: true
         },
         {
-            name: `${teamEmoji("Red")} Red Team`,
+            name: `${teamEmoji("Red")} Red Team (${_.round(match.redWinProbability * 100, 1)}% chance to win)`,
             value: `${redPlayersString}`,
             inline: true
         },
     ];
+}
+
+getMatchQualityField = (matchQuality) => {
+    return {
+        name: "Match Quality",
+        value: `${_.round(matchQuality, 1)}% chance to draw`,
+        inline: true
+    }
 }
 
 getDurationField = (startTime, endTime, inline = false, prefix = "Gather") => {
@@ -73,8 +82,8 @@ getKillAndDeathFields = (playerKillsAndDeaths, discordIdToUsername) => {
     ]
 }
 
-getResultField = (winner, inline=false) => {
-    const roundResult = winner !== constants.SOLDAT_TEAMS.TIE ? `${teamEmoji(winner)} ${winner} win` : `Tie`
+getResultField = (winner, inline = false) => {
+    const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === constants.SOLDAT_TEAMS.TIE ? "Tie" : "Win")
 
     return {
         name: "Result",
@@ -91,9 +100,9 @@ getGameModeField = (gameMode) => {
     }
 }
 
-getGatherEndFields = (game) => {
-    const redPlayersString = getPlayerFieldsWithKillsAndDeaths(game.redPlayers).join("\n")
-    const bluePlayersString = getPlayerFieldsWithKillsAndDeaths(game.bluePlayers).join("\n")
+getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
+    const redPlayersString = getPlayerFieldsWithKillsAndDeaths(game.redPlayers, undefined, discordIdToOldRating, discordIdToNewRating).join("\n")
+    const bluePlayersString = getPlayerFieldsWithKillsAndDeaths(game.bluePlayers, undefined, discordIdToOldRating, discordIdToNewRating).join("\n")
 
     return [
         getResultField(game.winner, true),
@@ -117,7 +126,7 @@ getServerLinkField = (password = "") => {
     }
 }
 
-getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
+getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
     // return discordIds.map(discordId => {
     //     const kills = (playerKillsAndDeaths[discordId] || {kills: 0}).kills
     //     const deaths = (playerKillsAndDeaths[discordId] || {deaths: 0}).deaths
@@ -126,7 +135,14 @@ getPlayerFieldsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     // })
 
     return discordIds.map(discordId => {
-        return `<@${discordId}>`
+        if (discordIdToOldRating !== undefined && discordIdToNewRating !== undefined) {
+            const oldRating = discordIdToOldRating[discordId]
+            const newRating = discordIdToNewRating[discordId]
+            return `<@${discordId}> (${_.round(oldRating.mu, 1)} -> ${_.round(newRating.mu, 1)}, ${_.round(oldRating.sigma, 1)} -> ${_.round(newRating.sigma, 1)})`
+        } else {
+
+            return `<@${discordId}>`
+        }
     })
 }
 
@@ -175,6 +191,15 @@ getDiscordIdToUsernameMap = async (client, discordIdToUsername, discordIds) => {
 }
 
 module.exports = {
-    teamEmoji, getPlayerStrings, getPlayerFields, getRoundEndFields, getGatherLengthField: getDurationField, getGatherEndFields,
-    getMapField, getServerLinkField, getDiscordIdToUsernameMap, getGameModeField
+    teamEmoji,
+    getPlayerStrings,
+    getPlayerFields,
+    getRoundEndFields,
+    getGatherLengthField: getDurationField,
+    getGatherEndFields,
+    getMapField,
+    getServerLinkField,
+    getDiscordIdToUsernameMap,
+    getGameModeField,
+    getMatchQualityField
 }

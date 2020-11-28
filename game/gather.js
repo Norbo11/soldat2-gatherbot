@@ -7,6 +7,7 @@ const util = require("util")
 const constants = require("./constants")
 const ctfRound = require("./ctfRound")
 const ctbRound = require("./ctbRound")
+const ratings = require("./ratings")
 
 const IN_GAME_STATES = constants.IN_GAME_STATES;
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS;
@@ -20,12 +21,12 @@ class Gather {
     currentSize = 6
     currentQueue = []
     rematchQueue = []
-    redTeam = []
-    blueTeam = []
     currentRound = undefined
     endedRounds = []
     inGameState = IN_GAME_STATES.NO_GATHER
     gameMode = GAME_MODES.CAPTURE_THE_FLAG
+    discordIdToPlayer = {}
+    match = undefined
 
     constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
         this.discordChannel = discordChannel
@@ -66,29 +67,33 @@ class Gather {
         currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue)
     }
 
-    startNewGame() {
-        const shuffledQueue = _.shuffle(this.currentQueue)
+    async startNewGame() {
+        this.discordIdToPlayer = {}
+        const allDiscordUsers = []
 
-        const redDiscordUsers = _.slice(shuffledQueue, 0, this.currentSize / 2)
-        const blueDiscordUsers = _.slice(shuffledQueue, this.currentSize / 2, this.currentSize)
+        for (let discordUser of this.currentQueue) {
+            const discordId = discordUser.id
+            let player = await this.statsDb.getPlayer(discordId)
+            if (player === undefined) {
+                player = ratings.createNewPlayer(discordId)
+            }
+            this.discordIdToPlayer[discordId] = player
+            allDiscordUsers.push(discordUser)
+        }
 
-        this.startGame(redDiscordUsers, blueDiscordUsers)
+        const balancedMatch = ratings.getBalancedMatch(this.discordIdToPlayer, this.currentSize)
+        balancedMatch.allDiscordUsers = allDiscordUsers
+        this.startGame(balancedMatch)
     }
 
-    startGame(redDiscordUsers, blueDiscordUsers) {
-        this.redTeam = redDiscordUsers
-        this.blueTeam = blueDiscordUsers
+    startGame(match) {
+        this.match = match
         this.inGameState = IN_GAME_STATES.GATHER_STARTED
         this.currentRound = this.gameMode === GAME_MODES.CAPTURE_THE_FLAG ?
             new ctfRound.CtfRound(this.getCurrentTimestamp) :
             new ctbRound.CtbRound(this.getCurrentTimestamp)
 
-        const redDiscordIds = this.redTeam.map(user => user.id)
-        const blueDiscordIds = this.blueTeam.map(user => user.id)
-
-        const allUsers = [...redDiscordUsers, ...blueDiscordUsers]
-
-        allUsers.forEach(user => {
+        match.allDiscordUsers.forEach(user => {
             user.send({
                 embed: {
                     title: "Gather Started",
@@ -96,7 +101,8 @@ class Gather {
                     fields: [
                         discord.getGameModeField(this.gameMode),
                         discord.getServerLinkField(this.password),
-                        ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
+                        discord.getMatchQualityField(match.matchQuality),
+                        ...discord.getPlayerFields(match),
                     ]
                 }
             })
@@ -108,7 +114,8 @@ class Gather {
                 color: 0xff0000,
                 fields: [
                     discord.getGameModeField(this.gameMode),
-                    ...discord.getPlayerFields(redDiscordIds, blueDiscordIds),
+                    discord.getMatchQualityField(match.matchQuality),
+                    ...discord.getPlayerFields(match),
                 ]
             }
         })
@@ -123,7 +130,6 @@ class Gather {
     }
 
     onBlueBaseCapture() {
-        // TODO: need to implement a different gather round object?
         this.currentRound.blueCapturedBase()
     }
 
@@ -170,14 +176,11 @@ class Gather {
             throw new Error(`Invalid game-mode detected: ${this.gameMode}`)
         }
 
-        const redDiscordIds = this.redTeam.map(user => user.id)
-        const blueDiscordIds = this.blueTeam.map(user => user.id)
-
         this.discordChannel.send({
             embed: {
                 title: "Round Finished",
                 color: 0xff0000,
-                fields: discord.getRoundEndFields(this.gameMode, redDiscordIds, blueDiscordIds, this.currentRound),
+                fields: discord.getRoundEndFields(this.gameMode, this.match.redDiscordIds, this.match.blueDiscordIds, this.currentRound),
             }
         })
 
@@ -214,13 +217,10 @@ class Gather {
     }
 
     endGame(gameWinner) {
-        const redDiscordIds = this.redTeam.map(user => user.id)
-        const blueDiscordIds = this.blueTeam.map(user => user.id)
-
         const game = {
             gameMode: this.gameMode,
-            redPlayers: redDiscordIds,
-            bluePlayers: blueDiscordIds,
+            redPlayers: this.match.redDiscordIds,
+            bluePlayers: this.match.blueDiscordIds,
             size: this.currentSize,
             startTime: this.endedRounds[0].startTime,
             endTime: this.endedRounds[this.endedRounds.length - 1].endTime,
@@ -228,6 +228,9 @@ class Gather {
             totalRounds: this.endedRounds.length,
             redRoundWins: _.filter(this.endedRounds, round => round.winner === SOLDAT_TEAMS.RED).length,
             blueRoundWins: _.filter(this.endedRounds, round => round.winner === SOLDAT_TEAMS.BLUE).length,
+            matchQuality: this.match.matchQuality,
+            blueWinProbability: this.match.blueWinProbability,
+            redWinProbability: this.match.redWinProbability,
             rounds: this.endedRounds.map(round => {
                 return {
                     startTime: round.startTime,
@@ -241,19 +244,32 @@ class Gather {
             }),
         }
 
+        const discordIdToOldRating = _.reduce(this.match.allDiscordIds, (object, discordId) => {
+            object[discordId] = ratings.getRating(this.discordIdToPlayer[discordId])
+            return object
+        }, {})
+        const discordIdToNewRating = ratings.rateRounds(game, this.discordIdToPlayer)
+
         this.statsDb.insertGame(game).then().catch(e => logger.log.error(`Error when saving game to DB: ${e}`))
+
+        for (let discordId of this.match.allDiscordIds) {
+            const newRating = discordIdToNewRating[discordId]
+            this.statsDb.upsertPlayer(discordId, newRating.mu, newRating.sigma).then().catch(e => logger.log.error(`Error when saving player to DB: ${e}`))
+        }
 
         this.inGameState = IN_GAME_STATES.NO_GATHER
         this.currentQueue = []
         this.rematchQueue = []
         this.endedRounds = []
         this.currentRound = undefined
+        this.discordIdToPlayer = {}
+        this.match = undefined
 
         this.discordChannel.send({
             embed: {
                 title: "Gather Finished",
                 color: 0xff0000,
-                fields: discord.getGatherEndFields(game),
+                fields: discord.getGatherEndFields(game, discordIdToOldRating, discordIdToNewRating),
             }
         })
     }
