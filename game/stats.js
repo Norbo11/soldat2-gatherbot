@@ -194,10 +194,10 @@ const getGatherStats = async (statsDb) => {
 }
 
 const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
-    const discordIds = await statsDb.getAllDiscordIds()
+    const allDiscordIds = await statsDb.getAllDiscordIds()
     const allPlayerStats = []
 
-    for (let discordId of discordIds) {
+    for (let discordId of allDiscordIds) {
         const stats = await getPlayerStats(statsDb, discordId)
         if (stats !== undefined) {
             allPlayerStats.push({
@@ -205,7 +205,7 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
                 playerStats: stats
             })
         } else {
-            _.remove(discordIds, discordId)
+            _.remove(allDiscordIds, discordId)
         }
     }
     const playersWithEnoughGames = _.filter(allPlayerStats, player => player.playerStats.gameModeStats[gameMode].totalGames >= minimumGamesPlayed)
@@ -236,7 +236,7 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     // })
 
     return {
-        topPlayersByWinRate, topPlayersByTotalGames, discordIds, topPlayersBySkillEstimate
+        topPlayersByWinRate, topPlayersByTotalGames, allDiscordIds, topPlayersBySkillEstimate
     }
 }
 
@@ -390,9 +390,9 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     // })
 
     const topPlayersBySkillEstimate = topPlayers.topPlayersBySkillEstimate.map(topPlayer => {
-        const rating = topPlayer.rating
-        const estimate = ratings.getSkillEstimate(rating)
         const playerStats = topPlayer.playerStats
+        const rating = playerStats.rating
+        const estimate = ratings.getSkillEstimate(rating)
         return `**${discordIdToUsername[topPlayer.discordId]}**: ${discord.roundSkill(estimate)} (${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames})`
     })
 

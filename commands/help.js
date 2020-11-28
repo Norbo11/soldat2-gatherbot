@@ -10,7 +10,7 @@ module.exports = {
             "1-1, 1-0 or 0-0 at the end of the second round, decide on a tiebreaker map to play for the third and final round. " +
             "If you're playing Capture The Bases, it's impossible for a round to end in a tie, so there will always be a winner " +
             "of the whole gather. After the gather, check your stats with !stats, change game-mode with !mode, and !add to more gathers. Use " +
-            "!commands for a full list of commands."
+            "!commands for a full list of commands. Use !ratings for an explanation of our rating system."
         message.channel.send(helpMessage)
     },
 };

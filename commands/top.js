@@ -22,9 +22,23 @@ module.exports = {
         }
 
         stats.getTopPlayers(currentStatsDb, 5, gameMode).then(topPlayers => {
+            const discordIds = new Set()
+
+            for (let player of topPlayers.topPlayersBySkillEstimate) {
+                discordIds.add(player.discordId)
+            }
+
+            for (let player of topPlayers.topPlayersByTotalGames) {
+                discordIds.add(player.discordId)
+            }
+
+            // for (let player in topPlayers.topPlayersByWinRate) {
+            //     discordIds.add(player.discordId)
+            // }
 
             const discordIdToUsername = {}
-            discord.getDiscordIdToUsernameMap(client, discordIdToUsername, topPlayers.allDiscordIds).then(() => {
+
+            discord.getDiscordIdToUsernameMap(client, discordIdToUsername, Array.from(discordIds)).then(() => {
                 message.channel.send(stats.formatTopPlayers(gameMode, topPlayers, discordIdToUsername))
             })
         })
