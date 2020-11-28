@@ -34,11 +34,14 @@ skillChangeEmoji = (oldSkill, newSkill) => {
     newSkill = roundSkill(newSkill)
 
     if (newSkill > oldSkill) {
-        return "<:green_arrow_up:780928985726582854>"
+        // return "<:green_arrow_up:780928985726582854>"
+        return "<:green_arrow_up:780933286187761695>"
     } else if (newSkill < oldSkill) {
-        return "<:red_arrow_down:780928963270279181>"
+        // return "<:red_arrow_down:780928963270279181>"
+        return "<:red_arrow_down:780933294295482378>"
     } else {
-        return "<:black_equals:780933358355611658>"
+        // return "<:black_equals:780933358355611658>"
+        return "<:black_equals:780933272548540418>"
     }
 }
 
