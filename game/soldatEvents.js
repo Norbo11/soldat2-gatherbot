@@ -97,14 +97,18 @@ registerSoldatEventListeners = (gather, soldatClient) => {
             let match = text.match(eventSpec.pattern)
             if (match !== null && eventSpec.condition(gather)) {
                 if (eventSpec.deduplicate) {
-                    if (seenMessages.has(text)) {
+                    // Messages start with timestamps like [00:00:00]
+                    // We wish to get rid of these in order for deduplication to work across seconds boundaries
+                    const textWithoutTimestamp = text.substring(11) // 11 chars present in the above, including space
+
+                    if (seenMessages.has(textWithoutTimestamp)) {
                         logger.log.info(`Received duplicated ${eventSpec.name} event, ignoring: ${text}`)
                         return
                     }
 
-                    seenMessages.add(text)
+                    seenMessages.add(textWithoutTimestamp)
                     setTimeout(() => {
-                        seenMessages.delete(text)
+                        seenMessages.delete(textWithoutTimestamp)
                     }, DEDUPLICATE_INTERVAL_MS)
                 }
 
