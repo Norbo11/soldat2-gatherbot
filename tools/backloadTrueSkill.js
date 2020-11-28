@@ -23,7 +23,7 @@ const backloadRatings = async () => {
     // )
 
     const names = {}
-    const discordIdToPlayer = {}
+    const discordIdToRating = {}
 
     const translateName = async discordId => {
         const username = (await client.fetchUser(discordId)).username
@@ -32,14 +32,9 @@ const backloadRatings = async () => {
     }
 
     const addPlayer = discordId => {
-        if (!(discordId in discordIdToPlayer)) {
-            discordIdToPlayer[discordId] = ratings.createNewPlayer()
+        if (!(discordId in discordIdToRating)) {
+            discordIdToRating[discordId] = ratings.createRating()
         }
-    }
-
-    const getRating = discordId => {
-        const player = discordIdToPlayer[discordId]
-        return ratings.getRatingOfPlayer(player)
     }
 
     for (let game of games) {
@@ -56,24 +51,28 @@ const backloadRatings = async () => {
         }
 
         console.log(`Game ${game.startTime}`)
-        console.log(`Blue Team: ${teams["Blue"].map(player => `${names[player]} (${getRating(player)})`).join(", ")}`)
-        console.log(`Red Team: ${teams["Red"].map(player => `${names[player]} (${getRating(player)})`).join(", ")}`)
+        console.log(`Blue Team: ${teams["Blue"].map(discordId => `${names[discordId]} (${ratings.getRating(discordId)})`).join(", ")}`)
+        console.log(`Red Team: ${teams["Red"].map(discordId => `${names[discordId]} (${ratings.getRating(discordId)})`).join(", ")}`)
         console.log(`Winner: ${game.winner}`)
 
-        const newRatings = ratings.rateRounds(game, discordIdToPlayer)
+        for (let round of game.rounds) {
+            const newRatings = ratings.rateRound(game.bluePlayers, game.redPlayers, discordIdToRating, round)
 
-        _.forEach(newRatings, (newRating, discordId) => {
-            discordIdToPlayer[discordId] = ratings.getPlayer(newRating.mu, newRating.sigma)
-        })
+            for (let discordId of _.keys(newRatings)) {
+                const rating = newRatings[discordId]
+                discordIdToRating[discordId] = rating
+
+                await statsDb.updateRating(discordId, game.startTime, round.startTime, rating.mu, rating.sigma)
+            }
+        }
     }
 
     console.log("Final ratings:")
-    let sortedRatings = _.map(discordIdToPlayer, (player, discordId) => {
+    let sortedRatings = _.map(discordIdToRating, (rating, discordId) => {
         return {
             name: names[discordId],
-            conservativeSkillEstimate: ratings.getSkillEstimate(ratings.getRatingOfPlayer(player)),
-            rating: ratings.getRatingOfPlayer(player),
-            player,
+            conservativeSkillEstimate: ratings.getSkillEstimate(rating),
+            rating,
             discordId
         }
     })
@@ -82,7 +81,6 @@ const backloadRatings = async () => {
 
     _.forEach(sortedRatings, (rating) => {
         console.log(`${rating.name}: ${rating.rating} = ${rating.conservativeSkillEstimate}`)
-        statsDb.upsertPlayer(rating.discordId, rating.rating.mu, rating.rating.sigma)
     })
 
 }

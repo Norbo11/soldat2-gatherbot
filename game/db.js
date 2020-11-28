@@ -75,19 +75,29 @@ class StatsDB {
         return _.sortBy(games, game => game.startTime)
     }
 
-    async getPlayer(discordId) {
-        const result = await this.db.collection("Player").find({discordId})
-        const array = await result.toArray()
-        return array.length > 0 ? array[0] : undefined
+    async getMuSigma(discordId) {
+        const result = await this.db.collection("RatingUpdates").find({discordId})
+        const ratingUpdates = await result.toArray()
+        if (ratingUpdates.length === 0) {
+            return undefined
+        } else {
+            const sorted = _.sortBy(ratingUpdates,
+                    ratingUpdate => -ratingUpdate.gameStartTime,
+                    ratingUpdate => -ratingUpdate.roundStartTime
+            )
+            const latest = sorted[0]
+            return {
+                mu: latest.newMu,
+                sigma: latest.newSigma,
+            }
+        }
     }
 
-    async upsertPlayer(discordId, ratingMu, ratingSigma) {
-        const result = await this.db.collection("Player").updateOne({discordId}, {
-            $set: {discordId, ratingMu, ratingSigma}
-        }, {
-            upsert: true
+    async updateRating(discordId, gameStartTime, roundStartTime, newMu, newSigma) {
+        const result = await this.db.collection("RatingUpdates").insertOne({
+            discordId, gameStartTime, roundStartTime, newMu, newSigma
         })
-        logger.log.info(`Saved player ${discordId}`)
+        logger.log.info(`Updated rating for player ${discordId}: (${newMu}, ${newSigma})`)
         return result.insertedId
     }
 

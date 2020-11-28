@@ -26,29 +26,13 @@ trueSkill.tau = trueSkill.sigma / 100
 trueSkill.drawProbability = 0.1
 
 
-
-const getRatingOfPlayer = (player) => {
-    return getRating(player.ratingMu, player.ratingSigma)
-}
-
-
 const getRating = (ratingMu, ratingSigma) => {
     return trueSkill.createRating(ratingMu, ratingSigma)
 }
 
-const getPlayer = (ratingMu, ratingSigma) => {
-    return {
-        ratingMu, ratingSigma
-    }
-}
 
 const createRating = () => {
     return trueSkill.createRating()
-}
-
-const createNewPlayer = () => {
-    const rating = createRating()
-    return getPlayer(rating.mu, rating.sigma)
 }
 
 
@@ -64,33 +48,41 @@ const getSkillEstimate = (rating) => {
 }
 
 
-const rateRounds = (game, discordIdToRating) => {
+const rateRound = (bluePlayers, redPlayers, discordIdToRating, round) => {
     const newDiscordIdToRating = Object.assign({}, discordIdToRating)
+    const ratingGroups = getRatingGroups(bluePlayers, redPlayers, newDiscordIdToRating)
+
+    let ranks;
+
+    if (round.winner === "Tie") {
+        ranks = [0, 0]
+    } else if (round.winner === "Blue") {
+        ranks = [0, 1]
+    } else {
+        ranks = [1, 0]
+    }
+
+    const [newBlueRatings, newRedRatings] = trueSkill.rate(ratingGroups, ranks)
+
+    _.forEach(newBlueRatings, (rating, i) => {
+        const player = bluePlayers[i]
+        newDiscordIdToRating[player] = rating
+    })
+
+    _.forEach(newRedRatings, (rating, i) => {
+        const player = redPlayers[i]
+        newDiscordIdToRating[player] = rating
+    })
+
+    return newDiscordIdToRating
+}
+
+
+const rateRounds = (game, discordIdToRating) => {
+    let newDiscordIdToRating = Object.assign({}, discordIdToRating)
 
     _.forEach(game.rounds, round => {
-        const ratingGroups = getRatingGroups(game.bluePlayers, game.redPlayers, newDiscordIdToRating)
-
-        let ranks;
-
-        if (round.winner === "Tie") {
-            ranks = [0, 0]
-        } else if (round.winner === "Blue") {
-            ranks = [0, 1]
-        } else {
-            ranks = [1, 0]
-        }
-
-        const [newBlueRatings, newRedRatings] = trueSkill.rate(ratingGroups, ranks)
-
-        _.forEach(newBlueRatings, (rating, i) => {
-            const player = game.bluePlayers[i]
-            newDiscordIdToRating[player] = rating
-        })
-
-        _.forEach(newRedRatings, (rating, i) => {
-            const player = game.redPlayers[i]
-            newDiscordIdToRating[player] = rating
-        })
+        newDiscordIdToRating = rateRound(game.bluePlayers, game.redPlayers, newDiscordIdToRating, round)
     })
 
     return newDiscordIdToRating
@@ -145,6 +137,5 @@ const getBalancedMatch = (discordIdToRating, size) => {
 }
 
 module.exports = {
-    createRating, createNewPlayer, rateRounds, getBalancedMatch, getRatingOfPlayer, getPlayer,
-    getSkillEstimate, getRating
+    createRating, rateRounds, getBalancedMatch, getSkillEstimate, getRating, rateRound
 }

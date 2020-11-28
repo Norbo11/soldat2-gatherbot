@@ -67,16 +67,15 @@ getTeamKills = (discordId, events) => {
 }
 
 getPlayerStats = async (statsDb, discordId) => {
-    const player = await statsDb.getPlayer(discordId)
+    const ratingNumbers = await statsDb.getMuSigma(discordId)
 
-    if (player === undefined) {
-        return false
+    if (ratingNumbers === undefined) {
+        return undefined
     }
 
-    const games = await statsDb.getGamesWithPlayer(discordId)
+    const rating = ratings.getRating(ratingNumbers.mu, ratingNumbers.sigma)
 
-    const ratingMu = player.ratingMu
-    const ratingSigma = player.ratingSigma
+    const games = await statsDb.getGamesWithPlayer(discordId)
 
     let totalGames = 0
     let wonGames = 0
@@ -162,7 +161,7 @@ getPlayerStats = async (statsDb, discordId) => {
     return {
         totalGames, wonGames, lostGames, weaponStats, totalKills, totalDeaths, totalGatherTime, totalCaps,
         sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds, gameModeStats,
-        ratingMu, ratingSigma
+        rating
     }
 }
 
@@ -196,18 +195,25 @@ const getGatherStats = async (statsDb) => {
 
 const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     const discordIds = await statsDb.getAllDiscordIds()
-    const allPlayerStats = await Promise.all(discordIds.map(async discordId => {
-        return {
-            discordId,
-            playerStats: await getPlayerStats(statsDb, discordId)
+    const allPlayerStats = []
+
+    for (let discordId of discordIds) {
+        const stats = await getPlayerStats(statsDb, discordId)
+        if (stats !== undefined) {
+            allPlayerStats.push({
+                discordId,
+                playerStats: stats
+            })
+        } else {
+            _.remove(discordIds, discordId)
         }
-    }))
+    }
     const playersWithEnoughGames = _.filter(allPlayerStats, player => player.playerStats.gameModeStats[gameMode].totalGames >= minimumGamesPlayed)
 
     let topPlayersByWinRate = _.sortBy(playersWithEnoughGames, player => -(player.playerStats.gameModeStats[gameMode].wonGames / player.playerStats.gameModeStats[gameMode].totalGames))
     topPlayersByWinRate = _.take(topPlayersByWinRate, 5)
 
-    let topPlayersBySkillEstimate = _.sortBy(playersWithEnoughGames, player => -ratings.getSkillEstimate(ratings.getRating(player.playerStats.ratingMu, player.playerStats.ratingSigma)))
+    let topPlayersBySkillEstimate = _.sortBy(playersWithEnoughGames, player => -ratings.getSkillEstimate(player.playerStats.rating))
     topPlayersBySkillEstimate = _.take(topPlayersBySkillEstimate, 5)
 
     // Take all players here
@@ -229,10 +235,8 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     //     topPlayersByWeaponKills[weaponId] = topPlayersByThisWeaponKills
     // })
 
-    const allDiscordIds = allPlayerStats.map(player => player.discordId)
-
     return {
-        topPlayersByWinRate, topPlayersByTotalGames, allDiscordIds, topPlayersBySkillEstimate
+        topPlayersByWinRate, topPlayersByTotalGames, discordIds, topPlayersBySkillEstimate
     }
 }
 
@@ -265,7 +269,7 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
         // `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
         `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
         `**Last Gather**: ${moment(playerStats.lastGameTimestamp).from(moment())}`,
-        `**Rating**: ${discord.formatRating(playerStats.ratingMu, playerStats.ratingSigma)}`,
+        `**Rating**: ${discord.formatRating(playerStats.rating)}`,
     ]
     //
     // let favouriteWeapons = Object.keys(playerStats.weaponStats).map(weaponId => {
@@ -391,9 +395,8 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     // })
 
     const topPlayersBySkillEstimate = topPlayers.topPlayersBySkillEstimate.map(topPlayer => {
-        const skill = topPlayer.playerStats.ratingMu
-        const uncertainty = topPlayer.playerStats.ratingSigma
-        const estimate = ratings.getSkillEstimate(ratings.getRating(skill, uncertainty))
+        const rating = topPlayer.rating
+        const estimate = ratings.getSkillEstimate(rating)
         return `**${discordIdToUsername[topPlayer.discordId]}**: ${discord.roundSkill(estimate)}`
     })
 

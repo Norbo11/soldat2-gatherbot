@@ -12,6 +12,7 @@ const moment = require("moment")
 const stats = require("../game/stats")
 const db = require("../game/db")
 const constants = require("../game/constants")
+const ratings = require("../game/ratings")
 
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
@@ -184,9 +185,20 @@ describe('Stats', () => {
         await conn.dropDatabase()
     })
 
+    const insertRatings = async () => {
+        await statsDb.updateRating("Player1", 0, 0, 50, 10)
+        await statsDb.updateRating("Player1", 0, 10, 60, 15)
+        await statsDb.updateRating("Player2", 30, 0, 70, 20)
+        await statsDb.updateRating("Player2", 15, 0, 80, 25)
+        await statsDb.updateRating("Player3", 15, 0, 80, 25)
+        await statsDb.updateRating("Player4", 15, 0, 80, 25)
+        await statsDb.updateRating("Player5", 15, 0, 80, 25)
+    }
+
     it('should return stats of players', async () => {
         const games = [getMockGames()[0]]
         await Promise.all(games.map(async game => statsDb.insertGame(game)))
+        await insertRatings()
 
         let playerStats = await stats.getPlayerStats(statsDb, "Player1")
         expect(playerStats).containSubset({
@@ -201,6 +213,8 @@ describe('Stats', () => {
                 }
             },
         })
+        expect(playerStats.rating.mu).equal(60)
+        expect(playerStats.rating.sigma).equal(15)
 
         playerStats = await stats.getPlayerStats(statsDb, "Player2")
         expect(playerStats).containSubset({
@@ -214,6 +228,8 @@ describe('Stats', () => {
                 }
             },
         })
+        expect(playerStats.rating.mu).equal(70)
+        expect(playerStats.rating.sigma).equal(20)
 
         playerStats = await stats.getPlayerStats(statsDb, "Player3")
         expect(playerStats).containSubset({
@@ -271,9 +287,10 @@ describe('Stats', () => {
     it('should return stats of top players', async () => {
         const games = getMockGames()
         await Promise.all(games.map(async game => statsDb.insertGame(game)))
+        await insertRatings()
 
         const topPlayers = await stats.getTopPlayers(statsDb, 0, GAME_MODES.CAPTURE_THE_FLAG)
-        expect(topPlayers.topPlayersByWinRate.map(player => player.discordId)).eql(["Player4", "Player5", "Player6", "Player3", "Player1"])
+        expect(topPlayers.topPlayersByWinRate.map(player => player.discordId)).eql(["Player4", "Player5", "Player3", "Player1", "Player2"])
         expect(topPlayers.topPlayersByTotalGames.map(player => player.discordId)).eql(["Player1", "Player2", "Player3", "Player4", "Player5"])
     })
 });
@@ -311,7 +328,8 @@ describe('Stats Formatter', () => {
                     lostGames: 0,
                     tiedGames: 0
                 }
-            }
+            },
+            rating: ratings.getRating(50, 10)
             // weaponStats: {
             //     [SOLDAT_WEAPONS.AK_74.id]: {
             //         kills: 12,
@@ -344,8 +362,9 @@ describe('Stats Formatter', () => {
                             // "**Kills/Deaths**: 12/7 (1.71)\n" +
                             // "**Caps**: 2 (0.67 per game)\n" +
                             `**First Gather**: ${moment().format("DD-MM-YYYY")}\n` +
-                            "**Last Gather**: a few seconds ago"
-                            // "**Friendly Fire**: undefined team kills (NaN% of kills)"
+                            "**Last Gather**: a few seconds ago\n" +
+                            "**Rating**: Skill 50.00, Uncertainty 10.00, Rating Estimate 20.00"
+                        // "**Friendly Fire**: undefined team kills (NaN% of kills)"
                     },
                     // {
                     //     name: "**Favourite Weapons**",

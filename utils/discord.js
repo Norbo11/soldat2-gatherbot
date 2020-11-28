@@ -24,10 +24,9 @@ roundSkill = (skill) => {
 }
 
 
-formatRating = (mu, sigma) => {
-    const rating = ratings.getRating(mu, sigma)
+formatRating = (rating) => {
     const skillEstimate = ratings.getSkillEstimate(rating)
-    return `Skill ${roundSkill(mu)}, Uncertainty ${roundSkill(sigma)}, Rating Estimate ${roundSkill(skillEstimate)}`
+    return `Skill ${roundSkill(rating.mu)}, Uncertainty ${roundSkill(rating.sigma)}, Rating Estimate ${roundSkill(skillEstimate)}`
 }
 
 skillChangeEmoji = (oldSkill, newSkill) => {

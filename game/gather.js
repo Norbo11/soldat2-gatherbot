@@ -68,21 +68,24 @@ class Gather {
     }
 
     async startNewGame() {
-        this.discordIdToRating = {}
+        const discordIdToRating = {}
         const allDiscordUsers = []
 
         for (let discordUser of this.currentQueue) {
             const discordId = discordUser.id
-            let player = await this.statsDb.getPlayer(discordId)
-            if (player === undefined) {
-                player = ratings.createNewPlayer(discordId)
+            let rating = await this.statsDb.getMuSigma(discordId)
+            if (rating === undefined) {
+                rating = ratings.createRating()
+            } else {
+                rating = ratings.getRating(rating.mu, rating.sigma)
             }
-            this.discordIdToRating[discordId] = ratings.getRatingOfPlayer(player)
+            discordIdToRating[discordId] = rating
             allDiscordUsers.push(discordUser)
         }
 
-        const balancedMatch = ratings.getBalancedMatch(this.discordIdToRating, this.currentSize)
+        const balancedMatch = ratings.getBalancedMatch(discordIdToRating, this.currentSize)
         balancedMatch.allDiscordUsers = allDiscordUsers
+        balancedMatch.discordIdToRating = discordIdToRating
         this.startGame(balancedMatch)
     }
 
@@ -164,6 +167,7 @@ class Gather {
 
     endRound(winner) {
 
+        logger.log.info("Ending round")
         // For CTF games, we determine the winner based on the flag cap events that we've kept track of.
         // For CTB games, we get told in the logs who won.
         if (this.gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
@@ -242,13 +246,22 @@ class Gather {
             }),
         }
 
-        const discordIdToNewRating = ratings.rateRounds(game, this.discordIdToRating)
+        const discordIdToOldRating = this.match.discordIdToRating
+        let discordIdToNewRating = Object.assign({}, discordIdToOldRating)
 
-        this.statsDb.insertGame(game).then().catch(e => logger.log.error(`Error when saving game to DB: ${e}`))
+        this.statsDb.insertGame(game).then().catch((e) => `Could not save game: ${e}`)
 
-        for (let discordId of this.match.allDiscordIds) {
-            const newRating = discordIdToNewRating[discordId]
-            this.statsDb.upsertPlayer(discordId, newRating.mu, newRating.sigma).then().catch(e => logger.log.error(`Error when saving player to DB: ${e}`))
+        let i = 1
+        for (let round of game.rounds) {
+            logger.log.info(`Rating round ${i}`)
+            discordIdToNewRating = ratings.rateRound(game.bluePlayers, game.redPlayers, discordIdToNewRating, round)
+
+            for (let discordId of _.keys(discordIdToNewRating)) {
+                const newRating = discordIdToNewRating[discordId]
+                this.statsDb.updateRating(discordId, game.startTime, round.startTime, newRating.mu, newRating.sigma).catch((e) => `Could not save rating: ${e}`)
+            }
+
+            i += 1
         }
 
         this.inGameState = IN_GAME_STATES.NO_GATHER
@@ -256,14 +269,13 @@ class Gather {
         this.rematchQueue = []
         this.endedRounds = []
         this.currentRound = undefined
-        this.discordIdToPlayer = {}
         this.match = undefined
 
         this.discordChannel.send({
             embed: {
                 title: "Gather Finished",
                 color: 0xff0000,
-                fields: discord.getGatherEndFields(game, this.discordIdToRating, discordIdToNewRating),
+                fields: discord.getGatherEndFields(game, discordIdToOldRating, discordIdToNewRating),
             }
         })
     }

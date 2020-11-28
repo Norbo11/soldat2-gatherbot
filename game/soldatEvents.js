@@ -80,6 +80,8 @@ const seenMessages = new Set()
 registerSoldatEventListeners = (gather, soldatClient) => {
     logger.log.info("Registered non-command event listeners.")
 
+    // It's important for this function to not be marked "async", as the underlying EventEmitter won't await it!
+    // This might cause events to be handled out-of-order!
     soldatClient.ws.addListener("message", data => {
         if (!soldatClient.initialized) {
             return;
@@ -91,7 +93,7 @@ registerSoldatEventListeners = (gather, soldatClient) => {
             return;
         }
 
-        PASSIVE_EVENTS.forEach(eventSpec => {
+        for (let eventSpec of PASSIVE_EVENTS) {
             let match = text.match(eventSpec.pattern)
             if (match !== null && eventSpec.condition(gather)) {
                 if (eventSpec.deduplicate) {
@@ -114,7 +116,7 @@ registerSoldatEventListeners = (gather, soldatClient) => {
                     logger.log.error(`There was an error processing a ${eventSpec.name} event from the server: ${e.stack}`)
                 }
             }
-        })
+        }
     });
 }
 
