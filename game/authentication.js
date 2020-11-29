@@ -9,8 +9,8 @@ class Authenticator {
         this.authCodes = {}
     }
 
-    getPlayfabToDiscordIdMap() {
-        return this.statsDb.getPlayfabIdToDiscordIdMap()
+    async getPlayfabIdToDiscordIdMap() {
+        return await this.statsDb.getPlayfabIdToDiscordIdMap()
     }
 
     async isAuthenticated(discordId) {

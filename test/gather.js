@@ -84,13 +84,11 @@ describe('Gather', () => {
         discordChannel.client.fetchUser = async discordId => {
             return {username: "TestDiscordUser", send: () => logger.log.info(`Sending message to ${discordId}`)}
         }
-        //
-        // await statsDb.mapHwidToDiscordId("A", "1")
-        // await statsDb.mapHwidToDiscordId("B", "2")
-        // await statsDb.mapHwidToDiscordId("C", "3")
-        // await statsDb.mapHwidToDiscordId("D", "4")
 
-        // const hwidToDiscordId = await statsDb.getHwidToDiscordIdMap()
+        await statsDb.mapPlayfabIdToDiscordId("A", "a")
+        await statsDb.mapPlayfabIdToDiscordId("B", "b")
+        await statsDb.mapPlayfabIdToDiscordId("C", "c")
+        await statsDb.mapPlayfabIdToDiscordId("D", "d")
 
         const mockCurrentTimestamp = () => {
             return currentTime;
@@ -130,9 +128,20 @@ describe('Gather', () => {
         expect(round.mapName).equal("ctf_ash")
         expect(round.startTime).equal(1000)
 
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] PlayerA [A] (1) killed PlayerB [B] (0) with Tec-9\n").raw))
+        expect(round.events[0]).containSubset({
+            timestamp: 1000,
+            type: SOLDAT_EVENTS.PLAYER_KILL,
+            killerDiscordId: "a",
+            victimDiscordId: "b",
+            killerTeam: SOLDAT_TEAMS.RED,
+            victimTeam: SOLDAT_TEAMS.BLUE,
+            weaponName: "Tec-9"
+        })
+
         ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
         expect(round.blueCaps).equal(1)
-        expect(round.events[0]).containSubset({
+        expect(round.events[1]).containSubset({
             timestamp: 1000,
             type: SOLDAT_EVENTS.FLAG_CAP,
             cappingTeam: SOLDAT_TEAMS.BLUE
@@ -140,7 +149,7 @@ describe('Gather', () => {
 
         ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured").raw))
         expect(round.redCaps).equal(1)
-        expect(round.events[1]).containSubset({
+        expect(round.events[2]).containSubset({
             timestamp: 1000,
             type: SOLDAT_EVENTS.FLAG_CAP,
             cappingTeam: SOLDAT_TEAMS.RED
@@ -202,6 +211,15 @@ describe('Gather', () => {
                 redCaps: 1,
                 winner: "Tie",
                 events: [
+                    {
+                        timestamp: 1000,
+                        type: SOLDAT_EVENTS.PLAYER_KILL,
+                        killerDiscordId: "a",
+                        victimDiscordId: "b",
+                        killerTeam: SOLDAT_TEAMS.RED,
+                        victimTeam: SOLDAT_TEAMS.BLUE,
+                        weaponName: "Tec-9"
+                    },
                     {
                         timestamp: 1000,
                         type: SOLDAT_EVENTS.FLAG_CAP,
@@ -410,7 +428,7 @@ describe('Gather', () => {
             authenticated = await auth.isAuthenticated("PlayerADiscordID")
             expect(authenticated).equal(true)
 
-            const map = await auth.getPlayfabToDiscordIdMap()
+            const map = await auth.getPlayfabIdToDiscordIdMap()
             expect(map["PlayerAPlayfabID"]).equal("PlayerADiscordID")
 
             resolve()

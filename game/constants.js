@@ -15,6 +15,10 @@ const SOLDAT_TEAMS = {
     TIE: "Tie",
 }
 
+const getSoldatTeamById = (id) => {
+    return id === "0" ? SOLDAT_TEAMS.BLUE : SOLDAT_TEAMS.RED
+}
+
 const GAME_MODES = {
     CAPTURE_THE_FLAG: "CaptureTheFlag",
     CAPTURE_THE_BASES: "CaptureTheBases"
@@ -30,72 +34,71 @@ const formatGameMode = (gameMode) => {
     return gameMode
 }
 
-
 // The IDs here are arbitrary - they don't necessarily match whatever IDs the game uses
 const SOLDAT_WEAPONS = {
-    DESERT_EAGLES: {
+    BARRETT: {
         id: "1",
-        formattedName: "Desert Eagles"
+        formattedName: "Barrett"
     },
-    HK_MP5: {
+    CHAINSAW: {
         id: "2",
-        formattedName: "HK MP5"
+        formattedName: "Chainsaw"
     },
-    AK_74: {
+    DRAGUNOV: {
         id: "3",
-        formattedName: "Ak-74"
+        formattedName: "Dragunov"
     },
-    STEYR_AUG: {
+    FLAK_CANNON: {
         id: "4",
-        formattedName: "Steyr AUG"
+        formattedName: "FlakCannon"
     },
-    SPAS_12: {
+    KALASHNIKOV: {
         id: "5",
-        formattedName: "Spas-12"
+        formattedName: "Kalashnikov"
     },
-    RUGER_77: {
+    KNIFE: {
         id: "6",
-        formattedName: "Ruger 77"
+        formattedName: "Knife"
     },
     M79: {
         id: "7",
         formattedName: "M79"
     },
-    BARRET_M82A1: {
+    MAKAROV: {
         id: "8",
-        formattedName: "Barrett M82A1"
+        formattedName: "Makarov"
     },
-    FN_MINIMI: {
+    MINIGUN: {
         id: "9",
-        formattedName: "FN Minimi"
+        formattedName: "Minigun"
     },
-    XM214_MINIGUN: {
+    MP5: {
         id: "10",
-        formattedName: "XM214 Minigun"
+        formattedName: "MP5"
     },
-    USSOCOM: {
+    RHEINMETALL: {
         id: "11",
-        formattedName: "USSOCOM"
+        formattedName: "Rheinmetall"
     },
-    COMBAT_KNIFE: {
+    SPAS12: {
         id: "12",
-        formattedName: "Combat Knife"
+        formattedName: "Spas12"
     },
-    CHAINSAW: {
+    TEC9: {
         id: "13",
-        formattedName: "Chainsaw"
-    },
-    M72_LAW: {
-        id: "14",
-        formattedName: "LAW"
+        formattedName: "Tec-9"
     },
     HANDS: {
-        id: "15",
+        id: "14",
         formattedName: "Hands"
     },
     GRENADE: {
-        id: "16",
+        id: "15",
         formattedName: "Grenade"
+    },
+    NA: {
+        id: "16",
+        formattedName: "N/A"
     },
 }
 
@@ -119,5 +122,5 @@ getWeaponByFormattedName = (formattedName) => {
 
 module.exports = {
     SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, NOT_AUTHED_KICK_TIMER_SECONDS, SOLDAT_TEAMS, GAME_MODES,
-    getWeaponById, getWeaponByFormattedName, formatGameMode
+    getWeaponById, getWeaponByFormattedName, formatGameMode, getSoldatTeamById
 }

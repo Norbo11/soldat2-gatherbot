@@ -71,6 +71,19 @@ const PASSIVE_EVENTS = [
         condition: gather => true,
         deduplicate: false
     },
+    {
+        name: "player kill",
+        pattern: /\[(?<time>.*?)] (?<killerName>.*?) \[(?<killerPlayfabId>.*?)] \((?<killerTeam>.*?)\) killed (?<victimName>.*?) \[(?<victimPlayfabId>.*?)] \((?<victimTeam>.*?)\) with (?<weapon>.*)/,
+        handler: (gather, match) => gather.onPlayerKill(
+            match.groups["killerPlayfabId"],
+            constants.getSoldatTeamById(match.groups["killerTeam"]),
+            match.groups["victimPlayfabId"],
+            constants.getSoldatTeamById(match.groups["victimTeam"]),
+            match.groups["weapon"]
+        ),
+        condition: gather => gather.gatherInProgress() ,
+        deduplicate: false
+    },
 ]
 
 const DEDUPLICATE_INTERVAL_MS = 1000

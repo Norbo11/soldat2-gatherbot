@@ -88,6 +88,7 @@ class Gather {
         const balancedMatch = ratings.getBalancedMatch(discordIdToRating, this.currentSize)
         balancedMatch.allDiscordUsers = allDiscordUsers
         balancedMatch.discordIdToRating = discordIdToRating
+        balancedMatch.playfabIdToDiscordId = await this.authenticator.getPlayfabIdToDiscordIdMap()
         this.startGame(balancedMatch)
     }
 
@@ -142,6 +143,13 @@ class Gather {
 
     onMapChange(mapName) {
         this.currentRound.changeMap(mapName);
+    }
+
+    onPlayerKill(killerPlayfabId, killerTeam, victimPlayfabId, victimTeam, weapon) {
+        const killerDiscordId = this.match.playfabIdToDiscordId[killerPlayfabId]
+        const victimDiscordId = this.match.playfabIdToDiscordId[victimPlayfabId]
+
+        this.currentRound.playerKill(killerDiscordId, killerTeam, victimDiscordId, victimTeam, weapon)
     }
 
     changeGameMode(gameMode) {

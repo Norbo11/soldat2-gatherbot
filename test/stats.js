@@ -49,7 +49,16 @@ getMockGames = () => {
                             timestamp: 1000 + 3 * 60e+3,
                             type: SOLDAT_EVENTS.FLAG_CAP,
                             cappingTeam: SOLDAT_TEAMS.RED
-                        }
+                        },
+                        {
+                            timestamp: 1000 + 3 * 60e+3,
+                            type: SOLDAT_EVENTS.PLAYER_KILL,
+                            killerDiscordId: "Player1",
+                            victimDiscordId: "Player3",
+                            killerTeam: SOLDAT_TEAMS.RED,
+                            victimTeam: SOLDAT_TEAMS.BLUE,
+                            weaponName: "Tec-9"
+                        },
                     ]
                 },
                 {
@@ -69,7 +78,16 @@ getMockGames = () => {
                             timestamp: 1000 + 9 * 60e+3,
                             type: SOLDAT_EVENTS.FLAG_CAP,
                             cappingTeam: SOLDAT_TEAMS.BLUE
-                        }
+                        },
+                        {
+                            timestamp: 1000 + 3 * 60e+3,
+                            type: SOLDAT_EVENTS.PLAYER_KILL,
+                            killerDiscordId: "Player4",
+                            victimDiscordId: "Player1",
+                            killerTeam: SOLDAT_TEAMS.BLUE,
+                            victimTeam: SOLDAT_TEAMS.RED,
+                            weaponName: "Kalashnikov"
+                        },
                     ]
                 },
                 {
@@ -207,14 +225,28 @@ describe('Stats', () => {
             wonGames: 0,
             lostGames: 1,
             totalCaps: 0,
+            totalKills: 1,
+            totalRounds: 3,
+            totalDeaths: 1,
             sizeStats: {
                 "4": {
                     totalGames: 1
                 }
             },
+
         })
         expect(playerStats.rating.mu).equal(60)
         expect(playerStats.rating.sigma).equal(15)
+        expect(playerStats.weaponStats).containSubset({
+            "Tec-9": {
+                kills: 1,
+                deaths: 0
+            },
+            "Kalashnikov": {
+                kills: 0,
+                deaths: 1
+            }
+        })
 
         playerStats = await stats.getPlayerStats(statsDb, "Player2")
         expect(playerStats).containSubset({
@@ -251,11 +283,19 @@ describe('Stats', () => {
             totalGames: 1,
             wonGames: 1,
             lostGames: 0,
+            totalKills: 1,
+            totalDeaths: 0,
             sizeStats: {
                 "4": {
                     totalGames: 1
                 }
             },
+        })
+        expect(playerStats.weaponStats).containSubset({
+            "Kalashnikov": {
+                kills: 1,
+                deaths: 0
+            }
         })
     });
 
@@ -304,8 +344,8 @@ describe('Stats Formatter', () => {
             lostGames: 1,
             tiedGames: 0,
             totalRounds: 6,
-            // totalKills: 12,
-            // totalDeaths: 7,
+            totalKills: 12,
+            totalDeaths: 7,
             // totalCaps: 2,
             sizeStats: {
                 6: {
@@ -329,21 +369,21 @@ describe('Stats Formatter', () => {
                     tiedGames: 0
                 }
             },
-            rating: ratings.getRating(50, 10)
-            // weaponStats: {
-            //     [SOLDAT_WEAPONS.AK_74.id]: {
-            //         kills: 12,
-            //         deaths: 7
-            //     },
-            //     [SOLDAT_WEAPONS.FN_MINIMI.id]: {
-            //         kills: 3,
-            //         deaths: 2
-            //     },
-            //     [SOLDAT_WEAPONS.HK_MP5.id]: {
-            //         kills: 5,
-            //         deaths: 7
-            //     }
-            // }
+            rating: ratings.getRating(50, 10),
+            weaponStats: {
+                [SOLDAT_WEAPONS.KALASHNIKOV.formattedName]: {
+                    kills: 12,
+                    deaths: 7
+                },
+                [SOLDAT_WEAPONS.MINIGUN.formattedName]: {
+                    kills: 3,
+                    deaths: 2
+                },
+                [SOLDAT_WEAPONS.MP5.formattedName]: {
+                    kills: 5,
+                    deaths: 7
+                }
+            }
         }
 
         const formatted = stats.formatGeneralStatsForPlayer("Player", playerStats)
@@ -359,21 +399,21 @@ describe('Stats Formatter', () => {
                             "**Total Gather Time**: an hour\n" +
                             "**CTF W-T-L**: 2-0-1 (67% winrate)\n" +
                             "**CTB W-T-L**: 0-0-0 (NaN% winrate)\n" +
-                            // "**Kills/Deaths**: 12/7 (1.71)\n" +
+                            "**Kills/Deaths**: 12/7 (1.71)\n" +
                             // "**Caps**: 2 (0.67 per game)\n" +
                             `**First Gather**: ${moment().format("DD-MM-YYYY")}\n` +
                             "**Last Gather**: a few seconds ago\n" +
                             "**Rating**: Skill 50.00, Uncertainty 10.00, Rating Estimate 20.00"
                         // "**Friendly Fire**: undefined team kills (NaN% of kills)"
                     },
-                    // {
-                    //     name: "**Favourite Weapons**",
-                    //     value:
-                    //         "**Ak-74**: 12 kills\n" +
-                    //         "**HK MP5**: 5 kills\n" +
-                    //         "**FN Minimi**: 3 kills",
-                    //     inline: true,
-                    // },
+                    {
+                        name: "**Favourite Weapons**",
+                        value:
+                            "**Kalashnikov**: 12 kills\n" +
+                            "**MP5**: 5 kills\n" +
+                            "**Minigun**: 3 kills",
+                        inline: true,
+                    },
                 ]
             }
         })

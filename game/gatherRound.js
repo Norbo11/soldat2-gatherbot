@@ -1,6 +1,7 @@
 const _ = require("lodash")
 const logger = require("../utils/logger")
 const util = require("util")
+const constants = require("../game/constants")
 
 class GatherRound {
 
@@ -18,6 +19,16 @@ class GatherRound {
         this.startTime = this.getCurrentTimestamp();
         this.events = [];
         this.reset()
+    }
+
+    playerKill(killerDiscordId, killerTeam, victimDiscordId, victimTeam, weaponName) {
+        this.pushEvent(constants.SOLDAT_EVENTS.PLAYER_KILL, {
+            killerDiscordId,
+            killerTeam,
+            victimDiscordId,
+            victimTeam,
+            weaponName
+        })
     }
 
     pushEvent(eventType, eventBody = {}) {
