@@ -121,7 +121,7 @@ getKillAndDeathFields = (playerKillsAndDeaths, discordIdToUsername) => {
 }
 
 getResultField = (winner, inline = false) => {
-    const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === constants.SOLDAT_TEAMS.TIE ? "Tie" : "Win")
+    const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === constants.SOLDAT_TEAMS.TIE ? "" : "Win")
 
     return {
         name: "Result",
