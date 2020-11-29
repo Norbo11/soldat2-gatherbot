@@ -21,10 +21,10 @@ module.exports = {
             "A player with a lot of games will have a much lower uncertainty and therefore a tighter interval around their " +
             "true skill. Unsurprising results will result in small skill adjustments. Surprising results, e.g. " +
             "weak players beating better players, will result in large skill adjustments. Uncertainty usually reflects " +
-            "how many games a player has played, although at some point plan to periodically increase Uncertainty for all players who " +
+            "how many games a player has played, although we plan at some point to periodically increase Uncertainty for all players who " +
             "haven't played for a long time.\n" +
             "The **Skill Estimate** seen on some bot commands is displaying the lower-end of the confidence interval (S - 3U) and " +
-            "this is used to to conservatively rank players on leaderboards. Player skills are distributed around a " +
+            "this is used to conservatively rank players on leaderboards. Player skills are distributed around a " +
             "normal bell-curve distribution, which means that the skill difference between levels 50 and 60 is much lower " +
             "than the skill difference between levels 60 and 70. \n" +
             "We use TrueSkill ratings to balance teams by maximising the probability that the match ends in a draw."
