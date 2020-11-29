@@ -25,7 +25,6 @@ class Gather {
     endedRounds = []
     inGameState = IN_GAME_STATES.NO_GATHER
     gameMode = GAME_MODES.CAPTURE_THE_FLAG
-    discordIdToPlayer = {}
     match = undefined
 
     constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
@@ -33,6 +32,7 @@ class Gather {
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
+        this.currentRound = this.currentRound.newRound()
         // this.password = "placeholder_password"
     }
 
@@ -167,7 +167,6 @@ class Gather {
 
     endRound(winner) {
 
-        logger.log.info("Ending round")
         // For CTF games, we determine the winner based on the flag cap events that we've kept track of.
         // For CTB games, we get told in the logs who won.
         if (this.gameMode === GAME_MODES.CAPTURE_THE_FLAG) {
@@ -213,9 +212,9 @@ class Gather {
             }
 
             this.endGame(gameWinner)
-        } else {
-            this.currentRound = this.currentRound.newRound()
         }
+
+        this.currentRound = this.currentRound.newRound()
     }
 
     endGame(gameWinner) {
@@ -268,7 +267,6 @@ class Gather {
         this.currentQueue = []
         this.rematchQueue = []
         this.endedRounds = []
-        this.currentRound = undefined
         this.match = undefined
 
         this.discordChannel.send({
@@ -340,8 +338,7 @@ class Gather {
         if (firstPart === "restart" || firstPart === "r") {
             // There is an annoying "bug" that if you use !r during a CTB game, when that game ends, it won't
             // print the "Red WON!" or "Blue WON!" message which we require to end the game. So we make !r act like
-            // the !map command whenever we can (currentRound is not null, so gather is running; and the currentRound
-            // knows about the current map).
+            // the !map command. We must have seen at least 1 map change event before this works.
             if (this.currentRound === undefined || this.currentRound.mapName === undefined) {
                 this.soldatClient.restart();
             } else {

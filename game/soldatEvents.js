@@ -68,7 +68,7 @@ const PASSIVE_EVENTS = [
         name: "change map",
         pattern: /\[(?<time>.*?)] Popup: Loading\.\.\. (?<mapName>.*)/,
         handler: (gather, match) => gather.onMapChange(match.groups["mapName"]),
-        condition: gather => gather.gatherInProgress(),
+        condition: gather => true,
         deduplicate: false
     },
 ]
