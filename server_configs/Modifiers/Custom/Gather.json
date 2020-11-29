@@ -26,11 +26,7 @@
       },
       "Handicaps": {
         "SpawnHealth": 1.0,
-        "InvincibleAfterSpawnDuration": 0.5,
-        "InvincibleAfterSpawnColor": "B1C0B2FF",
-        "DecreaseOverDefaultHealthInterval": 1.0,
-        "DecreaseOverDefaultHealthAmount": 0.05,
-        "OnlyHumans": false
+        "InvincibleAfterSpawnDuration": 1.6
       },
       "TeamRespawning": {
         "RespawnType": 0,
