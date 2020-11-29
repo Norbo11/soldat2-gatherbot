@@ -32,7 +32,7 @@ class Gather {
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
-        this.currentRound = this.currentRound.newRound()
+        this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
         // this.password = "placeholder_password"
     }
 
