@@ -151,6 +151,31 @@ class Soldat2Client {
 
         this.sendMessage(message)
     }
+
+    getPlayerInfo(playerName, callback) {
+        const message = NetworkMessage.Command(0, `listplayers`)
+
+        this.listenForServerResponse((text) => {
+            const match = text.match(new RegExp(`\\[(?<time>.*?)] \(?<num>.*?) ${playerName} \\[id] (?<id>.*?) \\[account] (?<playfabId>.*?) \\[team] (?<teamId>.*?) \\[score] (?<score>.*?) \\[kills] (?<kills>.*?) \\[deaths] (?<deaths>.*?) \\[spawned] (?<spawned>.*)`))
+
+            if (match === null) {
+                return false
+            } else {
+                return {
+                    id: match.groups["id"],
+                    name: playerName,
+                    playfabId: match.groups["playfabId"],
+                    teamId: match.groups["teamId"],
+                    score: match.groups["score"],
+                    kills: match.groups["kills"],
+                    deaths: match.groups["deaths"],
+                    spawned: match.groups["spawned"],
+                }
+            }
+        }, callback)
+
+        this.sendMessage(message)
+    }
 }
 
 function toArrayBuffer(buf) {

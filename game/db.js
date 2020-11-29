@@ -101,23 +101,25 @@ class StatsDB {
         return result.insertedId
     }
 
-    async getHwidToDiscordIdMap() {
-        const result = await this.db.collection("HWID").find({});
-        const map = await result.next()
-
-        if (map === null) {
-            return {}
-        } else {
-            return map
-        }
+    async getPlayfabIdToDiscordIdMap() {
+        const result = await this.db.collection("PlayfabId").find({});
+        const array = await result.toArray()
+        const map = {}
+        _.forEach(array, mapping => {
+            map[mapping.playfabId] = mapping.discordId
+        })
+        return map
     }
 
-    async mapHwidToDiscordId(hwid, discordId) {
-        const hwidMap = await this.getHwidToDiscordIdMap()
-        hwidMap[hwid] = discordId
-
-        await this.db.collection("HWID").deleteOne({})
-        await this.db.collection("HWID").insertOne(hwidMap)
+    async mapPlayfabIdToDiscordId(playfabId, discordId) {
+        const result = await this.db.collection("PlayfabId").replaceOne({
+            playfabId
+        }, {
+            discordId, playfabId
+        }, {
+            upsert: true
+        })
+        return result.insertedId
     }
 }
 

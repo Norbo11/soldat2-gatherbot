@@ -81,8 +81,8 @@ describe('Gather', () => {
         }
 
         discordChannel.client = sinon.stub()
-        discordChannel.client.fetchUser = async _ => {
-            return {username: "TestDiscordUser"}
+        discordChannel.client.fetchUser = async discordId => {
+            return {username: "TestDiscordUser", send: () => logger.log.info(`Sending message to ${discordId}`)}
         }
         //
         // await statsDb.mapHwidToDiscordId("A", "1")
@@ -383,6 +383,39 @@ describe('Gather', () => {
             }
         )
     });
+
+    it("should get player info", async (done) => {
+        soldatClient.getPlayerInfo("vandal", (info) => {
+            expect(info).containSubset({
+                name: "vandal",
+                playfabId: "7CCE15D959A12E91"
+            })
+            done()
+        })
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] 0 vandal [id] 0 [account] 7CCE15D959A12E91 [team] 0 [score] 9 [kills] 9 [deaths] 14 [spawned] yes").raw))
+    })
+
+    it("should handle authentication", async () => {
+        const auth = currentGather.authenticator
+
+        let authenticated = await auth.isAuthenticated("PlayerADiscordID")
+        expect(authenticated).equal(false)
+
+        const authCode = auth.requestAuthentication("PlayerADiscordID")
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine(`[00:00:00] [PlayerA] !auth ${authCode}`).raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine(`[00:00:00]  0 PlayerA [id] 0 [account] PlayerAPlayfabID [team] 0 [score] 9 [kills] 9 [deaths] 14 [spawned] yes`).raw))
+
+        // TODO: We should not have to wait for 1 second here; need to figure out how to await an eventemitter...
+        return new Promise((resolve, reject) => setTimeout(async () => {
+            authenticated = await auth.isAuthenticated("PlayerADiscordID")
+            expect(authenticated).equal(true)
+
+            const map = await auth.getPlayfabToDiscordIdMap()
+            expect(map["PlayerAPlayfabID"]).equal("PlayerADiscordID")
+
+            resolve()
+        }, 1000))
+    })
 
     // it('should handle gather pausing/unpausing', async () => {
     //     currentGather.currentSize = 4

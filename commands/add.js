@@ -10,6 +10,12 @@ module.exports = {
             return
         }
 
-        currentGather.playerAdd(message.author)
+        currentGather.authenticator.isAuthenticated(message.author.id).then(authenticated => {
+            if (!authenticated) {
+                message.reply("you are not authenticated. Type !auth and follow the instructions.")
+            } else {
+                currentGather.playerAdd(message.author)
+            }
+        })
     },
 };

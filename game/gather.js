@@ -8,6 +8,7 @@ const constants = require("./constants")
 const ctfRound = require("./ctfRound")
 const ctbRound = require("./ctbRound")
 const ratings = require("./ratings")
+const authentication = require("./authentication")
 
 const IN_GAME_STATES = constants.IN_GAME_STATES;
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS;
@@ -33,6 +34,7 @@ class Gather {
         this.statsDb = statsDb
         this.soldatClient = soldatClient
         this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
+        this.authenticator = new authentication.Authenticator(statsDb)
         // this.password = "placeholder_password"
     }
 
@@ -343,6 +345,24 @@ class Gather {
                 this.soldatClient.restart();
             } else {
                 this.soldatClient.changeMap(this.currentRound.mapName, this.gameMode)
+            }
+        }
+
+        if (firstPart === "auth") {
+            if (parts.length === 2) {
+                const authCode = parts[1]
+                this.soldatClient.getPlayerInfo(playerName, player => {
+                    this.authenticator.authenticate(player.playfabId, authCode, (discordId) => {
+                        if (discordId === false) {
+                            // TODO Auth code is incorrect. Message the player in-game once we
+                            //  have an "rcon say" command
+                        } else {
+                            this.discordChannel.client.fetchUser(discordId).then(user => {
+                                user.send("You have been successfully authenticated.")
+                            })
+                        }
+                    })
+                })
             }
         }
     }
