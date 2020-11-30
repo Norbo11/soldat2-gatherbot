@@ -6,7 +6,7 @@ const constants = require("../game/constants")
 const statsFormatting = require("../game/statsFormatting")
 
 module.exports = {
-    aliases: ["topweapon"],
+    aliases: ["topweapon", "topwep"],
     description: "Show the top players by weapon.",
     execute(client, message, args) {
         let gameMode = constants.GAME_MODES.CAPTURE_THE_FLAG
