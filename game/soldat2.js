@@ -2,6 +2,7 @@ const logger = require("../utils/logger")
 const WebSocket = require('ws');
 const random = require("../utils/random")
 const util = require('util')
+const _ = require("lodash")
 
 // const sslRootCAs = require('ssl-root-cas/latest')
 // sslRootCAs.inject().addFile(__dirname + "/../certs/webrcon.com")
@@ -156,7 +157,7 @@ class Soldat2Client {
         const message = NetworkMessage.Command(0, `listplayers`)
 
         this.listenForServerResponse((text) => {
-            const match = text.match(new RegExp(`\\[(?<time>.*?)] \(?<num>.*?) ${playerName} \\[id] (?<id>.*?) \\[account] (?<playfabId>.*?) \\[team] (?<teamId>.*?) \\[score] (?<score>.*?) \\[kills] (?<kills>.*?) \\[deaths] (?<deaths>.*?) \\[spawned] (?<spawned>.*)`))
+            const match = text.match(new RegExp(`\\[(?<time>.*?)] \(?<num>.*?) ${_.escapeRegExp(playerName)} \\[id] (?<id>.*?) \\[account] (?<playfabId>.*?) \\[team] (?<teamId>.*?) \\[score] (?<score>.*?) \\[kills] (?<kills>.*?) \\[deaths] (?<deaths>.*?) \\[spawned] (?<spawned>.*)`))
 
             if (match === null) {
                 return false
