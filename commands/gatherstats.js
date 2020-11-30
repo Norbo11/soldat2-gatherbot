@@ -1,6 +1,7 @@
 const logger = require("../utils/logger")
 const utils = require("../utils/commandUtils")
 const stats = require("../game/stats")
+const statsFormatting = require("../game/statsFormatting")
 
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
     description: "Show overall gather statistics.",
     execute(client, message, args) {
         stats.getGatherStats(currentStatsDb).then((gatherStats) => {
-            message.channel.send(stats.formatGatherStats(gatherStats))
+            message.channel.send(statsFormatting.formatGatherStats(gatherStats))
         })
     },
 };

@@ -3,6 +3,7 @@ const utils = require("../utils/commandUtils")
 const stats = require("../game/stats")
 const discord = require("../utils/discord")
 const constants = require("../game/constants")
+const statsFormatting = require("../game/statsFormatting")
 
 module.exports = {
     aliases: ["topweapon"],
@@ -34,7 +35,7 @@ module.exports = {
             const discordIdToUsername = {}
 
             discord.getDiscordIdToUsernameMap(client, discordIdToUsername, Array.from(discordIds)).then(() => {
-                message.channel.send(stats.formatTopPlayersByWeapon(topPlayers, discordIdToUsername, weaponName))
+                message.channel.send(statsFormatting.formatTopPlayersByWeapon(topPlayers, discordIdToUsername, weaponName))
             })
         })
     }

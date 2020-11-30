@@ -2,7 +2,8 @@ const logger = require("./logger")
 const moment = require("moment")
 const _ = require("lodash")
 const constants = require("../game/constants")
-const ratings = require("../game/ratings")
+const stats = require("../game/stats")
+const statsFormatting = require("../game/statsFormatting")
 
 const GAME_MODES = constants.GAME_MODES
 
@@ -18,43 +19,6 @@ teamEmoji = (teamName) => {
     }
 }
 
-
-roundSkill = (skill) => {
-    return skill.toFixed(2)
-}
-
-
-formatRating = (rating) => {
-    const skillEstimate = ratings.getSkillEstimate(rating)
-    return `Skill ${roundSkill(rating.mu)}, Uncertainty ${roundSkill(rating.sigma)}, Rating Estimate ${roundSkill(skillEstimate)}`
-}
-
-skillChangeEmoji = (oldSkill, newSkill) => {
-    oldSkill = roundSkill(oldSkill)
-    newSkill = roundSkill(newSkill)
-
-    if (newSkill > oldSkill) {
-        return `<:green_arrow_up:${process.env.GREEN_ARROW_UP_EMOJI_ID}>`
-    } else if (newSkill < oldSkill) {
-        return `<:red_arrow_down:${process.env.RED_ARROW_DOWN_EMOJI_ID}>`
-    } else {
-        return `<:black_equals:${process.env.BLACK_EQUALS_EMOJI_ID}>`
-    }
-}
-
-
-uncertaintyChangeEmoji = (oldUncertainty, newUncertainty) => {
-    oldUncertainty = roundSkill(oldUncertainty)
-    newUncertainty = roundSkill(newUncertainty)
-
-    if (newUncertainty > oldUncertainty) {
-        return ":arrow_up:"
-    } else if (newUncertainty < oldUncertainty) {
-        return ":arrow_down:"
-    } else {
-        return `<:black_equals:${process.env.BLACK_EQUALS_EMOJI_ID}>`
-    }
-}
 
 
 getPlayerNameStrings = (redTeamIds, blueTeamIds, delim = "\n") => {
@@ -146,47 +110,21 @@ getServerLinkField = (password = "") => {
 }
 
 
-getPlayerNameStringsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths = undefined) => {
-    // return discordIds.map(discordId => {
-    //     const kills = (playerKillsAndDeaths[discordId] || {kills: 0}).kills
-    //     const deaths = (playerKillsAndDeaths[discordId] || {deaths: 0}).deaths
-    //
-    //     return `<@${discordId}>: ${kills}/${deaths} (${(kills / deaths).toFixed(2)})`
-    // })
-
+getPlayerNameStringsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     return discordIds.map(discordId => {
-        return `<@${discordId}>`
-    })
-}
+        const kills = (playerKillsAndDeaths[discordId] || {kills: 0}).kills
+        const deaths = (playerKillsAndDeaths[discordId] || {deaths: 0}).deaths
 
-getSkillChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating) => {
-
-    return discordIds.map(discordId => {
-        const oldRating = discordIdToOldRating[discordId]
-        const newRating = discordIdToNewRating[discordId]
-
-        // We are rounding before we take a difference in order to treat small differences as 0 and display an equals sign
-        return `${skillChangeEmoji(oldRating.mu, newRating.mu)} ${roundSkill(roundSkill(newRating.mu) - roundSkill(oldRating.mu))}`;
-    })
-}
-
-getUncertaintyChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating) => {
-
-    return discordIds.map(discordId => {
-        const oldRating = discordIdToOldRating[discordId]
-        const newRating = discordIdToNewRating[discordId]
-
-        // We are rounding before we take a difference in order to treat small differences as 0 and display an equals sign
-        return `${uncertaintyChangeEmoji(oldRating.sigma, newRating.sigma)} ${roundSkill(roundSkill(newRating.sigma) - roundSkill(oldRating.sigma))}`;
+        return `<@${discordId}>: ${kills}/${deaths} (${(kills / deaths).toFixed(2)})`
     })
 }
 
 
-getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, discordIdToOldRating, discordIdToNewRating) => {
+getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating) => {
 
-    const playerNameStrings = getPlayerNameStringsWithKillsAndDeaths(discordIds)
-    const skillChangeStrings = getSkillChangeStrings(discordIds, discordIdToOldRating, discordIdToNewRating)
-    const uncertaintyChangeStrings = getUncertaintyChangeStrings(discordIds, discordIdToOldRating, discordIdToNewRating)
+    const playerNameStrings = getPlayerNameStringsWithKillsAndDeaths(discordIds, playerKillsAndDeaths)
+    const skillChangeStrings = statsFormatting.getSkillChangeStrings(discordIds, discordIdToOldRating, discordIdToNewRating)
+    const uncertaintyChangeStrings = statsFormatting.getUncertaintyChangeStrings(discordIds, discordIdToOldRating, discordIdToNewRating)
 
     return [
         {
@@ -209,12 +147,15 @@ getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, discordIdToOldRati
 
 
 getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
+    const allEvents = _.flatMap(game.rounds, round => round.events)
+    const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(allEvents)
+
     return [
         getResultField(game.winner, true),
         getDurationField(game.startTime, game.endTime, true, "Gather"),
         getGameModeField(game.gameMode),
-        ...getGatherEndFieldsForTeam(constants.SOLDAT_TEAMS.BLUE, game.bluePlayers, game.blueRoundWins, discordIdToOldRating, discordIdToNewRating),
-        ...getGatherEndFieldsForTeam(constants.SOLDAT_TEAMS.RED, game.redPlayers, game.redRoundWins, discordIdToOldRating, discordIdToNewRating)
+        ...getGatherEndFieldsForTeam(constants.SOLDAT_TEAMS.BLUE, game.bluePlayers, game.blueRoundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating),
+        ...getGatherEndFieldsForTeam(constants.SOLDAT_TEAMS.RED, game.redPlayers, game.redRoundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating)
     ]
 }
 
@@ -222,16 +163,7 @@ getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRati
 getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
 
     // TODO: Hook this up
-    const playerKillsAndDeaths = {}
-    const allPlayers = [...redDiscordIds, ...blueDiscordIds]
-
-    allPlayers.forEach(discordId => {
-        playerKillsAndDeaths[discordId] = {
-            kills: 0,
-            deaths: 0
-        }
-    })
-
+    const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(round.events)
     const redPlayersString = getPlayerNameStringsWithKillsAndDeaths(redDiscordIds, playerKillsAndDeaths).join("\n")
     const bluePlayersString = getPlayerNameStringsWithKillsAndDeaths(blueDiscordIds, playerKillsAndDeaths).join("\n")
 
@@ -276,6 +208,5 @@ module.exports = {
     getDiscordIdToUsernameMap,
     getGameModeField,
     getMatchQualityField,
-    roundSkill,
-    formatRating
+
 }

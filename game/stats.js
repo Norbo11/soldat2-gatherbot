@@ -1,10 +1,8 @@
 const _ = require("lodash")
-const moment = require("moment")
 
 const logger = require("../utils/logger")
 const constants = require("./constants")
 const ratings = require("./ratings")
-const discord = require("../utils/discord")
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
@@ -20,6 +18,27 @@ getCaps = (discordId, events) => {
     return events.length
 }
 
+
+filterKillEvent = (event) => {
+    return event.type === SOLDAT_EVENTS.PLAYER_KILL
+    && event.killerDiscordId !== event.victimDiscordId // Do not count selfkills as kills
+    && event.killerTeam !== event.victimTeam // Do not count friendly kills
+}
+
+filterDeathEvent = (event, discordId = null) => {
+    return event.type === SOLDAT_EVENTS.PLAYER_KILL
+    // Count deaths from other people, or selfkills
+    && (event.killerTeam !== event.victimTeam || event.killerDiscordId === discordId)
+}
+
+filterKillEventsByPlayer = (events, discordId) => {
+    return _.filter(events, event => event.killerDiscordId === discordId && filterKillEvent(event));
+}
+
+filterDeathEventsByPlayer = (events, discordId) => {
+    return _.filter(events, event => event.victimDiscordId === discordId && filterDeathEvent(event, discordId));
+}
+
 getKillsAndDeathsPerWeapon = (discordId, events) => {
     const weaponStats = {}
 
@@ -29,21 +48,8 @@ getKillsAndDeathsPerWeapon = (discordId, events) => {
             deaths: 0
         }
     })
-
-    const killEvents = _.filter(events, event =>
-        event.type === SOLDAT_EVENTS.PLAYER_KILL
-        && event.killerDiscordId === discordId
-        && event.killerDiscordId !== event.victimDiscordId // Do not count selfkills as kills
-        && event.killerTeam !== event.victimTeam // Do not count friendly kills
-    )
-
-    const deathEvents = _.filter(events, event =>
-        event.type === SOLDAT_EVENTS.PLAYER_KILL
-        && event.victimDiscordId === discordId
-
-        // Count deaths from other people, or selfkills
-        && (event.killerTeam !== event.victimTeam || event.killerDiscordId === discordId)
-    )
+    const killEvents = filterKillEventsByPlayer(events, discordId);
+    const deathEvents = filterDeathEventsByPlayer(events, discordId);
 
     killEvents.forEach(event => {
         weaponStats[event.weaponName].kills += 1
@@ -242,96 +248,6 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     }
 }
 
-const formatMilliseconds = (millis) => {
-    if (millis === 0) {
-        return "0 seconds"
-    } else {
-        const momentDuration = moment.duration(millis)
-        return momentDuration.humanize()
-    }
-}
-
-const formatWinsTiesLosses = (playerStats, gameMode) => {
-
-    const stats = playerStats.gameModeStats[gameMode]
-
-    return `${stats.wonGames}-${stats.tiedGames}-${stats.lostGames} (${Math.round(stats.wonGames / stats.totalGames * 100)}% winrate)`
-}
-
-
-const formatGeneralStatsForPlayer = (playerName, playerStats) => {
-    const overallStats = [
-        `**Gathers Played**: ${playerStats.totalGames}`,
-        `**Rounds Played**: ${playerStats.totalRounds}`,
-        `**Total Gather Time**: ${formatMilliseconds(playerStats.totalGatherTime)}`,
-        `**CTF W-T-L**: ${formatWinsTiesLosses(playerStats, GAME_MODES.CAPTURE_THE_FLAG)}`,
-        `**CTB W-T-L**: ${formatWinsTiesLosses(playerStats, GAME_MODES.CAPTURE_THE_BASES)}`,
-        `**Kills/Deaths**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`,
-        // `**Caps**: ${playerStats.totalCaps} (${(playerStats.totalCaps / playerStats.totalGames).toFixed(2)} per game)`,
-        `**First Gather**: ${moment(playerStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
-        `**Last Gather**: ${moment(playerStats.lastGameTimestamp).from(moment())}`,
-        `**Rating**: ${discord.formatRating(playerStats.rating)}`,
-    ]
-
-    let favouriteWeapons = Object.keys(playerStats.weaponStats).map(weaponName => {
-        return {weaponName, ...playerStats.weaponStats[weaponName]}
-    })
-
-    favouriteWeapons = _.sortBy(favouriteWeapons, weaponStat => -weaponStat.kills)
-    favouriteWeapons = _.take(favouriteWeapons, 5)
-    favouriteWeapons = favouriteWeapons.map(weaponStat => `**${weaponStat.weaponName}**: ${weaponStat.kills} kills`)
-
-    return {
-        embed: {
-            fields: [
-                {
-                    name: `**Overall Stats for ${playerName}**`,
-                    value: overallStats.join("\n")
-                },
-                {
-                    name: "**Favourite Weapons**",
-                    value: favouriteWeapons.join("\n"),
-                    inline: true
-                },
-            ]
-        }
-    }
-}
-
-const formatGatherStats = (gatherStats) => {
-    const overallStats = [
-        `**Gathers Played**: ${gatherStats.totalGames}`,
-        `**Rounds Played**: ${gatherStats.totalRounds}`,
-        `**Total Gather Time**: ${formatMilliseconds(gatherStats.totalGatherTime)}`,
-        `**Average Gather Time**: ${formatMilliseconds(Math.round(gatherStats.totalGatherTime / gatherStats.totalGames))}`,
-        `**First Gather**: ${moment(gatherStats.firstGameTimestamp).format("DD-MM-YYYY")}`,
-        `**Last Gather**: ${moment(gatherStats.lastGameTimestamp).from(moment())}`,
-    ]
-
-    let favouriteMaps = Object.keys(gatherStats.mapStats).map(mapName => {
-        return {mapName, ...gatherStats.mapStats[mapName]}
-    })
-
-    favouriteMaps = _.sortBy(favouriteMaps, mapStats => -mapStats.totalRounds)
-    favouriteMaps = _.take(favouriteMaps, 5)
-    favouriteMaps = favouriteMaps.map(mapStat => `**${mapStat.mapName}**: ${mapStat.totalRounds} rounds`)
-
-    return {
-        embed: {
-            fields: [
-                {
-                    name: "**Overall Stats**",
-                    value: overallStats.join("\n")
-                },
-                {
-                    name: "**Favourite Maps**",
-                    value: favouriteMaps.length > 0 ? favouriteMaps.join("\n") : "No Gathers Played",
-                },
-            ]
-        }
-    }
-}
-
 const getTeamCaps = (events, teamName) => {
     let caps = 0
 
@@ -350,6 +266,7 @@ const getKillsAndDeathsPerPlayer = (events) => {
     const playerKillsAndDeaths = {}
 
     events.forEach(event => {
+
         if (event.type === SOLDAT_EVENTS.PLAYER_KILL) {
             if (!(event.killerDiscordId in playerKillsAndDeaths)) {
                 playerKillsAndDeaths[event.killerDiscordId] = {
@@ -365,8 +282,13 @@ const getKillsAndDeathsPerPlayer = (events) => {
                 }
             }
 
-            playerKillsAndDeaths[event.killerDiscordId].kills += 1
-            playerKillsAndDeaths[event.victimDiscordId].deaths += 1
+            if (filterKillEvent(event)) {
+                playerKillsAndDeaths[event.killerDiscordId].kills += 1
+            }
+
+            if (filterDeathEvent(event)) {
+                playerKillsAndDeaths[event.victimDiscordId].deaths += 1
+            }
         }
     })
 
@@ -374,78 +296,8 @@ const getKillsAndDeathsPerPlayer = (events) => {
 }
 
 
-const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
-    const topPlayersByKda = topPlayers.topPlayersByKda.map(topPlayer => {
-        const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
-    })
-
-    const topPlayersByTotalGames = topPlayers.topPlayersByTotalGames.map(topPlayer => {
-        const playerStats = topPlayer.playerStats.gameModeStats[gameMode]
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalGames} games`
-    })
-
-    // const topPlayersByTeamKills = topPlayers.topPlayersByTeamKills.map(topPlayer => {
-    //     const playerStats = topPlayer.playerStats
-    //     return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalTeamKills} team kills (${(playerStats.totalTeamKills / playerStats.totalKills * 100).toFixed(1)}% of kills)`
-    // })
-
-    const topPlayersBySkillEstimate = topPlayers.topPlayersBySkillEstimate.map(topPlayer => {
-        const playerStats = topPlayer.playerStats
-        const rating = playerStats.rating
-        const estimate = ratings.getSkillEstimate(rating)
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${discord.roundSkill(estimate)} (${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames})`
-    })
-
-    return {
-        embed: {
-            title: `Top ${constants.formatGameMode(gameMode)} Players`,
-            fields: [
-                {
-                    name: "**Rating Estimate**",
-                    value: topPlayersBySkillEstimate.length > 0 ? topPlayersBySkillEstimate.join("\n") : "No Players",
-                    inline: true
-                },
-                {
-                    name: "**KDA**",
-                    value: topPlayersByKda.length > 0 ? topPlayersByKda.join("\n") : "No Players",
-                    inline: true
-                },
-                {
-                    name: "**Total Games**",
-                    value: topPlayersByTotalGames.length > 0 ? topPlayersByTotalGames.join("\n") : "No Players",
-                    inline: true
-                },
-            ]
-        }
-    }
-}
-
-const formatTopPlayersByWeapon = (topPlayers, discordIdToUsername, weaponName) => {
-    const weapon = constants.getWeaponByFormattedName(weaponName)
-
-    if (weapon === undefined) {
-        return `${weaponName} is not a soldat weapon.`
-    }
-
-    const topPlayersByWeapon = topPlayers.topPlayersByWeaponKills[weapon.formattedName].map(topPlayer => {
-        const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.weaponStats[weapon.formattedName].kills} kills`
-    })
-
-    return {
-        embed: {
-            fields: [
-                {
-                    name: `**Top Players by ${weapon.formattedName} kills**`,
-                    value: topPlayersByWeapon.length > 0 ? topPlayersByWeapon.join("\n") : "No kills with this weapon"
-                },
-            ]
-        }
-    }
-}
 
 module.exports = {
-    getPlayerStats, formatGeneralStatsForPlayer, getGatherStats, formatGatherStats,
-    getTopPlayers, formatTopPlayers, formatTopPlayersByWeapon, getTeamCaps, getKillsAndDeathsPerPlayer
+    getPlayerStats, getGatherStats,
+    getTopPlayers, getTeamCaps, getKillsAndDeathsPerPlayer
 }

@@ -13,6 +13,7 @@ const stats = require("../game/stats")
 const db = require("../game/db")
 const constants = require("../game/constants")
 const ratings = require("../game/ratings")
+const statsFormatting = require("../game/statsFormatting")
 
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
@@ -386,7 +387,7 @@ describe('Stats Formatter', () => {
             }
         }
 
-        const formatted = stats.formatGeneralStatsForPlayer("Player", playerStats)
+        const formatted = statsFormatting.formatGeneralStatsForPlayer("Player", playerStats)
 
         expect(formatted).eql({
             embed: {
@@ -434,7 +435,7 @@ describe('Stats Formatter', () => {
             }
         }
 
-        const formatted = stats.formatGatherStats(gatherStats)
+        const formatted = statsFormatting.formatGatherStats(gatherStats)
 
         expect(formatted).eql({
             embed: {

@@ -1,5 +1,6 @@
 const logger = require("../utils/logger")
 const stats = require("../game/stats")
+const statsFormatting = require("../game/statsFormatting")
 const utils = require("util")
 
 
@@ -25,7 +26,7 @@ module.exports = {
                 if (playerStats === undefined) {
                     message.channel.send(`<@${user.id}> does not have any stats.`)
                 } else {
-                    message.channel.send(stats.formatGeneralStatsForPlayer(user.username, playerStats))
+                    message.channel.send(statsFormatting.formatGeneralStatsForPlayer(user.username, playerStats))
                 }
             })
         })
