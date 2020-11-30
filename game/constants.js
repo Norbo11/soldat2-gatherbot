@@ -90,12 +90,13 @@ const SOLDAT_WEAPONS = {
     },
     HANDS: {
         id: "14",
-        formattedName: "Hands"
+        formattedName: "Melee"
     },
     GRENADE: {
         id: "15",
-        formattedName: "Grenade"
+        formattedName: "RGD5"
     },
+    // This shows up when you kill yourself or use the respawn button
     NA: {
         id: "16",
         formattedName: "N/A"
