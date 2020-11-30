@@ -17,7 +17,7 @@ module.exports = {
 
         const weaponName = args[0]
 
-        stats.getTopPlayers(currentStatsDb, 5, gameMode).then(topPlayers => {
+        stats.getTopPlayers(currentStatsDb, process.env.MINIMUM_GAMES_NEEDED_FOR_LEADERBOARD, gameMode).then(topPlayers => {
             const discordIds = new Set()
 
             for (let player of topPlayers.topPlayersBySkillEstimate) {
