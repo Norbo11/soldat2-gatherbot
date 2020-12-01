@@ -3,6 +3,18 @@ const constants = require("../game/constants")
 const discord = require("../utils/discord")
 
 
+ensureWebrconAlive = () => {
+    currentGather.soldatClient.pingServer((response) => {
+        if (response === undefined) {
+            currentDiscordChannel.send("Detected issue with webrcon connection/credentials. Restarting with fresh credentials...").then(() => {
+                // This will invoke the cleanUp function in index.js
+                process.kill(process.pid, "SIGINT")
+            })
+        }
+    })
+}
+
+
 displayGatherStatus = (message) => {
     let description = undefined;
 
@@ -88,5 +100,5 @@ displayQueueWithServerInfo = () => {
 
 
 module.exports = {
-    displayGatherStatus, displayServerInfo, displayQueueWithServerInfo
+    displayGatherStatus, displayServerInfo, displayQueueWithServerInfo, ensureWebrconAlive
 }

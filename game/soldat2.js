@@ -33,7 +33,6 @@ class Soldat2Client {
         ws.on("open", () => {
             logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
             let loginMessage = NetworkMessage.Login(sessionId, ckey)
-            let randomString = random.getRandomString()
 
             client.sendMessage(loginMessage);
 
@@ -44,14 +43,10 @@ class Soldat2Client {
             // or anything else more messy. Once we receive our echo, we can set the "initialized" flag to true; this is
             // used to kick off the soldat events handlers.
 
-            client.listenForServerResponse((text) => {
-                const regex = new RegExp("\\[(?<time>.*)] Return value: dummy_initialization_command_" + randomString)
-                return !!text.match(regex);
-            }, () => {
+           client.pingServer(() => {
                 logger.log.info("Received the initialization command; setting initialized = true.")
                 client.initialized = true;
             }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
-            client.sendMessage(NetworkMessage.Command(0, "echotest dummy_initialization_command_" + randomString))
         });
 
         ws.on("message", (data) => {
@@ -92,6 +87,12 @@ class Soldat2Client {
                             timeout = DEFAULT_RESPONSE_TIMEOUT,
                             verbose = true) {
 
+        const noResponseTimer = setTimeout(() => {
+            logger.log.error(`Did not receive expected data after ${timeout}ms has passed! Removing listener.`)
+            this.ws.removeListener("message", listener)
+            callback(undefined)
+        }, timeout)
+
         const listener = (data) => {
             const eventText = maybeGetLogLine(data);
 
@@ -109,16 +110,27 @@ class Soldat2Client {
                 logger.log.info(`Got the data that we wanted: ${eventText}`)
 
                 this.ws.removeListener("message", listener)
+                clearTimeout(noResponseTimer)
                 callback(result)
             }
         }
 
         this.ws.addListener("message", listener)
 
-        setTimeout(() => {
-            logger.log.info(`${timeout}ms has passed, removing listener.`)
-            this.ws.removeListener("message", listener)
-        }, timeout)
+    }
+
+    pingServer(callback) {
+        // This command doesn't just ping the server directly; it uses the webrcon connection send a message to thhe
+        // server and expects to receive a response.
+
+        let randomString = random.getRandomString()
+
+        this.listenForServerResponse((text) => {
+            const regex = new RegExp("\\[(?<time>.*)] Return value: ping_command_" + randomString)
+            return !!text.match(regex);
+        }, callback)
+
+        this.sendMessage(NetworkMessage.Command(0, "echotest ping_command_" + randomString))
     }
 
     sendMessage(netMessage) {
