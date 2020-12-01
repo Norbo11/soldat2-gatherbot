@@ -368,7 +368,7 @@ class Gather {
                         } else {
                             this.discordChannel.client.fetchUser(discordId).then(user => {
                                 user.send("You have been successfully authenticated.")
-                            })
+                            }).catch(e => logger.log.error(`Could not send auth confirmation to ${discordId}: ${e}\n${util.inspect(e)}`))
                         }
                     })
                 })
