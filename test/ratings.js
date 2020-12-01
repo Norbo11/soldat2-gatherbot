@@ -114,10 +114,10 @@ describe("Ratings", () => {
         assert.containSubset(match, {
             // Lower match quality due to increased uncertainty
             // This match quality is actually the same across the 3 combinations of teams which may be a bit
-            // counter-intuitive; you'd think a, b vs c, d would have the lowest match quality
+            // counter-intuitive; you'd think a, b vs c, d would have the lowest match quality, but I think
+            // uncertainty only plays a role when adjusting skill levels, not when determining match quality.
             matchQuality: 0.8811342210628017,
 
-            // Certain + uncertain vs certain + uncertain
             blueDiscordIds: ["a", "b"],
             redDiscordIds: ["c", "d"],
 
@@ -158,9 +158,8 @@ describe("Ratings", () => {
         assert.equal(muDiffs["c"], -35.080222930586544)
         assert.equal(muDiffs["d"], -35.080222930586544)
 
-        // Decrease in uncertainties as the system learned a lot about these players' relative skill levels
-        // Seems a bit counter-intuitive because this result was very surprising, but because the
-        // uncertainty was high to start off with, the system wasn't sure about skill levels to behind with.
+        // Decrease in uncertainties as the system learned a lot about these players' relative skill levels compared
+        // to what is used to know before the game started
         assert.equal(sigmaDiffs["a"], -5.306623193545484)
         assert.equal(sigmaDiffs["b"], -5.306623193545484)
         assert.equal(sigmaDiffs["c"], -5.306623193545484)
@@ -192,14 +191,13 @@ describe("Ratings", () => {
         const newRatings = ratings.rateRounds(game, oldRatings)
         const {muDiffs, sigmaDiffs} = computeRatingDiff(oldRatings, newRatings)
 
-        // Smaller increases in a and b ratings than before due to higher starting certainty,
-        // despite the surprising result
+        // Smaller increases in a and b ratings than before due to higher starting certainty
         assert.equal(muDiffs["a"], 25.05722457942357)
         assert.equal(muDiffs["b"], 25.05722457942357)
         assert.equal(muDiffs["c"], -25.057224579423554)
         assert.equal(muDiffs["d"], -25.05722457942356)
 
-        // Smaller decreases in uncertainty
+        // Smaller decreases in uncertainty, but still quite significant due to how surprising this result was
         assert.equal(sigmaDiffs["a"], -2.5736584808598906)
         assert.equal(sigmaDiffs["b"], -2.5736584808598906)
         assert.equal(sigmaDiffs["c"], -2.5736584808598906)
@@ -242,6 +240,44 @@ describe("Ratings", () => {
         assert.equal(sigmaDiffs["b"], -2.277736555496798)
         assert.equal(sigmaDiffs["c"], -2.277736555496798)
         assert.equal(sigmaDiffs["d"], -2.277736555496798)
+    })
+
+    it("should do a small rating increase if 2 strong beat 2 weak when starting with more certainty", () => {
+
+        const oldRatings = {
+            "a": ratings.getRating(30, 100 / 6),
+            "b": ratings.getRating(30, 100 / 6),
+            "c": ratings.getRating(70, 100 / 6),
+            "d": ratings.getRating(70, 100 / 6),
+        }
+
+        const game = {
+            bluePlayers: ["a", "b"],
+            redPlayers: ["c", "d"],
+            rounds: [
+                {
+                    winner: "Red"
+                },
+                {
+                    winner: "Red"
+                }
+            ]
+        }
+
+        const newRatings = ratings.rateRounds(game, oldRatings)
+        const {muDiffs, sigmaDiffs} = computeRatingDiff(oldRatings, newRatings)
+
+        // Very small decrease in a and b ratings due to higher certainty than before
+        assert.equal(muDiffs["a"], -0.6409517650844059)
+        assert.equal(muDiffs["b"], -0.6409517650844059)
+        assert.equal(muDiffs["c"], 0.640951765084381)
+        assert.equal(muDiffs["d"], 0.640951765084381)
+
+        // Much smaller decrease in uncertainty than before as the system didn't learn anything new
+        assert.equal(sigmaDiffs["a"], -0.30888269114563016)
+        assert.equal(sigmaDiffs["b"], -0.30888269114563016)
+        assert.equal(sigmaDiffs["c"], -0.30888269114563016)
+        assert.equal(sigmaDiffs["d"], -0.30888269114563016)
     })
 
     it("ties do not change rating if all skill levels are the same", () => {
