@@ -330,7 +330,7 @@ class Gather {
     playerCommand(playerName, command) {
         const parts = command.split(/ +/);
         const firstPart = parts[0].toLowerCase()
-        log.logger.info(`Processing command '${command}' for player '${playerName}'`)
+        logger.log.info(`Processing command '${command}' for player '${playerName}'`)
 
         if (firstPart === "map") {
             if (parts.length === 2) {

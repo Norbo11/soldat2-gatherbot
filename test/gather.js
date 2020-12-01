@@ -435,6 +435,28 @@ describe('Gather', () => {
         }, 1000))
     })
 
+    it("should handle authentication for player with regex characters in the name", async () => {
+        const auth = currentGather.authenticator
+
+        let authenticated = await auth.isAuthenticated("NamelessWolf")
+        expect(authenticated).equal(false)
+
+        const authCode = auth.requestAuthentication("NamelessWolf")
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine(`[00:00:00] [[WP] NamelessWolf] !auth ${authCode}`).raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine(`[00:00:00]  0 [WP] NamelessWolf [id] 0 [account] NamelessPlayFabId [team] 0 [score] 9 [kills] 9 [deaths] 14 [spawned] yes`).raw))
+
+        // TODO: We should not have to wait for 1 second here; need to figure out how to await an eventemitter...
+        return new Promise((resolve, reject) => setTimeout(async () => {
+            authenticated = await auth.isAuthenticated("NamelessWolf")
+            expect(authenticated).equal(true)
+
+            const map = await auth.getPlayfabIdToDiscordIdMap()
+            expect(map["NamelessPlayFabId"]).equal("NamelessWolf")
+
+            resolve()
+        }, 1000))
+    })
+
     // it('should handle gather pausing/unpausing', async () => {
     //     currentGather.currentSize = 4
     //     currentGather.currentQueue = ["a", "b", "c", "d"]
