@@ -189,7 +189,7 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
                     inline: true
                 },
                 {
-                    name: "**KDA**",
+                    name: "**K/D Ratio**",
                     value: topPlayersByKda.length > 0 ? topPlayersByKda.join("\n") : "No Players",
                     inline: true
                 },
