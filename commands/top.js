@@ -33,9 +33,9 @@ module.exports = {
                 discordIds.add(player.discordId)
             }
 
-            // for (let player in topPlayers.topPlayersByWinRate) {
-            //     discordIds.add(player.discordId)
-            // }
+            for (let player of topPlayers.topPlayersByKda) {
+                discordIds.add(player.discordId)
+            }
 
             const discordIdToUsername = {}
 

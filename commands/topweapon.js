@@ -20,17 +20,9 @@ module.exports = {
         stats.getTopPlayers(currentStatsDb, process.env.MINIMUM_GAMES_NEEDED_FOR_LEADERBOARD, gameMode).then(topPlayers => {
             const discordIds = new Set()
 
-            for (let player of topPlayers.topPlayersBySkillEstimate) {
+            for (let player of topPlayers.topPlayersByWeaponKills) {
                 discordIds.add(player.discordId)
             }
-
-            for (let player of topPlayers.topPlayersByTotalGames) {
-                discordIds.add(player.discordId)
-            }
-
-            // for (let player in topPlayers.topPlayersByWinRate) {
-            //     discordIds.add(player.discordId)
-            // }
 
             const discordIdToUsername = {}
 
