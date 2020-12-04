@@ -21,12 +21,13 @@ module.exports = {
 
         if (weapon === undefined) {
             message.channel.send(`${weaponName} is not a soldat weapon.`)
+            return
         }
 
         stats.getTopPlayers(currentStatsDb, process.env.MINIMUM_GAMES_NEEDED_FOR_LEADERBOARD, gameMode).then(topPlayers => {
             const discordIds = new Set()
 
-            for (let player of topPlayers.topPlayersByWeaponKills[weapon.weaponName]) {
+            for (let player of topPlayers.topPlayersByWeaponKills[weapon.formattedName]) {
                 discordIds.add(player.discordId)
             }
 
