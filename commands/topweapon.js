@@ -17,17 +17,23 @@ module.exports = {
 
         const weaponName = args[0]
 
+        const weapon = constants.getWeaponByFormattedName(weaponName)
+
+        if (weapon === undefined) {
+            message.channel.send(`${weaponName} is not a soldat weapon.`)
+        }
+
         stats.getTopPlayers(currentStatsDb, process.env.MINIMUM_GAMES_NEEDED_FOR_LEADERBOARD, gameMode).then(topPlayers => {
             const discordIds = new Set()
 
-            for (let player of topPlayers.topPlayersByWeaponKills[weaponName]) {
+            for (let player of topPlayers.topPlayersByWeaponKills[weapon.weaponName]) {
                 discordIds.add(player.discordId)
             }
 
             const discordIdToUsername = {}
 
             discord.getDiscordIdToUsernameMap(client, discordIdToUsername, Array.from(discordIds)).then(() => {
-                message.channel.send(statsFormatting.formatTopPlayersByWeapon(topPlayers, discordIdToUsername, weaponName))
+                message.channel.send(statsFormatting.formatTopPlayersByWeapon(topPlayers, discordIdToUsername, weapon))
             })
         })
     }

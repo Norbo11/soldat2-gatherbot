@@ -203,13 +203,7 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     }
 }
 
-const formatTopPlayersByWeapon = (topPlayers, discordIdToUsername, weaponName) => {
-    const weapon = constants.getWeaponByFormattedName(weaponName)
-
-    if (weapon === undefined) {
-        return `${weaponName} is not a soldat weapon.`
-    }
-
+const formatTopPlayersByWeapon = (topPlayers, discordIdToUsername, weapon) => {
     const topPlayersByWeapon = topPlayers.topPlayersByWeaponKills[weapon.formattedName].map(topPlayer => {
         const playerStats = topPlayer.playerStats
         return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.weaponStats[weapon.formattedName].kills} kills`
