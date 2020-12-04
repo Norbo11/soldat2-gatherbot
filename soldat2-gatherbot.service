@@ -14,11 +14,8 @@ Type=simple
 # Always restart
 Restart=always
 
-# Restart after 30 secs to let server ports clear
-RestartSec=30
-
-# Restart automatically after 1 day
-RuntimeMaxSec=1d
+# Restart after 90 secs to let server ports clear
+RestartSec=90
 
 # Allow 10 seconds for clean shutdown, then SIGKILL
 TimeoutStopSec=10s
