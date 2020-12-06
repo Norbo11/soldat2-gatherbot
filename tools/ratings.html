@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    body {
+        font: 10px sans-serif;
+    }
+
+    .line {
+        stroke: #000;
+        stroke-width: 1.5px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jstat/latest/jstat.min.js"></script>
+<script>
+    function normal(mean, sd, start = mean - 4 * sd, end = mean + 4 * sd) {
+        data = [];
+        for (let i = start; i <= end; i += 1) {
+            data.push({
+                x: i,
+                density: jStat.normal.pdf(i, mean, sd)
+            });
+        };
+        return data;
+    }
+
+
+    let globalMu = 50
+    let globalSigma = 50 / 3
+
+    points = [
+        {
+            mu: 30,
+            sigma: 3,
+        },
+        {
+            mu: 50,
+            sigma: 5,
+        },
+    ]
+
+    let figureWidth = this.innerWidth - 100
+    let figureHeight = this.innerHeight - 100
+
+    let margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = figureWidth - margin.left - margin.right,
+        height = figureHeight - margin.top - margin.bottom;
+
+    let normalPoints = normal(globalMu, globalSigma);
+
+    let min_d = d3.min(normalPoints, d => d.x);
+    let max_d = d3.max(normalPoints, d => d.x);
+    let max_p = d3.max(normalPoints, d => d.density);
+
+    // Return a function that maps our q values to the width of our graph
+    let x = d3.scaleLinear()
+            .rangeRound([0, width])
+            .domain([min_d, max_d])
+
+    x.domain().nice;  // This extends the domain so that it starts and ends on nice round values
+
+    // Return a function that maps our p values to the height of our graph
+    let y = d3.scaleLinear()
+        .domain([0, max_p])
+        .range([height, 0]);  // Height comes first because origin is at the top left of the graph
+
+    let svg = d3.select("body")
+
+        // Create an SVG with a given width and height
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+
+        // Create a group of elements and apply margins
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Create a group for the X axis
+    let gX = svg.append("g")
+        .attr("class", "x axis")
+
+        // Move it to the bottom of the graph
+        .attr("transform", "translate(0," + height + ")")
+
+        // Call the "axis" function over our xAxis group
+        // The axis function is a "generator" which will generate the SVG elements that draw our axis
+        .call(d3.axisBottom(x));
+
+    //let gY = svg.append("g")
+    //            .attr("class", "y axis")
+    //            .call(d3.axisLeft(y));
+
+    // Create a line where we map a datapoint to its X, Y location using the earlier scale
+    let line = d3.line()
+        .x(d => x(d.x))
+        .y(d => y(d.density));
+
+    let uncertaintyPoints = points.map(point => {
+        const left = point.mu - 3 * point.sigma
+        const right = point.mu + 3 * point.sigma
+        // return [
+        //     {
+        //         x: left,
+        //         density: 0
+        //     },
+        //     ...normal(globalMu, globalSigma, left, right),
+        //     {
+        //         x: right,
+        //         density: 0
+        //     },
+        // ]
+        return normal(globalMu, globalSigma, left, right)
+    })
+
+    // Draw the lines, with fill
+    svg.append("path")
+        .datum(normalPoints)
+        .attr("class", "line")
+        .attr("d", line)
+        .style("fill", "#4393c3")
+        .style("opacity", "0.5");
+
+    const handleMouseOverPoint = (d, i) => {
+
+
+        const left = d.mu - 3 * d.sigma
+        const right = d.mu + 3 * d.sigma
+        // const yValues = normal(globalMu, globalSigma, left, right)
+        const values = [
+            ...normal(globalMu, globalSigma, left, right),
+
+        ]
+        // return normal(globalMu, globalSigma, left, right)
+
+        // let points = uncertaintyPoints[i]
+
+        // Insert the uncertainty area *before* the current point in order to not mess up on-hover handling
+
+        // TODO: we need to somehow only pass the first value at the start, transitioning to the
+        //  full list of values at the end
+        let path = svg.insert("path", `#point${i}`)
+            .datum(values)
+            .attr("class", "area")
+            .attr("id", `uncertaintyArea${i}`)
+            .style("fill", "red")
+            .style("stroke", "none")
+            .style("opacity", "0.7")
+            .attr("d", d3.area()
+                .x(x(left))
+                .y0(y(0))
+                // .y1(d => y(values[0].density))
+                .y1(d => y(d.density))
+            )
+            .transition()
+                .duration(1000)
+                .attr("d", d3.area()
+                    .x(d => x(d.x))
+                    .y0(y(0))
+                    .y1(d => y(d.density))
+            )
+
+
+        // Animate stroke:
+        // let totalLength = path.node().getTotalLength()
+        //
+        // path
+        //     .attr("stroke-dasharray", totalLength + " " + totalLength)
+        //     .attr("stroke-dashoffset", totalLength)
+        //     .transition()
+        //         .duration(4000)
+        //         .ease(d3.easeLinear)
+        //         .attr("stroke-dashoffset", 0)
+
+    }
+
+    const handleMouseOutPoint = (d, i) => {
+        d3.select(`#uncertaintyArea${i}`).remove();
+    }
+
+    svg.selectAll("points")
+        .data(points)
+        .enter()
+        .append("circle")
+            .attr("id", (d, i) => `point${i}`)
+            .attr("fill", "red")
+            .attr("stroke", "none")
+            .attr("cx", d => x(d.mu))
+            .attr("cy", d => y(jStat.normal.pdf(d.mu, globalMu, globalSigma)))
+            .attr("r", 6)
+        .on("mouseover", handleMouseOverPoint)
+        .on("mouseout", handleMouseOutPoint)
+
+    // console.log(uncertaintyPoints)
+
+
+
+
+
+</script>
