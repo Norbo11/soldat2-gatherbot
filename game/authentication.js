@@ -26,8 +26,9 @@ class Authenticator {
     }
 
     authenticate(playfabId, authCode, callback) {
-        if (!(authCode in this.authCodes)) {
+        if (!_.includes(_.keys(this.authCodes), authCode)) {
             callback(false)
+            return
         }
 
         const discordId = this.authCodes[authCode]

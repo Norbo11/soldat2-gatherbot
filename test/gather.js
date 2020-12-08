@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
+const _ = require("lodash")
 
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
@@ -453,6 +454,20 @@ describe('Gather', () => {
             const map = await auth.getPlayfabIdToDiscordIdMap()
             expect(map["NamelessPlayFabId"]).equal("NamelessWolf")
 
+            resolve()
+        }, 1000))
+    })
+
+    it("should handle refuse to authenticate with bad code", async () => {
+        const auth = currentGather.authenticator
+
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine(`[00:00:00] [[WP] NamelessWolf] !auth blah`).raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine(`[00:00:00]  0 [WP] NamelessWolf [id] 0 [account] NamelessPlayFabId [team] 0 [score] 9 [kills] 9 [deaths] 14 [spawned] yes`).raw))
+
+        // TODO: We should not have to wait for 1 second here; need to figure out how to await an eventemitter...
+        return new Promise((resolve, reject) => setTimeout(async () => {
+            const map = await auth.getPlayfabIdToDiscordIdMap()
+            expect(_.size(map)).equal(4) // We map 4 of players inside beforeEach
             resolve()
         }, 1000))
     })

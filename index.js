@@ -52,7 +52,7 @@ const setUpServer = (webrconCredentials) => {
     // https://nodejs.org/api/child_process.html
     const child = child_process.spawn(`${process.env.SERVER_FOLDER}/soldat2`, [], {
 
-        // Can use "true" if we want the S2 server to continue running after we shut down the but
+        // Can use "true" if we want the S2 server to continue running after we shut down the bot
         detached: false,
 
         // stdin, stdout, stderr are all ignored; server logs should be tailed via Logs/console.txt

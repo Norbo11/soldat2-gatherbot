@@ -365,6 +365,7 @@ class Gather {
                         if (discordId === false) {
                             // TODO Auth code is incorrect. Message the player in-game once we
                             //  have an "rcon say" command
+                            logger.log.info(`${playerName} failed to authenticate with invalid auth code ${authCode}`)
                         } else {
                             this.discordChannel.client.fetchUser(discordId).then(user => {
                                 user.send("You have been successfully authenticated.")
