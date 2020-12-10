@@ -31,6 +31,10 @@ module.exports = {
                 discordIds.add(player.discordId)
             }
 
+            for (let player of topPlayers.topPlayersByWeaponKillsPerRound[weapon.formattedName]) {
+                discordIds.add(player.discordId)
+            }
+
             const discordIdToUsername = {}
 
             discord.getDiscordIdToUsernameMap(client, discordIdToUsername, Array.from(discordIds)).then(() => {

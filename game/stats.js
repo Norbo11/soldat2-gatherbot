@@ -242,9 +242,17 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
         topPlayersByWeaponKills[weapon.formattedName] = topPlayersByThisWeaponKills
     })
 
+    let topPlayersByWeaponKillsPerRound = {}
+
+    _.forEach(_.values(SOLDAT_WEAPONS), weapon => {
+        let topPlayersByThisWeaponKillsPerRound = _.sortBy(playersWithEnoughGames, player => -player.playerStats.weaponStats[weapon.formattedName].kills / player.playerStats.totalRounds)
+        topPlayersByThisWeaponKillsPerRound = _.take(topPlayersByThisWeaponKillsPerRound, 5)
+        topPlayersByWeaponKillsPerRound[weapon.formattedName] = topPlayersByThisWeaponKillsPerRound
+    })
+
     return {
         topPlayersByWinRate, topPlayersByTotalGames, allDiscordIds, topPlayersBySkillEstimate,
-        topPlayersByKda, topPlayersByTeamKills, topPlayersByWeaponKills
+        topPlayersByKda, topPlayersByTeamKills, topPlayersByWeaponKills, topPlayersByWeaponKillsPerRound
     }
 }
 
