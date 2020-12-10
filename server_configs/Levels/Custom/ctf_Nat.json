@@ -1,33 +1,33 @@
 {
   "Objects": {
-    "ctf_steelworkx": {
+    "ctf_Nat": {
       "MapSettings": {
-        "Scene": "cobra",
+        "Scene": "laos",
         "Author": "",
         "Seed": 0,
         "Generate": false,
         "Mirror": true,
         "Scale": {
-          "x": 3.5,
-          "y": 4.0,
+          "x": 3.0,
+          "y": 2.2,
           "z": 2.0
         },
-        "HeightAdd": 30,
+        "HeightAdd": 5,
         "MonumentOffset": {
           "x": 0.0,
-          "y": -5.0,
+          "y": 0.0,
           "z": 0.0
         },
-        "HueShift": 0.113,
-        "SaturationShift": -0.428,
-        "BrightnessShift": -0.203,
-        "SunIntensityShift": -0.702,
-        "SunVerticalAngle": 26.031,
-        "SunHorizontalAngle": 100.326
+        "HueShift": 0.0,
+        "SaturationShift": 0.0,
+        "BrightnessShift": 0.0,
+        "SunIntensityShift": 0.0,
+        "SunVerticalAngle": 124.7,
+        "SunHorizontalAngle": -180.1
       },
       "VoxelMap3D": {
-        "WorldWidth": 6,
-        "WorldHeight": 3,
+        "WorldWidth": 8,
+        "WorldHeight": 10,
         "PlatformsMaxHeight": 16,
         "NoiseFrequency": 0.1,
         "MainNoiseType": 4,
@@ -73,191 +73,205 @@
         "VerticalNoiseType": 6,
         "VerticalNoiseFrequency": 0.15,
         "VerticalNoiseThreshold": 0.0,
-        "VerticalSpaceOnSides": 55,
-        "VerticalSpaceInMiddle": 15,
+        "VerticalSpaceOnSides": 0,
+        "VerticalSpaceInMiddle": 0,
         "TerrainVoxelsModulation": 0.0,
         "TerrainVoxelsOffset": 0.0,
-        "BiomeFrequency": 0.01,
-        "BiomeAffect": 0.01,
-        "DisturbanceNoiseType": 9,
-        "FrontDisturbance": 0.1,
-        "BackDisturbance": 0.0,
-        "DisturbanceFrequency": 0.0,
-        "DisturbanceSmoothDistance": 0.05,
-        "DisturbanceHoleFactor": 0.3,
-        "DisturbanceRound": 30,
-        "BackThreshold": 0.01,
-        "BackEdgeMinWidth": 75,
-        "ScrambleEdgesFrequency": 0.0,
-        "ScrambleSmoothFactor": 0.01,
-        "OverTopBackFrequency": 0.0,
+        "BiomeFrequency": 0.05,
+        "BiomeAffect": 0.5,
+        "DisturbanceNoiseType": 2,
+        "FrontDisturbance": 14.86,
+        "BackDisturbance": 0.9,
+        "DisturbanceFrequency": 0.8,
+        "DisturbanceSmoothDistance": 0.001,
+        "DisturbanceHoleFactor": 0.44,
+        "DisturbanceRound": 25,
+        "BackThreshold": 0.0,
+        "BackEdgeMinWidth": 10,
+        "ScrambleEdgesFrequency": 0.21,
+        "ScrambleSmoothFactor": 0.1,
+        "OverTopBackFrequency": 0.1,
         "OverTopWallMaxHeight": 10.0,
         "FinalRipple": 0.09,
         "FinalVerticalSlope": 0.3,
         "FinalVerticalFrequency": 0.04,
         "FinalBackSlope": 0.1,
         "HuffmanTiles": [
-          20,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          2,
-          4,
-          1,
-          12,
+          1205,
           2,
           1,
           1,
-          4,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          2,
-          4,
-          1,
-          8,
-          2,
           5,
           1,
-          4,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          2,
-          4,
-          1,
-          9,
-          2,
-          4,
-          1,
-          4,
-          1,
-          3,
-          1,
-          3,
-          1,
-          3,
-          1,
-          2,
-          8,
+          48,
           10,
-          2,
-          3,
-          1,
-          4,
-          17,
-          17,
-          2,
-          2,
-          1,
-          3,
-          14,
-          12,
-          20,
-          17,
-          4,
-          13,
-          6,
-          20,
-          4,
-          1,
-          14,
+          48,
+          7,
+          50,
           8,
-          3,
-          4,
-          2,
-          23,
-          3,
-          6,
+          36,
+          1,
           13,
           9,
-          14,
-          6,
-          18,
-          17,
-          2,
-          15,
-          5,
-          9,
-          15,
-          23,
-          5,
-          13,
-          3,
-          5,
-          2,
-          3,
+          19,
           2,
           7,
+          8,
+          13,
+          8,
+          3,
+          2,
+          13,
+          4,
+          5,
+          10,
+          3,
+          1,
+          8,
+          7,
+          5,
+          6,
+          7,
+          5,
+          5,
+          10,
+          3,
+          3,
+          6,
+          6,
+          7,
+          17,
           5,
           3,
-          17,
           3,
           4,
-          2,
-          3,
-          29,
-          17,
-          11,
-          32,
-          3,
-          3,
-          3,
-          1,
-          18,
           4,
-          2,
           3,
+          5,
           2,
           14,
+          9,
+          17,
+          3,
+          5,
+          4,
+          3,
+          2,
+          16,
+          3,
+          2,
+          1,
+          18,
+          3,
+          5,
+          4,
+          3,
+          2,
+          16,
+          3,
+          21,
+          3,
+          6,
+          3,
+          3,
+          2,
+          11,
+          3,
+          3,
+          2,
+          35,
+          3,
+          4,
+          1,
+          1,
+          4,
+          2,
+          1,
+          41,
+          4,
+          3,
+          1,
+          1,
+          1,
+          2,
+          1,
+          2,
+          1,
+          41,
+          5,
+          2,
+          1,
+          4,
+          1,
+          2,
+          1,
+          3,
+          3,
+          36,
+          4,
+          2,
+          1,
+          11,
+          4,
+          19,
+          2,
+          16,
+          5,
+          7,
+          1,
+          4,
+          2,
+          20,
+          4,
+          16,
+          4,
+          6,
+          1,
+          4,
           1,
           20,
-          3,
-          3,
+          5,
+          16,
+          5,
+          4,
           2,
-          3,
-          2,
-          2,
-          2,
-          2,
-          2,
-          2,
-          28,
-          3,
-          2,
+          4,
+          1,
+          19,
+          4,
+          19,
+          11,
           2,
           2,
+          18,
           2,
-          2,
-          2,
-          41,
-          2,
-          27,
           2,
           1,
+          19,
           1,
+          6,
+          8,
+          17,
           2,
+          31,
+          2,
+          3,
+          3,
+          13,
+          5,
+          36,
           1,
           1,
           3,
+          5,
+          8,
+          43,
+          8,
+          4,
           2,
+          49,
           2,
-          1
+          1440
         ]
       },
       "MapBoundsHandling": {
@@ -295,93 +309,121 @@
         "FinalRipple": -0.26,
         "ScaleDepthByHeight": 0.0,
         "ScaleDepthByHeightNoiseScale": 0.1,
-        "NormalsSmoothing": -0.002,
+        "NormalsSmoothing": 0.0,
         "UseCurves": true,
         "TerrainCurve": [
-          27.548,
-          27.548,
-          27.548,
-          27.477,
-          27.405,
-          27.404,
-          27.386,
-          27.122,
-          27.047,
-          26.818,
-          24.947,
-          12.341,
-          11.724,
-          11.724,
-          11.724,
-          10.268,
-          10.054,
-          6.912,
-          6.28,
-          5.961,
-          5.812,
-          5.175,
-          4.653,
-          4.32,
-          3.9,
-          3.692,
-          3.614,
-          3.555,
-          3.517,
-          3.465,
-          3.428,
-          3.359,
-          3.229,
-          3.159,
-          3.168,
-          3.253,
-          3.335,
-          3.323,
-          3.299,
-          3.299,
-          3.04,
-          2.689,
-          2.477,
-          2.445,
-          2.581,
-          2.767,
-          2.87,
-          2.788,
-          2.813,
-          2.967,
-          2.924,
-          2.634,
-          2.332,
-          2.216,
-          2.035,
-          1.846,
-          1.716,
-          1.64,
-          1.327,
-          1.071,
-          1.206,
-          1.445,
-          1.507,
-          1.523,
-          1.523,
-          1.464,
-          1.192,
-          2.121,
-          2.083,
-          2.083,
-          2.044,
-          1.557,
-          1.48,
-          1.496,
-          1.824,
-          1.801,
-          1.754,
-          1.805,
-          1.436,
-          1.549,
-          1.824,
-          1.546,
-          1.379,
-          1.489
+          27.608,
+          27.526,
+          31.195,
+          32.033,
+          34.226,
+          35.488,
+          35.987,
+          37.045,
+          37.043,
+          37.057,
+          37.631,
+          37.644,
+          38.226,
+          38.248,
+          39.135,
+          39.175,
+          41.086,
+          41.198,
+          41.198,
+          41.279,
+          41.355,
+          41.238,
+          40.676,
+          40.497,
+          38.037,
+          37.117,
+          37.075,
+          37.287,
+          37.255,
+          37.243,
+          37.243,
+          37.345,
+          37.363,
+          37.188,
+          30.876,
+          30.894,
+          30.894,
+          30.899,
+          30.977,
+          31.007,
+          31.083,
+          31.119,
+          31.21,
+          31.348,
+          31.508,
+          31.629,
+          31.697,
+          32.99,
+          33.715,
+          33.858,
+          34.135,
+          34.11,
+          33.844,
+          33.567,
+          33.347,
+          33.116,
+          32.869,
+          32.838,
+          32.825,
+          32.614,
+          32.583,
+          32.622,
+          32.46,
+          32.337,
+          32.304,
+          32.396,
+          32.72,
+          33.569,
+          34.723,
+          35.398,
+          35.979,
+          36.234,
+          36.234,
+          36.208,
+          35.139,
+          32.399,
+          32.968,
+          34.211,
+          32.683,
+          32.683,
+          32.877,
+          33.663,
+          33.989,
+          35.481,
+          35.524,
+          35.755,
+          35.755,
+          35.723,
+          35.504,
+          35.504,
+          35.471,
+          35.253,
+          35.418,
+          34.775,
+          34.775,
+          34.739,
+          34.189,
+          34.213,
+          34.696,
+          34.641,
+          33.755,
+          33.417,
+          33.364,
+          33.333,
+          33.141,
+          33.622,
+          33.622,
+          33.636,
+          36.083,
+          36.097,
+          42.321,
+          43.399
         ],
         "CurvesTangent": 0.5,
         "FlattenMiddleWidth": 3
@@ -389,70 +431,10 @@
       "MapObjects": {
         "Objects": [
           {
-            "Prefab": "truss",
+            "Prefab": "rickety bridge",
             "Position": {
-              "x": 123.704,
-              "y": 53.608,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 344.3133
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 74.7594,
-              "y": 24.2642,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 315.5625
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 110.7567,
-              "y": 21.7001,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 15.3822
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 119.4259,
-              "y": 17.6808,
+              "x": 36.242,
+              "y": 85.4865,
               "z": 0.0
             },
             "Rotation": {
@@ -469,16 +451,556 @@
             "Background": false
           },
           {
-            "Prefab": "truss",
+            "Prefab": "rickety bridge",
             "Position": {
-              "x": 136.1062,
-              "y": 13.8052,
+              "x": 142.8391,
+              "y": 96.1126,
               "z": 0.0
             },
             "Rotation": {
               "x": 0.0,
               "y": 0.0,
-              "z": 356.8272
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "rickety bridge",
+            "Position": {
+              "x": 125.0274,
+              "y": 98.6969,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 145.6204,
+              "y": 94.1414,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 127.9743,
+              "y": 96.511,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 92.1611,
+              "y": 100.1717,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 38.983,
+              "y": 85.6799,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 36.18,
+              "y": 85.6692,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "guard tower",
+            "Position": {
+              "x": 37.524,
+              "y": 80.9227,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "guard tower",
+            "Position": {
+              "x": 90.7371,
+              "y": 95.4024,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "tent cover",
+            "Position": {
+              "x": 144.0904,
+              "y": 94.1631,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "tent cover",
+            "Position": {
+              "x": 126.4225,
+              "y": 96.4976,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "tent cover big",
+            "Position": {
+              "x": 113.0544,
+              "y": 98.4746,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "tent cover big",
+            "Position": {
+              "x": 83.7905,
+              "y": 92.2141,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "wood bridge",
+            "Position": {
+              "x": 53.4775,
+              "y": 90.766,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 77.9484,
+              "y": 51.0331,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 53.9946,
+              "y": 60.7746,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.6394,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 93.7474,
+              "y": 69.4829,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 78.052,
+              "y": 63.3335,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "wood bridge",
+            "Position": {
+              "x": 77.7497,
+              "y": 82.8257,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 270.8079
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "wood bridge",
+            "Position": {
+              "x": 123.3899,
+              "y": 62.3092,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.4747,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "wood bridge",
+            "Position": {
+              "x": 57.6358,
+              "y": 57.6982,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 57.9476,
+              "y": 50.0935,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.4448,
+              "y": 1.6005,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 105.0985,
+              "y": 53.7215,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 126.1246,
+              "y": 49.687,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 162.5701,
+              "y": 70.1966,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.3874,
+              "y": 1.3571,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 122.9966,
+              "y": 63.4661,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 75.0907,
+              "y": 63.5158,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 51.0256,
+              "y": 63.633,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
             },
             "Scale": {
               "x": 1.0,
@@ -491,8 +1013,8 @@
           {
             "Prefab": "soldier respawn",
             "Position": {
-              "x": 76.4403,
-              "y": 43.0308,
+              "x": 47.3581,
+              "y": 65.838,
               "z": 0.0
             },
             "Rotation": {
@@ -511,288 +1033,8 @@
           {
             "Prefab": "soldier respawn",
             "Position": {
-              "x": 74.5375,
-              "y": 43.001,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 75.4897,
-              "y": 43.001,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 77.423,
-              "y": 43.0606,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 73.5258,
-              "y": 42.9713,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "block_cube_b-x0.25",
-            "Position": {
-              "x": 118.1478,
-              "y": 24.5206,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 10.0,
-              "y": 10.0,
-              "z": 10.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "block_cube_b-x0.25",
-            "Position": {
-              "x": 118.2042,
-              "y": 24.8371,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 6.4779
-            },
-            "Scale": {
-              "x": 10.0,
-              "y": 10.0,
-              "z": 10.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 116.5172,
-              "y": 43.5765,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 324.538
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 115.1229,
-              "y": 45.9254,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 93.908,
-              "y": 21.9636,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 136.2128,
-              "y": 53.9985,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 101.7576,
-              "y": 45.9796,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 118.279,
-              "y": 27.3182,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 125.6734,
-              "y": 17.9727,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 73.2165,
-              "y": 25.988,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 70.2611,
-              "y": 42.0019,
+              "x": 43.6699,
+              "y": 66.1584,
               "z": 0.0
             },
             "Rotation": {
@@ -811,294 +1053,14 @@
           {
             "Prefab": "basecamp",
             "Position": {
-              "x": 59.2588,
-              "y": 30.1618,
+              "x": 64.4379,
+              "y": 74.7522,
               "z": 0.0
             },
             "Rotation": {
               "x": 0.0,
               "y": 0.0,
               "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "red house",
-            "Position": {
-              "x": 49.2438,
-              "y": 25.5953,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 116.5172,
-              "y": 43.5765,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 324.538
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "block_cube_b-x0.25",
-            "Position": {
-              "x": 118.2042,
-              "y": 24.8371,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 6.4779
-            },
-            "Scale": {
-              "x": 10.0,
-              "y": 10.0,
-              "z": 10.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "block_cube_b-x0.25",
-            "Position": {
-              "x": 118.1478,
-              "y": 24.5206,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 10.0,
-              "y": 10.0,
-              "z": 10.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 73.5258,
-              "y": 42.9713,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 77.423,
-              "y": 43.0606,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 75.4897,
-              "y": 43.001,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 74.5375,
-              "y": 43.001,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "soldier respawn",
-            "Position": {
-              "x": 76.4403,
-              "y": 43.0308,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 136.1062,
-              "y": 13.8052,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 356.8272
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 119.4259,
-              "y": 17.6808,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 110.7567,
-              "y": 21.7001,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 15.3822
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 74.7594,
-              "y": 24.2642,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 315.5625
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 123.704,
-              "y": 53.608,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 344.3133
             },
             "Scale": {
               "x": 1.0,
@@ -1118,6 +1080,6 @@
     "Author": "MM",
     "Version": "1",
     "Game": "Soldat2",
-    "GameVersion": "0.7.14"
+    "GameVersion": "0.7.18"
   }
 }
