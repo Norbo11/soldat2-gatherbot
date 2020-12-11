@@ -79,7 +79,7 @@ const formatWinsTiesLosses = (playerStats, gameMode) => {
 
     const stats = playerStats.gameModeStats[gameMode]
 
-    return `${stats.wonGames}-${stats.tiedGames}-${stats.lostGames} (${Math.round(stats.wonGames / stats.totalGames * 100)}% winrate)`
+    return `${stats.wonGames}-${stats.tiedGames}-${stats.lostGames} (${Math.round(stats.wonGames / (stats.wonGames + stats.lostGames) * 100)}% winrate)`
 }
 
 
