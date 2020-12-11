@@ -140,7 +140,7 @@ describe('Gather', () => {
             weaponName: "Tec-9"
         })
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  blah [9DD00BA9F5AA7525] (0)").raw))
         expect(round.blueCaps).equal(1)
         expect(round.events[1]).containSubset({
             timestamp: 1000,
@@ -148,7 +148,7 @@ describe('Gather', () => {
             cappingTeam: SOLDAT_TEAMS.BLUE
         })
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured by  blah2 [9DD00BA9F5AA7525] (1)").raw))
         expect(round.redCaps).equal(1)
         expect(round.events[2]).containSubset({
             timestamp: 1000,
@@ -172,10 +172,10 @@ describe('Gather', () => {
         expect(round.mapName).equal("ctf_division")
         expect(round.startTime).equal(6000)
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  blah [9DD00BA9F5AA7525] (0)").raw))
         expect(round.blueCaps).equal(1)
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  blah [9DD00BA9F5AA7525] (0)").raw))
         expect(round.blueCaps).equal(2)
 
         currentTime = 8000;

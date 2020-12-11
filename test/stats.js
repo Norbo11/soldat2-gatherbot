@@ -345,6 +345,7 @@ describe('Stats Formatter', () => {
             lostGames: 1,
             tiedGames: 0,
             totalRounds: 6,
+            totalRoundsAfterKillTrackingWasImplemented: 6,
             totalKills: 12,
             totalDeaths: 7,
             // totalCaps: 2,
@@ -410,9 +411,9 @@ describe('Stats Formatter', () => {
                     {
                         name: "**Favourite Weapons**",
                         value:
-                            "**Kalashnikov**: 12 kills\n" +
-                            "**MP5**: 5 kills\n" +
-                            "**Minigun**: 3 kills",
+                            "**Kalashnikov**: 12 kills (2.00 per round)\n" +
+                            "**MP5**: 5 kills (0.83 per round)\n" +
+                            "**Minigun**: 3 kills (0.50 per round)",
                         inline: true,
                     },
                 ]
