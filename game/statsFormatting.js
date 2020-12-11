@@ -103,7 +103,7 @@ const formatGeneralStatsForPlayer = (playerName, playerStats) => {
 
     favouriteWeapons = _.sortBy(favouriteWeapons, weaponStat => -weaponStat.kills / playerStats.totalRounds)
     favouriteWeapons = _.take(favouriteWeapons, 5)
-    favouriteWeapons = favouriteWeapons.map(weaponStat => `**${weaponStat.weaponName}**: ${weaponStat.kills} kills (${(weaponStat.kills / playerStats.totalRounds).toFixed(2)} per round)`)
+    favouriteWeapons = favouriteWeapons.map(weaponStat => `**${weaponStat.weaponName}**: ${weaponStat.kills} kills (${(weaponStat.kills / playerStats.totalRoundsAfterKillTrackingWasImplemented).toFixed(2)} per round)`)
 
     return {
         embed: {
@@ -211,7 +211,7 @@ const formatTopPlayersByWeapon = (topPlayers, discordIdToUsername, weapon) => {
 
     const topPlayersByWeaponKillsPerRound = topPlayers.topPlayersByWeaponKillsPerRound[weapon.formattedName].map(topPlayer => {
         const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${(playerStats.weaponStats[weapon.formattedName].kills / playerStats.totalRounds).toFixed(2)} kills`
+        return `**${discordIdToUsername[topPlayer.discordId]}**: ${(playerStats.weaponStats[weapon.formattedName].kills / playerStats.totalRoundsAfterKillTrackingWasImplemented).toFixed(2)} kills`
     })
 
     return {

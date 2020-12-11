@@ -94,6 +94,7 @@ getPlayerStats = async (statsDb, discordId) => {
     let totalGatherTime = 0
     let totalCaps = 0
     let totalRounds = 0
+    let totalRoundsAfterKillTrackingWasImplemented = 0
     const weaponStats = {}
     const sizeStats = {}
     const gameModeStats = {}
@@ -101,7 +102,8 @@ getPlayerStats = async (statsDb, discordId) => {
     Object.keys(SOLDAT_WEAPONS).forEach(weaponKey => {
         weaponStats[SOLDAT_WEAPONS[weaponKey].formattedName] = {
             kills: 0,
-            deaths: 0
+            deaths: 0,
+            totalRounds: 0, // Defined as getting at least 1 kill with the weapon in a given round
         }
     })
 
@@ -150,6 +152,13 @@ getPlayerStats = async (statsDb, discordId) => {
         // totalCaps += getCaps(discordId, game.events)
         totalRounds += game.rounds.length
 
+        // TODO: This is the start time of the game where we first started tracking kills... it kinda sucks,
+        //   so maybe we need to reset stats.
+        if (game.startTime >= 1606852578641) {
+            totalRoundsAfterKillTrackingWasImplemented += 1
+        }
+
+
         _.forEach(game.rounds, round => {
             totalTeamKills += getTeamKills(discordId, round.events)
             const killsAndDeathsPerWeapon = getKillsAndDeathsPerWeapon(discordId, round.events)
@@ -157,6 +166,11 @@ getPlayerStats = async (statsDb, discordId) => {
             Object.keys(killsAndDeathsPerWeapon).forEach(weaponName => {
                 weaponStats[weaponName].kills += killsAndDeathsPerWeapon[weaponName].kills
                 weaponStats[weaponName].deaths += killsAndDeathsPerWeapon[weaponName].deaths
+
+                if (killsAndDeathsPerWeapon[weaponName].kills > 0) {
+                    weaponStats[weaponName].totalRounds += 1
+                }
+
                 totalKills += killsAndDeathsPerWeapon[weaponName].kills
                 totalDeaths += killsAndDeathsPerWeapon[weaponName].deaths
             })
@@ -169,7 +183,7 @@ getPlayerStats = async (statsDb, discordId) => {
     return {
         totalGames, wonGames, lostGames, weaponStats, totalKills, totalDeaths, totalGatherTime, totalCaps,
         sizeStats, firstGameTimestamp, lastGameTimestamp, totalTeamKills, tiedGames, totalRounds, gameModeStats,
-        rating
+        rating, totalRoundsAfterKillTrackingWasImplemented
     }
 }
 
@@ -245,7 +259,7 @@ const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     let topPlayersByWeaponKillsPerRound = {}
 
     _.forEach(_.values(SOLDAT_WEAPONS), weapon => {
-        let topPlayersByThisWeaponKillsPerRound = _.sortBy(playersWithEnoughGames, player => -player.playerStats.weaponStats[weapon.formattedName].kills / player.playerStats.totalRounds)
+        let topPlayersByThisWeaponKillsPerRound = _.sortBy(playersWithEnoughGames, player => -player.playerStats.weaponStats[weapon.formattedName].kills / player.playerStats.totalRoundsAfterKillTrackingWasImplemented)
         topPlayersByThisWeaponKillsPerRound = _.take(topPlayersByThisWeaponKillsPerRound, 5)
         topPlayersByWeaponKillsPerRound[weapon.formattedName] = topPlayersByThisWeaponKillsPerRound
     })
