@@ -69,21 +69,6 @@ getMapField = (mapName, inline = false) => {
     }
 }
 
-getKillAndDeathFields = (playerKillsAndDeaths, discordIdToUsername) => {
-    const playerKDs = []
-
-    _.forEach(playerKillsAndDeaths, (killsAndDeaths, discordId) => {
-        playerKDs.push(`**${discordIdToUsername[discordId]}**: ${killsAndDeaths.kills}/${killsAndDeaths.deaths}`)
-    })
-
-    return [
-        {
-            name: "Player Kills/Deaths",
-            value: playerKDs.join("\n")
-        }
-    ]
-}
-
 getResultField = (winner, inline = false) => {
     const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === constants.SOLDAT_TEAMS.TIE ? "" : "Win")
 
@@ -184,17 +169,6 @@ getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
     ]
 }
 
-getDiscordIdToUsernameMap = async (client, discordIdToUsername, discordIds) => {
-    return Promise.all(discordIds.map(async (discordId) => {
-        try {
-            const user = await client.fetchUser(discordId)
-            discordIdToUsername[discordId] = user.username
-        } catch (e) {
-            logger.log.warn(`Could not find user with discord ID ${discordId}`)
-        }
-    }))
-}
-
 
 module.exports = {
     teamEmoji,
@@ -205,7 +179,6 @@ module.exports = {
     getGatherEndFields,
     getMapField,
     getServerLinkField,
-    getDiscordIdToUsernameMap,
     getGameModeField,
     getMatchQualityField,
 

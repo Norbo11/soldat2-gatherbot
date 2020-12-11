@@ -156,15 +156,15 @@ const formatGatherStats = (gatherStats) => {
     }
 }
 
-const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
+const formatTopPlayers = (gameMode, topPlayers) => {
     const topPlayersByKda = topPlayers.topPlayersByKda.map(topPlayer => {
         const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
+        return `<@${topPlayer.discordId}>: ${playerStats.totalKills}/${playerStats.totalDeaths} (${(playerStats.totalKills / playerStats.totalDeaths).toFixed(2)})`
     })
 
     const topPlayersByTotalGames = topPlayers.topPlayersByTotalGames.map(topPlayer => {
         const playerStats = topPlayer.playerStats.gameModeStats[gameMode]
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.totalGames} games`
+        return `<@${topPlayer.discordId}>: ${playerStats.totalGames}`
     })
 
     // const topPlayersByTeamKills = topPlayers.topPlayersByTeamKills.map(topPlayer => {
@@ -176,7 +176,7 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
         const playerStats = topPlayer.playerStats
         const rating = playerStats.rating
         const estimate = ratings.getSkillEstimate(rating)
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${roundSkill(estimate)} (${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames})`
+        return `<@${topPlayer.discordId}>: ${roundSkill(estimate)} (${playerStats.wonGames}-${playerStats.tiedGames}-${playerStats.lostGames})`
     })
 
     return {
@@ -203,15 +203,15 @@ const formatTopPlayers = (gameMode, topPlayers, discordIdToUsername) => {
     }
 }
 
-const formatTopPlayersByWeapon = (topPlayers, discordIdToUsername, weapon) => {
+const formatTopPlayersByWeapon = (topPlayers, weapon) => {
     const topPlayersByWeaponKills = topPlayers.topPlayersByWeaponKills[weapon.formattedName].map(topPlayer => {
         const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${playerStats.weaponStats[weapon.formattedName].kills} kills`
+        return `<@${topPlayer.discordId}>: ${playerStats.weaponStats[weapon.formattedName].kills} kills`
     })
 
     const topPlayersByWeaponKillsPerRound = topPlayers.topPlayersByWeaponKillsPerRound[weapon.formattedName].map(topPlayer => {
         const playerStats = topPlayer.playerStats
-        return `**${discordIdToUsername[topPlayer.discordId]}**: ${(playerStats.weaponStats[weapon.formattedName].kills / playerStats.totalRoundsAfterKillTrackingWasImplemented).toFixed(2)} kills`
+        return `<@${topPlayer.discordId}>: ${(playerStats.weaponStats[weapon.formattedName].kills / playerStats.totalRoundsAfterKillTrackingWasImplemented).toFixed(2)} kills`
     })
 
     return {

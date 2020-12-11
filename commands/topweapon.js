@@ -28,21 +28,7 @@ module.exports = {
             }
 
             stats.getTopPlayers(currentStatsDb, process.env.MINIMUM_GAMES_NEEDED_FOR_LEADERBOARD, gameMode).then(topPlayers => {
-                const discordIds = new Set()
-
-                for (let player of topPlayers.topPlayersByWeaponKills[weapon.formattedName]) {
-                    discordIds.add(player.discordId)
-                }
-
-                for (let player of topPlayers.topPlayersByWeaponKillsPerRound[weapon.formattedName]) {
-                    discordIds.add(player.discordId)
-                }
-
-                const discordIdToUsername = {}
-
-                discord.getDiscordIdToUsernameMap(client, discordIdToUsername, Array.from(discordIds)).then(() => {
-                    message.channel.send(statsFormatting.formatTopPlayersByWeapon(topPlayers, discordIdToUsername, weapon))
-                })
+                message.channel.send(statsFormatting.formatTopPlayersByWeapon(topPlayers, weapon))
             })
         } else if (args.length === 0) {
 
