@@ -233,7 +233,37 @@ const formatTopPlayersByWeapon = (topPlayers, discordIdToUsername, weapon) => {
     }
 }
 
+
+const formatOverallWeaponStats = (overallWeaponStats) => {
+
+    let sortedWeaponStats = _.map(_.keys(overallWeaponStats), weaponName => {
+        const stats = overallWeaponStats[weaponName]
+        return {
+            weaponName, stats
+        }
+
+    })
+
+    sortedWeaponStats = _.sortBy(sortedWeaponStats, x => -x.stats.kills)
+
+    const outputLines = _.map(sortedWeaponStats, x => {
+        return `**${x.weaponName}**: ${x.stats.kills} total kills`
+    })
+
+    return {
+        embed: {
+            fields: [
+                {
+                    name: `**Overall Weapon Stats**`,
+                    value: outputLines.join("\n") ,
+                    inline: true
+                },
+            ]
+        }
+    }
+}
+
 module.exports = {
     formatGeneralStatsForPlayer, formatGatherStats, formatTopPlayersByWeapon, formatTopPlayers, skillChangeEmoji,
-    uncertaintyChangeEmoji, getSkillChangeStrings, getUncertaintyChangeStrings
+    uncertaintyChangeEmoji, getSkillChangeStrings, getUncertaintyChangeStrings, formatOverallWeaponStats
 }

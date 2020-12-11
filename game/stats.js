@@ -190,11 +190,18 @@ getPlayerStats = async (statsDb, discordId) => {
 const getGatherStats = async (statsDb) => {
     const games = await statsDb.getAllGames()
 
+    let overallWeaponStats = {}
     let totalGames = games.length
     let totalRounds = _.sum(games.map(game => game.rounds.length))
     let totalGatherTime = _.sum(games.map(game => game.endTime - game.startTime))
     let firstGameTimestamp = totalGames > 0 ? _.sortBy(games, game => game.startTime)[0].startTime : 0
     let lastGameTimestamp = totalGames > 0 ? _.sortBy(games, game => -game.startTime)[0].startTime : 0
+
+    Object.keys(SOLDAT_WEAPONS).forEach(weaponKey => {
+        overallWeaponStats[SOLDAT_WEAPONS[weaponKey].formattedName] = {
+            kills: 0,
+        }
+    })
 
     let mapStats = {}
 
@@ -207,11 +214,17 @@ const getGatherStats = async (statsDb) => {
             }
 
             mapStats[round.mapName].totalRounds += 1
+
+            _.forEach(round.events, event => {
+                if (event.type === SOLDAT_EVENTS.PLAYER_KILL) {
+                    overallWeaponStats[event.weaponName].kills += 1
+                }
+            })
         })
     })
 
     return {
-        totalGames, totalGatherTime, mapStats, firstGameTimestamp, lastGameTimestamp, totalRounds
+        totalGames, totalGatherTime, mapStats, firstGameTimestamp, lastGameTimestamp, totalRounds, overallWeaponStats
     }
 }
 
