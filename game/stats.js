@@ -155,9 +155,8 @@ getPlayerStats = async (statsDb, discordId) => {
         // TODO: This is the start time of the game where we first started tracking kills... it kinda sucks,
         //   so maybe we need to reset stats.
         if (game.startTime >= 1606852578641) {
-            totalRoundsAfterKillTrackingWasImplemented += 1
+            totalRoundsAfterKillTrackingWasImplemented += game.rounds.length
         }
-
 
         _.forEach(game.rounds, round => {
             totalTeamKills += getTeamKills(discordId, round.events)
