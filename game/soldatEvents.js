@@ -23,14 +23,14 @@ const PASSIVE_EVENTS = [
     {
         name: "red flag cap",
         pattern: /\[(?<time>.*?)] Red flag captured by {2}(?<playerName>.*?) \[(?<playfabId>.*?)] \((?<cappingTeam>.*?)\)/,
-        handler: (gather, match) => gather.redFlagCaptured(),
+        handler: (gather, match) => gather.redFlagCaptured(match.groups["playerName"], constants.getSoldatTeamById(match.groups["cappingTeam"]), match.groups["playfabId"]),
         condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },
     {
         name: "blue flag cap",
         pattern: /\[(?<time>.*?)] Blue flag captured by {2}(?<playerName>.*?) \[(?<playfabId>.*?)] \((?<cappingTeam>.*?)\)/,
-        handler: (gather, match) => gather.blueFlagCaptured(),
+        handler: (gather, match) => gather.blueFlagCaptured(match.groups["playerName"], constants.getSoldatTeamById(match.groups["cappingTeam"]), match.groups["playfabId"]),
         condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },

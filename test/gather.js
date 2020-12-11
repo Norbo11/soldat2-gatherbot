@@ -140,7 +140,7 @@ describe('Gather', () => {
             weaponName: "Tec-9"
         })
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  blah [9DD00BA9F5AA7525] (0)").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  A [A] (0)").raw))
         expect(round.blueCaps).equal(1)
         expect(round.events[1]).containSubset({
             timestamp: 1000,
@@ -148,7 +148,7 @@ describe('Gather', () => {
             cappingTeam: SOLDAT_TEAMS.BLUE
         })
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured by  blah2 [9DD00BA9F5AA7525] (1)").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Blue flag captured by  C [C] (1)").raw))
         expect(round.redCaps).equal(1)
         expect(round.events[2]).containSubset({
             timestamp: 1000,
@@ -172,10 +172,10 @@ describe('Gather', () => {
         expect(round.mapName).equal("ctf_division")
         expect(round.startTime).equal(6000)
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  blah [9DD00BA9F5AA7525] (0)").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  A [A] (0)").raw))
         expect(round.blueCaps).equal(1)
 
-        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  blah [9DD00BA9F5AA7525] (0)").raw))
+        ws.emit("message", soldat.toBuffer(soldat.NetworkMessage.LogLine("[00:00:00] Red flag captured by  A [A] (0)").raw))
         expect(round.blueCaps).equal(2)
 
         currentTime = 8000;
@@ -219,17 +219,19 @@ describe('Gather', () => {
                         victimDiscordId: "b",
                         killerTeam: SOLDAT_TEAMS.RED,
                         victimTeam: SOLDAT_TEAMS.BLUE,
-                        weaponName: "Tec-9"
+                        weaponName: "Tec-9",
                     },
                     {
                         timestamp: 1000,
                         type: SOLDAT_EVENTS.FLAG_CAP,
-                        cappingTeam: SOLDAT_TEAMS.BLUE
+                        cappingTeam: SOLDAT_TEAMS.BLUE,
+                        discordId: "a",
                     },
                     {
                         timestamp: 1000,
                         type: SOLDAT_EVENTS.FLAG_CAP,
-                        cappingTeam: SOLDAT_TEAMS.RED
+                        cappingTeam: SOLDAT_TEAMS.RED,
+                        discordId: "c",
                     }
                 ]
             }
@@ -246,12 +248,14 @@ describe('Gather', () => {
                     {
                         timestamp: 6000,
                         type: SOLDAT_EVENTS.FLAG_CAP,
-                        cappingTeam: SOLDAT_TEAMS.BLUE
+                        cappingTeam: SOLDAT_TEAMS.BLUE,
+                        discordId: "a",
                     },
                     {
                         timestamp: 6000,
                         type: SOLDAT_EVENTS.FLAG_CAP,
-                        cappingTeam: SOLDAT_TEAMS.BLUE
+                        cappingTeam: SOLDAT_TEAMS.BLUE,
+                        discordId: "a",
                     }
                 ]
             }

@@ -12,17 +12,19 @@ class CtfRound extends gatherRound.GatherRound {
         this.blueCaps = 0
     }
 
-    redFlagCaptured() {
+    redFlagCaptured(discordId) {
         this.blueCaps += 1;
         this.pushEvent(SOLDAT_EVENTS.FLAG_CAP, {
-            cappingTeam: SOLDAT_TEAMS.BLUE
+            cappingTeam: SOLDAT_TEAMS.BLUE,
+            discordId: discordId,
         })
     }
 
-    blueFlagCaptured() {
+    blueFlagCaptured(discordId) {
         this.redCaps += 1;
         this.pushEvent(SOLDAT_EVENTS.FLAG_CAP, {
-            cappingTeam: SOLDAT_TEAMS.RED
+            cappingTeam: SOLDAT_TEAMS.RED,
+            discordId: discordId,
         })
     }
 

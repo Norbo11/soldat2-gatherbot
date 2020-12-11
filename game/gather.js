@@ -125,12 +125,16 @@ class Gather {
         })
     }
 
-    redFlagCaptured() {
-        this.currentRound.redFlagCaptured();
+    redFlagCaptured(playerName, playerTeam, playfabId) {
+        const discordId = this.match.playfabIdToDiscordId[playfabId]
+
+        this.currentRound.redFlagCaptured(discordId);
     }
 
-    blueFlagCaptured() {
-        this.currentRound.blueFlagCaptured();
+    blueFlagCaptured(playerName, playerTeam, playfabId) {
+        const discordId = this.match.playfabIdToDiscordId[playfabId]
+
+        this.currentRound.blueFlagCaptured(discordId);
     }
 
     onBlueBaseCapture() {
