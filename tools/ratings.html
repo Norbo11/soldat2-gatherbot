@@ -131,24 +131,35 @@
         .style("opacity", "0.5");
 
     const handleMouseOverPoint = (d, i) => {
-
-
         const left = d.mu - 3 * d.sigma
         const right = d.mu + 3 * d.sigma
-        // const yValues = normal(globalMu, globalSigma, left, right)
         const values = [
             ...normal(globalMu, globalSigma, left, right),
 
         ]
-        // return normal(globalMu, globalSigma, left, right)
 
-        // let points = uncertaintyPoints[i]
+        // Interpolate a rectangular clipPath which will smoothly reveal the area underneath our point
+        let clipPath = svg.append("clipPath")
+            .attr("id", `clipPath${i}`)
+            .append("path")
+            .datum([left, right]) // I think this is "datum" not "data" because we are drawing just 1 path
+            .attr("class", "area")
+            .attr("d", d3.area()
+                .x(x(left))
+                .y0(y(0))
+                .y1(y(1))
+            )
+            .transition()
+                .ease(d3.easePoly)
+                .duration(1000)
+                .attr("d", d3.area()
+                    .x(d => x(d))
+                    .y0(y(0))
+                    .y1(y(1))
+                )
 
         // Insert the uncertainty area *before* the current point in order to not mess up on-hover handling
-
-        // TODO: we need to somehow only pass the first value at the start, transitioning to the
-        //  full list of values at the end
-        let path = svg.insert("path", `#point${i}`)
+        let area = svg.insert("path", `#point${i}`)
             .datum(values)
             .attr("class", "area")
             .attr("id", `uncertaintyArea${i}`)
@@ -156,35 +167,16 @@
             .style("stroke", "none")
             .style("opacity", "0.7")
             .attr("d", d3.area()
-                .x(x(left))
+                .x(d => x(d.x))
                 .y0(y(0))
-                // .y1(d => y(values[0].density))
                 .y1(d => y(d.density))
             )
-            .transition()
-                .duration(1000)
-                .attr("d", d3.area()
-                    .x(d => x(d.x))
-                    .y0(y(0))
-                    .y1(d => y(d.density))
-            )
-
-
-        // Animate stroke:
-        // let totalLength = path.node().getTotalLength()
-        //
-        // path
-        //     .attr("stroke-dasharray", totalLength + " " + totalLength)
-        //     .attr("stroke-dashoffset", totalLength)
-        //     .transition()
-        //         .duration(4000)
-        //         .ease(d3.easeLinear)
-        //         .attr("stroke-dashoffset", 0)
-
+            .attr("clip-path", `url(#clipPath${i})`) // Assign to our earlier clip path
     }
 
     const handleMouseOutPoint = (d, i) => {
         d3.select(`#uncertaintyArea${i}`).remove();
+        d3.select(`#clipPath${i}`).remove();
     }
 
     svg.selectAll("points")
