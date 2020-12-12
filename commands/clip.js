@@ -38,7 +38,7 @@ export default {
                 }
 
                 currentClipManager.addClip(message.author.id, clipUrl).then((id) => {
-                    message.reply(`Clip #${id} added.`)
+                    message.reply(`clip #${id} added.`)
                 })
                 return
 
