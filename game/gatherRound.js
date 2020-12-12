@@ -1,7 +1,6 @@
-import _ from 'lodash';
 import logger from '../utils/logger';
 import util from 'util';
-import constants from '../game/constants';
+import {SOLDAT_EVENTS} from './constants';
 
 class GatherRound {
 
@@ -22,7 +21,7 @@ class GatherRound {
     }
 
     playerKill(killerDiscordId, killerTeam, victimDiscordId, victimTeam, weaponName) {
-        this.pushEvent(constants.SOLDAT_EVENTS.PLAYER_KILL, {
+        this.pushEvent(SOLDAT_EVENTS.PLAYER_KILL, {
             killerDiscordId,
             killerTeam,
             victimDiscordId,

@@ -1,20 +1,13 @@
 import _ from 'lodash';
 import logger from '../utils/logger';
 import discord from '../utils/discord';
-import random from '../utils/random';
 import maps from '../utils/maps';
 import util from 'util';
-import constants from './constants';
+import {GAME_MODES, IN_GAME_STATES, SOLDAT_TEAMS} from './constants';
 import ctfRound from './ctfRound';
 import ctbRound from './ctbRound';
 import ratings from './ratings';
 import authentication from './authentication';
-
-const IN_GAME_STATES = constants.IN_GAME_STATES;
-const SOLDAT_EVENTS = constants.SOLDAT_EVENTS;
-const SOLDAT_TEAMS = constants.SOLDAT_TEAMS;
-const GAME_MODES = constants.GAME_MODES;
-
 
 class Gather {
 

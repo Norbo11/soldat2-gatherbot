@@ -1,9 +1,7 @@
 import moment from 'moment';
-import constants from './constants';
+import {GAME_MODES, formatGameMode} from './constants';
 import ratings from './ratings';
 import _ from 'lodash';
-
-const GAME_MODES = constants.GAME_MODES
 
 const roundSkill = (skill) => {
     return skill.toFixed(2)
@@ -181,7 +179,7 @@ const formatTopPlayers = (gameMode, topPlayers) => {
 
     return {
         embed: {
-            title: `Top ${constants.formatGameMode(gameMode)} Players`,
+            title: `Top ${formatGameMode(gameMode)} Players`,
             fields: [
                 {
                     name: "**Rating Estimate**",

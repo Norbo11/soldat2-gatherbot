@@ -1,25 +1,19 @@
 import _ from 'lodash';
 import mongodb from 'mongodb';
-const MongoClient = mongodb.MongoClient;
-
 import chai from 'chai';
 import chaiSubset from 'chai-subset';
-chai.use(chaiSubset)
-
-const expect = chai.expect
-
 import moment from 'moment';
 import stats from '../game/stats';
 import db from '../game/db';
-import constants from '../game/constants';
+import {GAME_MODES, SOLDAT_EVENTS, SOLDAT_TEAMS, SOLDAT_WEAPONS} from '../game/constants';
 import ratings from '../game/ratings';
 import statsFormatting from '../game/statsFormatting';
 
+const MongoClient = mongodb.MongoClient;
 
-const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
-const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
-const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
-const GAME_MODES = constants.GAME_MODES
+chai.use(chaiSubset)
+
+const expect = chai.expect
 
 
 const getMockGames = () => {

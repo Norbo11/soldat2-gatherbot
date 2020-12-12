@@ -1,12 +1,6 @@
 import _ from 'lodash';
-import logger from '../utils/logger';
-import constants from './constants';
+import {GAME_MODES, SOLDAT_EVENTS, SOLDAT_TEAMS, SOLDAT_WEAPONS} from './constants';
 import ratings from './ratings';
-
-const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
-const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
-const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
-const GAME_MODES = constants.GAME_MODES
 
 const getCaps = (discordId, events) => {
     events = _.filter(events, event =>

@@ -1,7 +1,5 @@
 import gatherRound from './gatherRound';
-import constants from './constants';
-const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
-const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
+import {SOLDAT_EVENTS, SOLDAT_TEAMS} from './constants';
 
 
 class CtbRound extends gatherRound.GatherRound {

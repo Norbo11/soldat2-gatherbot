@@ -1,16 +1,12 @@
-import logger from '../utils/logger';
-import utils from '../utils/commandUtils';
 import stats from '../game/stats';
-import discord from '../utils/discord';
-import constants from '../game/constants';
+import {GAME_MODES, getWeaponByFormattedName} from '../game/constants';
 import statsFormatting from '../game/statsFormatting';
-import _ from 'lodash';
 
 export default {
     aliases: ["topweapon", "topwep"],
     description: "Show the top players by weapon.",
     execute(client, message, args) {
-        let gameMode = constants.GAME_MODES.CAPTURE_THE_FLAG
+        let gameMode = GAME_MODES.CAPTURE_THE_FLAG
 
         if (args.length > 1) {
             currentDiscordChannel.send("Command format: !topwep [weapon], or just !topwep for overall stats.")
@@ -20,7 +16,7 @@ export default {
         if (args.length === 1) {
             const weaponName = args[0]
 
-            const weapon = constants.getWeaponByFormattedName(weaponName)
+            const weapon = getWeaponByFormattedName(weaponName)
 
             if (weapon === undefined) {
                 message.channel.send(`${weaponName} is not a soldat weapon.`)

@@ -1,18 +1,16 @@
 import logger from './logger';
 import moment from 'moment';
 import _ from 'lodash';
-import constants from '../game/constants';
+import {GAME_MODES, SOLDAT_TEAMS, formatGameMode} from '../game/constants';
 import stats from '../game/stats';
 import statsFormatting from '../game/statsFormatting';
 
-const GAME_MODES = constants.GAME_MODES
-
 const teamEmoji = (teamName) => {
-    if (teamName === constants.SOLDAT_TEAMS.RED) {
+    if (teamName === SOLDAT_TEAMS.RED) {
         return ":a:"
-    } else if (teamName === constants.SOLDAT_TEAMS.BLUE) {
+    } else if (teamName === SOLDAT_TEAMS.BLUE) {
         return ":regional_indicator_b:"
-    } else if (teamName === constants.SOLDAT_TEAMS.TIE) {
+    } else if (teamName === SOLDAT_TEAMS.TIE) {
         return ":poop:"
     } else {
         logger.log.error(`Invalid team name ${teamName}`)
@@ -70,7 +68,7 @@ const getMapField = (mapName, inline = false) => {
 }
 
 const getResultField = (winner, inline = false) => {
-    const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === constants.SOLDAT_TEAMS.TIE ? "" : "Win")
+    const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === SOLDAT_TEAMS.TIE ? "" : "Win")
 
     return {
         name: "Result",
@@ -83,7 +81,7 @@ const getResultField = (winner, inline = false) => {
 const getGameModeField = (gameMode) => {
     return {
         name: "Game Mode",
-        value: constants.formatGameMode(gameMode)
+        value: formatGameMode(gameMode)
     }
 }
 
@@ -139,8 +137,8 @@ const getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToN
         getResultField(game.winner, true),
         getDurationField(game.startTime, game.endTime, true, "Gather"),
         getGameModeField(game.gameMode),
-        ...getGatherEndFieldsForTeam(constants.SOLDAT_TEAMS.BLUE, game.bluePlayers, game.blueRoundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating),
-        ...getGatherEndFieldsForTeam(constants.SOLDAT_TEAMS.RED, game.redPlayers, game.redRoundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating)
+        ...getGatherEndFieldsForTeam(SOLDAT_TEAMS.BLUE, game.bluePlayers, game.blueRoundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating),
+        ...getGatherEndFieldsForTeam(SOLDAT_TEAMS.RED, game.redPlayers, game.redRoundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating)
     ]
 }
 
@@ -159,11 +157,11 @@ const getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
         getDurationField(round.startTime, round.endTime, true, "Round"),
         getMapField(round.mapName),
         {
-            name: `${teamEmoji(constants.SOLDAT_TEAMS.BLUE)} Blue Team (${round.blueCaps} ${flagsOrBases} captured)`,
+            name: `${teamEmoji(SOLDAT_TEAMS.BLUE)} Blue Team (${round.blueCaps} ${flagsOrBases} captured)`,
             value: `${bluePlayersString}`,
         },
         {
-            name: `${teamEmoji(constants.SOLDAT_TEAMS.RED)} Red Team (${round.redCaps} ${flagsOrBases} captured)`,
+            name: `${teamEmoji(SOLDAT_TEAMS.RED)} Red Team (${round.redCaps} ${flagsOrBases} captured)`,
             value: `${redPlayersString}`,
         },
     ]

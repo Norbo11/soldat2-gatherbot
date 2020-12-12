@@ -1,6 +1,4 @@
-import constants from '../game/constants';
-
-const GAME_MODES = constants.GAME_MODES
+import {GAME_MODES} from '../game/constants';
 
 export default {
     aliases: ["mode", "gamemode", "game"],

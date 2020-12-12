@@ -1,9 +1,9 @@
 import logger from './logger';
-import constants from '../game/constants';
+import {IN_GAME_STATES} from '../game/constants';
 import discord from '../utils/discord';
 
 
-ensureWebrconAlive = () => {
+const ensureWebrconAlive = () => {
     currentGather.soldatClient.pingServer((response) => {
         if (response === undefined) {
             currentDiscordChannel.send("Detected issue with webrcon connection/credentials. Restarting with fresh credentials...").then(() => {
@@ -15,10 +15,10 @@ ensureWebrconAlive = () => {
 }
 
 
-displayGatherStatus = (message) => {
+const displayGatherStatus = (message) => {
     let description = undefined;
 
-    if (currentGather.inGameState === constants.IN_GAME_STATES.GATHER_STARTED) {
+    if (currentGather.inGameState === IN_GAME_STATES.GATHER_STARTED) {
         description = `**Gather In Progress**\n`
     }
 
@@ -35,7 +35,7 @@ displayGatherStatus = (message) => {
 }
 
 
-displayServerInfo = (message) => {
+const displayServerInfo = (message) => {
     currentSoldatClient.getServerInfo(serverInfo => {
         const redPlayerStrings = []
         const bluePlayerStrings = []
@@ -94,7 +94,7 @@ displayServerInfo = (message) => {
 }
 
 
-displayQueueWithServerInfo = () => {
+const displayQueueWithServerInfo = () => {
     currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue)
 }
 

@@ -119,7 +119,7 @@ const getWeaponByFormattedName = (formattedName) => {
     return SOLDAT_WEAPONS[key]
 }
 
-export default {
+export {
     SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, SOLDAT_TEAMS, GAME_MODES,
     getWeaponById, getWeaponByFormattedName, formatGameMode, getSoldatTeamById
 };

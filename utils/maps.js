@@ -1,8 +1,6 @@
-import constants from '../game/constants';
+import {GAME_MODES} from '../game/constants';
 import glob from 'glob';
 import _ from 'lodash';
-
-const GAME_MODES = constants.GAME_MODES
 
 
 const getMapsForGameMode = (gameMode) => {
