@@ -1,17 +1,16 @@
 require("dotenv").config()
-const fs = require("fs")
-const moment = require("moment")
-const util = require("util")
-const _ = require("lodash")
-const sinon = require("sinon")
-const events = require("events")
-const MongoClient = require('mongodb').MongoClient;
-
-const gather = require("../game/gather")
-const soldat = require("../utils/soldat")
-const logger = require("../utils/logger")
-const soldatEvents = require("../game/soldatEvents")
-const db = require("../game/db")
+import fs from 'fs';
+import moment from 'moment';
+import util from 'util';
+import _ from 'lodash';
+import sinon from 'sinon';
+import events from 'events';
+import { MongoClient } from 'mongodb';
+import gather from '../game/gather';
+import soldat from '../utils/soldat';
+import logger from '../utils/logger';
+import soldatEvents from '../game/soldatEvents';
+import db from '../game/db';
 
 function getDiscordUser(hwidToDiscordId, playerNameToHwid, name) {
     if (!(name in playerNameToHwid)) {
@@ -27,7 +26,7 @@ function getDiscordUser(hwidToDiscordId, playerNameToHwid, name) {
     return {id: hwidToDiscordId[hwid]}
 }
 
-const backloadGames = async () => {
+const backloadGames = (async () => {
     const dbConn = await db.getDbConnection()
     const statsDb = new db.StatsDB(dbConn)
 
@@ -210,6 +209,6 @@ const backloadGames = async () => {
     })
 
     console.log(util.inspect(hwidToPlayerName))
-}
+})
 
 (async () => await backloadGames())()

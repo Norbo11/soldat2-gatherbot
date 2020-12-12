@@ -1,8 +1,8 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
-const maps = require("../utils/maps")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
+import maps from '../utils/maps';
 
-module.exports = {
+export default {
     aliases: ["map"],
     description: "Change the map on the server",
     execute(client, message, args) {

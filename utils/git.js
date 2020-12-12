@@ -1,7 +1,7 @@
-const nodegit = require("nodegit")
-const fs = require("fs")
+import nodegit from 'nodegit';
+import fs from 'fs';
 const PATH_TO_COMMIT_FILE = "last_commit_hash"
-const _ = require("lodash")
+import _ from 'lodash';
 
 postChangelog = () => {
     nodegit.Repository.open(".").then(async repo => {
@@ -39,6 +39,6 @@ postChangelog = () => {
     })
 }
 
-module.exports = {
+export default {
     postChangelog
-}
+};

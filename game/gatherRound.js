@@ -1,7 +1,6 @@
-const _ = require("lodash")
-const logger = require("../utils/logger")
-const util = require("util")
-const constants = require("../game/constants")
+import logger from '../utils/logger';
+import util from 'util';
+import {SOLDAT_EVENTS} from './constants';
 
 class GatherRound {
 
@@ -22,7 +21,7 @@ class GatherRound {
     }
 
     playerKill(killerDiscordId, killerTeam, victimDiscordId, victimTeam, weaponName) {
-        this.pushEvent(constants.SOLDAT_EVENTS.PLAYER_KILL, {
+        this.pushEvent(SOLDAT_EVENTS.PLAYER_KILL, {
             killerDiscordId,
             killerTeam,
             victimDiscordId,
@@ -55,7 +54,7 @@ class GatherRound {
     }
 }
 
-module.exports = {
+export default {
     GatherRound,
-}
+};
 

@@ -1,7 +1,7 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
 
-module.exports = {
+export default {
     aliases: ["rematch"],
     description: "Add yourself to the rematch queue.",
     execute(client, message, args) {

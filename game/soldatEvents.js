@@ -1,9 +1,6 @@
-const logger = require("../utils/logger")
-const constants = require("./constants")
-const soldat = require("./soldat2")
-
-const GAME_MODES = constants.GAME_MODES
-const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
+import logger from '../utils/logger';
+import {GAME_MODES, getSoldatTeamById, SOLDAT_TEAMS} from './constants';
+import soldat from './soldat2';
 
 const PASSIVE_EVENTS = [
     {
@@ -23,14 +20,14 @@ const PASSIVE_EVENTS = [
     {
         name: "red flag cap",
         pattern: /\[(?<time>.*?)] Red flag captured by {2}(?<playerName>.*?) \[(?<playfabId>.*?)] \((?<cappingTeam>.*?)\)/,
-        handler: (gather, match) => gather.redFlagCaptured(match.groups["playerName"], constants.getSoldatTeamById(match.groups["cappingTeam"]), match.groups["playfabId"]),
+        handler: (gather, match) => gather.redFlagCaptured(match.groups["playerName"], getSoldatTeamById(match.groups["cappingTeam"]), match.groups["playfabId"]),
         condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },
     {
         name: "blue flag cap",
         pattern: /\[(?<time>.*?)] Blue flag captured by {2}(?<playerName>.*?) \[(?<playfabId>.*?)] \((?<cappingTeam>.*?)\)/,
-        handler: (gather, match) => gather.blueFlagCaptured(match.groups["playerName"], constants.getSoldatTeamById(match.groups["cappingTeam"]), match.groups["playfabId"]),
+        handler: (gather, match) => gather.blueFlagCaptured(match.groups["playerName"], getSoldatTeamById(match.groups["cappingTeam"]), match.groups["playfabId"]),
         condition: gather => gather.gatherInProgress() && gather.gameMode === GAME_MODES.CAPTURE_THE_FLAG,
         deduplicate: false
     },
@@ -76,9 +73,9 @@ const PASSIVE_EVENTS = [
         pattern: /\[(?<time>.*?)] (?<killerName>.*?) \[(?<killerPlayfabId>.*?)] \((?<killerTeam>.*?)\) killed (?<victimName>.*?) \[(?<victimPlayfabId>.*?)] \((?<victimTeam>.*?)\) with (?<weapon>.*)/,
         handler: (gather, match) => gather.onPlayerKill(
             match.groups["killerPlayfabId"],
-            constants.getSoldatTeamById(match.groups["killerTeam"]),
+            getSoldatTeamById(match.groups["killerTeam"]),
             match.groups["victimPlayfabId"],
-            constants.getSoldatTeamById(match.groups["victimTeam"]),
+            getSoldatTeamById(match.groups["victimTeam"]),
             match.groups["weapon"]
         ),
         condition: gather => gather.gatherInProgress() ,
@@ -90,7 +87,7 @@ const DEDUPLICATE_INTERVAL_MS = 1000
 
 const seenMessages = new Set()
 
-registerSoldatEventListeners = (gather, soldatClient) => {
+const registerSoldatEventListeners = (gather, soldatClient) => {
     logger.log.info("Registered non-command event listeners.")
 
     // It's important for this function to not be marked "async", as the underlying EventEmitter won't await it!
@@ -137,7 +134,7 @@ registerSoldatEventListeners = (gather, soldatClient) => {
     });
 }
 
-module.exports = {
+export default {
     registerSoldatEventListeners
-}
+};
 

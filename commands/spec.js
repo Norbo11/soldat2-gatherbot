@@ -1,6 +1,6 @@
-const discord = require("../utils/discord")
+import discord from '../utils/discord';
 
-module.exports = {
+export default {
     aliases: ["spec"],
     description: "Spectate the current gather.",
     execute(client, message, args) {
@@ -22,4 +22,4 @@ module.exports = {
             }
         })
     },
-}
+};

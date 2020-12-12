@@ -1,11 +1,11 @@
 require("dotenv").config()
-const util = require("util")
-const MongoClient = require('mongodb').MongoClient;
-const db = require("../game/db")
-const _ = require("lodash")
+import util from 'util';
+import { MongoClient } from 'mongodb';
+import db from '../game/db';
+import _ from 'lodash';
 
 
-const main = async () => {
+const main = (async () => {
     const dbConn = await db.getDbConnection()
     const statsDb = new db.StatsDB(dbConn)
 
@@ -46,7 +46,7 @@ const main = async () => {
     })
 
     console.log(`${games.length} games validated.`)
-}
+})
 
 (async () => await main())()
 

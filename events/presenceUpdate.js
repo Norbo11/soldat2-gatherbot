@@ -1,7 +1,7 @@
-const _ = require("lodash")
-const logger = require("../utils/logger")
+import _ from 'lodash';
+import logger from '../utils/logger';
 
-module.exports = (client, oldMember, newMember) => {
+export default (client, oldMember, newMember) => {
     if (!currentGather.gatherInProgress()) {
         if (currentGather.currentQueue.includes(newMember.user)) {
 
@@ -13,4 +13,4 @@ module.exports = (client, oldMember, newMember) => {
             }
         }
     }
-}
+};

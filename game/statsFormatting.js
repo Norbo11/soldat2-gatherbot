@@ -1,21 +1,19 @@
-const moment = require("moment")
-const constants = require("./constants")
-const ratings = require("./ratings")
-const _ = require("lodash")
+import moment from 'moment';
+import {GAME_MODES, formatGameMode} from './constants';
+import ratings from './ratings';
+import _ from 'lodash';
 
-const GAME_MODES = constants.GAME_MODES
-
-roundSkill = (skill) => {
+const roundSkill = (skill) => {
     return skill.toFixed(2)
 }
 
-formatRating = (rating) => {
+const formatRating = (rating) => {
     const skillEstimate = ratings.getSkillEstimate(rating)
     return `Skill ${roundSkill(rating.mu)}, Uncertainty ${roundSkill(rating.sigma)}, Rating Estimate ${roundSkill(skillEstimate)}`
 }
 
 
-skillChangeEmoji = (oldSkill, newSkill) => {
+const skillChangeEmoji = (oldSkill, newSkill) => {
     oldSkill = roundSkill(oldSkill)
     newSkill = roundSkill(newSkill)
 
@@ -29,7 +27,7 @@ skillChangeEmoji = (oldSkill, newSkill) => {
 }
 
 
-uncertaintyChangeEmoji = (oldUncertainty, newUncertainty) => {
+const uncertaintyChangeEmoji = (oldUncertainty, newUncertainty) => {
     oldUncertainty = roundSkill(oldUncertainty)
     newUncertainty = roundSkill(newUncertainty)
 
@@ -43,7 +41,7 @@ uncertaintyChangeEmoji = (oldUncertainty, newUncertainty) => {
 }
 
 
-getSkillChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating) => {
+const getSkillChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating) => {
 
     return discordIds.map(discordId => {
         const oldRating = discordIdToOldRating[discordId]
@@ -54,7 +52,7 @@ getSkillChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating)
     })
 }
 
-getUncertaintyChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating) => {
+const getUncertaintyChangeStrings = (discordIds, discordIdToOldRating, discordIdToNewRating) => {
 
     return discordIds.map(discordId => {
         const oldRating = discordIdToOldRating[discordId]
@@ -181,7 +179,7 @@ const formatTopPlayers = (gameMode, topPlayers) => {
 
     return {
         embed: {
-            title: `Top ${constants.formatGameMode(gameMode)} Players`,
+            title: `Top ${formatGameMode(gameMode)} Players`,
             fields: [
                 {
                     name: "**Rating Estimate**",
@@ -263,7 +261,7 @@ const formatOverallWeaponStats = (overallWeaponStats) => {
     }
 }
 
-module.exports = {
+export default {
     formatGeneralStatsForPlayer, formatGatherStats, formatTopPlayersByWeapon, formatTopPlayers, skillChangeEmoji,
     uncertaintyChangeEmoji, getSkillChangeStrings, getUncertaintyChangeStrings, formatOverallWeaponStats
-}
+};

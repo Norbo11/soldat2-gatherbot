@@ -1,32 +1,23 @@
-const MongoClient = require('mongodb').MongoClient;
-const _ = require("lodash")
+import mongodb from 'mongodb';
+import _ from 'lodash';
+import chai from 'chai';
+import chaiSubset from 'chai-subset';
+import sinon from 'sinon';
+import logger from '../utils/logger';
+import db from '../game/db';
+import events from 'events';
+import gather from '../game/gather';
+import {GAME_MODES, IN_GAME_STATES, SOLDAT_EVENTS, SOLDAT_TEAMS} from '../game/constants';
 
-const chai = require('chai');
-const chaiSubset = require('chai-subset');
+
+import soldat from '../game/soldat2';
+import soldatEvents from '../game/soldatEvents';
+
+const MongoClient = mongodb.MongoClient;
+
 chai.use(chaiSubset)
 
 const expect = chai.expect
-
-const sinon = require("sinon")
-const logger = require("../utils/logger")
-
-const stats = require("../game/stats")
-const db = require("../game/db")
-
-const events = require("events");
-
-const gather = require("../game/gather")
-const constants = require("../game/constants")
-
-
-const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
-const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
-const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
-const IN_GAME_STATES = constants.IN_GAME_STATES
-const GAME_MODES = constants.GAME_MODES
-
-const soldat = require("../game/soldat2")
-const soldatEvents = require("../game/soldatEvents")
 
 
 function fourPlayersJoin(currentGather, netClient) {

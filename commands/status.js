@@ -1,7 +1,7 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
 
-module.exports = {
+export default {
     aliases: ["status"],
     description: "View the current gather queue.",
     execute(client, message, args) {

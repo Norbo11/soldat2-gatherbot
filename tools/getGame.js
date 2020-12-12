@@ -1,17 +1,16 @@
 require("dotenv").config()
-const util = require("util")
-const MongoClient = require('mongodb').MongoClient;
-const db = require("../game/db")
-const _ = require("lodash")
-
-const Discord = require("discord.js")
+import util from 'util';
+import { MongoClient } from 'mongodb';
+import db from '../game/db';
+import _ from 'lodash';
+import Discord from 'discord.js';
 
 const guild = "761205877432385567"
 const channel = "761314449532387368"
 
 const dbUrl = "check_env_file"
 
-const main = async () => {
+const main = (async () => {
     const client = new Discord.Client()
     console.log(process.env.BOT_TOKEN)
     client.login(process.env.BOT_TOKEN)
@@ -39,7 +38,7 @@ const main = async () => {
             }
         }
     })
-}
+})
 
 (async () => await main())()
 

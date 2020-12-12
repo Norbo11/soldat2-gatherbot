@@ -1,4 +1,4 @@
-const _ = require("lodash")
+import _ from 'lodash';
 
 
 const SOLDAT_EVENTS = {
@@ -108,20 +108,18 @@ const IN_GAME_STATES = {
     GATHER_STARTED: "GATHER_STARTED",
 }
 
-const NOT_AUTHED_KICK_TIMER_SECONDS = 60
 
-
-getWeaponById = (id) => {
+const getWeaponById = (id) => {
     const key = _.findKey(SOLDAT_WEAPONS, weapon => weapon.id === id)
     return SOLDAT_WEAPONS[key]
 }
 
-getWeaponByFormattedName = (formattedName) => {
+const getWeaponByFormattedName = (formattedName) => {
     const key = _.findKey(SOLDAT_WEAPONS, weapon => weapon.formattedName.toUpperCase().startsWith(formattedName.toUpperCase()))
     return SOLDAT_WEAPONS[key]
 }
 
-module.exports = {
-    SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, NOT_AUTHED_KICK_TIMER_SECONDS, SOLDAT_TEAMS, GAME_MODES,
+export {
+    SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, SOLDAT_TEAMS, GAME_MODES,
     getWeaponById, getWeaponByFormattedName, formatGameMode, getSoldatTeamById
-}
+};

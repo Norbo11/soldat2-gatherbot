@@ -1,11 +1,11 @@
-const chai = require('chai');
-const chaiSubset = require('chai-subset');
-const _ = require('lodash')
+import chai from 'chai';
+import chaiSubset from 'chai-subset';
+import _ from 'lodash';
 chai.use(chaiSubset)
 
 const assert = chai.assert
 
-const ratings = require("../game/ratings")
+import ratings from '../game/ratings';
 
 
 const printRatings = (nameToRating) => {

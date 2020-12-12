@@ -1,8 +1,8 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
-const _ = require("lodash")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
+import _ from 'lodash';
 
-module.exports = {
+export default {
     aliases: ["delrematch"],
     description: "Delete yourself from the rematch queue.",
     execute(client, message, args) {

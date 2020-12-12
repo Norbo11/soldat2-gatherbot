@@ -1,8 +1,6 @@
-const constants = require("../game/constants")
+import {GAME_MODES} from '../game/constants';
 
-const GAME_MODES = constants.GAME_MODES
-
-module.exports = {
+export default {
     aliases: ["mode", "gamemode", "game"],
     description: "Change game mode.",
     execute(client, message, args) {

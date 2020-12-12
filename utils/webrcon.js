@@ -1,6 +1,6 @@
-const parser = require("node-html-parser")
-const Browser = require("zombie")
-const logger = require("./logger")
+import parser from 'node-html-parser';
+import Browser from 'zombie';
+import logger from './logger';
 
 const fetchNewWebrconCredentials = async () => {
     // We use a real browser here rather than pure GET requests, because we need to save/upload cookies and god knows
@@ -22,6 +22,6 @@ const fetchNewWebrconCredentials = async () => {
 }
 
 
-module.exports = {
+export default {
     fetchNewWebrconCredentials
-}
+};

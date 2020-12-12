@@ -1,6 +1,6 @@
-const logger = require("../utils/logger")
+import logger from '../utils/logger';
 
-module.exports = {
+export default {
     aliases: ["trueskill", "ratings", "ratinghelp"],
     description: "Show a help message about the rating system.",
     execute(client, message, args) {
