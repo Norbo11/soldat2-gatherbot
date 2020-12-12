@@ -11,6 +11,7 @@
     "contributors": [
         "Norbert Podsadowski <norbo11@gmail.com> (https://github.com/Norbo11/)"
     ],
+    "type": "module",
     "main": "index.js",
     "dependencies": {
         "binary-parser": "1.6.2",
@@ -42,7 +43,7 @@
         "node": ">=14.0.0"
     },
     "scripts": {
-        "start": "node index.js",
+        "start": "node --experimental-specifier-resolution=node index.js",
         "ratings": "node tools/backloadTrueSkill.js",
         "test": "mocha"
     }

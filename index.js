@@ -1,13 +1,16 @@
-require("dotenv").config()
-const logger = require("./utils/logger")
-const Discord = require("discord.js")
-const fs = require("fs")
-const message = require("./events/message")
-const ready = require("./events/ready")
-const presenceUpdate = require("./events/presenceUpdate")
-const webrcon = require("./utils/webrcon")
-const child_process = require('child_process')
-const ini = require('ini')
+import dotenv from 'dotenv'
+dotenv.config()
+
+import Discord from 'discord.js';
+import fs from 'fs';
+import ini from 'ini';
+
+import logger from './utils/logger';
+import message from './events/message';
+import ready from './events/ready';
+import presenceUpdate from './events/presenceUpdate';
+import webrcon from './utils/webrcon';
+import child_process from 'child_process';
 
 const client = new Discord.Client()
 
@@ -36,7 +39,7 @@ const setUpEvents = (webrconCredentials) => {
     process.on("SIGTERM", cleanUp)
 }
 
-const setUpServer = (webrconCredentials) => {
+const setUpServer = (webrconCredentials => {
     const configFilename = `${process.env.SERVER_FOLDER}/autoconfig.ini`
 
     // Trim the beginning of the file because there's some weird character there that messes up the parsing
@@ -60,7 +63,7 @@ const setUpServer = (webrconCredentials) => {
     });
 
     logger.log.info(`Spawned process with PID ${child.pid}`)
-}
+})
 
 (async () => {
     const afterServerSetup = async (webrconCredentials) => {

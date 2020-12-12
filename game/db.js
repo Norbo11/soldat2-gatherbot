@@ -1,16 +1,18 @@
-const MongoClient = require('mongodb').MongoClient;
-const _ = require("lodash")
-const logger = require("../utils/logger")
+import mongodb from 'mongodb';
+const MongoClient = mongodb.MongoClient;
 
-getUrl = () => {
+import _ from 'lodash';
+import logger from '../utils/logger';
+
+const getUrl = () => {
     return process.env.MONGO_URL
 }
 
-getDbName = () => {
+const getDbName = () => {
     return process.env.MONGO_DB_NAME
 }
 
-getDbConnection = async () => {
+const getDbConnection = async () => {
     const url = getUrl()
     const dbName = getDbName()
 
@@ -123,6 +125,6 @@ class StatsDB {
     }
 }
 
-module.exports = {
+export default {
     StatsDB, getDbConnection
-}
+};

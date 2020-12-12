@@ -1,6 +1,6 @@
-const logger = require("../utils/logger")
-const constants = require("./constants")
-const soldat = require("./soldat2")
+import logger from '../utils/logger';
+import constants from './constants';
+import soldat from './soldat2';
 
 const GAME_MODES = constants.GAME_MODES
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
@@ -90,7 +90,7 @@ const DEDUPLICATE_INTERVAL_MS = 1000
 
 const seenMessages = new Set()
 
-registerSoldatEventListeners = (gather, soldatClient) => {
+const registerSoldatEventListeners = (gather, soldatClient) => {
     logger.log.info("Registered non-command event listeners.")
 
     // It's important for this function to not be marked "async", as the underlying EventEmitter won't await it!
@@ -137,7 +137,7 @@ registerSoldatEventListeners = (gather, soldatClient) => {
     });
 }
 
-module.exports = {
+export default {
     registerSoldatEventListeners
-}
+};
 

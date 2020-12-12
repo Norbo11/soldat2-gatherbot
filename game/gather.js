@@ -1,14 +1,14 @@
-const _ = require("lodash")
-const logger = require("../utils/logger")
-const discord = require("../utils/discord")
-const random = require("../utils/random")
-const maps = require("../utils/maps")
-const util = require("util")
-const constants = require("./constants")
-const ctfRound = require("./ctfRound")
-const ctbRound = require("./ctbRound")
-const ratings = require("./ratings")
-const authentication = require("./authentication")
+import _ from 'lodash';
+import logger from '../utils/logger';
+import discord from '../utils/discord';
+import random from '../utils/random';
+import maps from '../utils/maps';
+import util from 'util';
+import constants from './constants';
+import ctfRound from './ctfRound';
+import ctbRound from './ctbRound';
+import ratings from './ratings';
+import authentication from './authentication';
 
 const IN_GAME_STATES = constants.IN_GAME_STATES;
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS;
@@ -382,7 +382,7 @@ class Gather {
     }
 }
 
-module.exports = {
+export default {
     Gather
-}
+};
 

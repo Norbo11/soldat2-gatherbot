@@ -1,11 +1,11 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
-const stats = require("../game/stats")
-const discord = require("../utils/discord")
-const constants = require("../game/constants")
-const statsFormatting = require("../game/statsFormatting")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
+import stats from '../game/stats';
+import discord from '../utils/discord';
+import constants from '../game/constants';
+import statsFormatting from '../game/statsFormatting';
 
-module.exports = {
+export default {
     aliases: ["top"],
     description: "Show the top players by game mode.",
     execute(client, message, args) {

@@ -1,7 +1,7 @@
-const logger = require("../utils/logger")
-const discord = require("../utils/discord")
+import logger from '../utils/logger';
+import discord from '../utils/discord';
 
-module.exports = {
+export default {
     aliases: ["last", "lastgather"],
     description: "View details of the last played gather.",
     execute(client, message, args) {

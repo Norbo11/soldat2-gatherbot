@@ -1,11 +1,11 @@
-const gather = require("../game/gather")
-const logger = require("../utils/logger")
-const soldat = require("../game/soldat2")
-const soldatEvents = require("../game/soldatEvents")
-const db = require("../game/db")
-const git = require("../utils/git")
+import gather from '../game/gather';
+import logger from '../utils/logger';
+import soldat from '../game/soldat2';
+import soldatEvents from '../game/soldatEvents';
+import db from '../game/db';
+import git from '../utils/git';
 
-module.exports = (client, webrconCredentials) => {
+export default (client, webrconCredentials) => {
     logger.log.info(`Logged in to Discord server as ${client.user.username}!`)
 
     db.getDbConnection().then(async (dbConnection) => {
@@ -26,4 +26,4 @@ module.exports = (client, webrconCredentials) => {
         currentDiscordChannel.send("GatherBot Initialised.")
         git.postChangelog()
     })
-}
+};

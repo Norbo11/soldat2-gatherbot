@@ -1,8 +1,8 @@
-const logger = require("../utils/logger")
-const WebSocket = require('ws');
-const random = require("../utils/random")
-const util = require('util')
-const _ = require("lodash")
+import logger from '../utils/logger';
+import WebSocket from 'ws';
+import random from '../utils/random';
+import util from 'util';
+import _ from 'lodash';
 
 // const sslRootCAs = require('ssl-root-cas/latest')
 // sslRootCAs.inject().addFile(__dirname + "/../certs/webrcon.com")
@@ -395,6 +395,6 @@ class NetworkMessage {
     }
 }
 
-module.exports = {
+export default {
     Soldat2Client, maybeGetLogLine, NetworkMessage, toBuffer
-}
+};

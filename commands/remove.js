@@ -1,8 +1,8 @@
-const _ = require("lodash")
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
+import _ from 'lodash';
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
 
-module.exports = {
+export default {
     aliases: ["del", "remove"],
     description: "Remove yourself from the gather queue.",
     execute(client, message, args) {

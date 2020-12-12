@@ -1,13 +1,13 @@
 require("dotenv").config()
-const db = require("../game/db")
-const _ = require("lodash")
-const Discord = require("discord.js")
+import db from '../game/db';
+import _ from 'lodash';
+import Discord from 'discord.js';
 
 const guild = "761205877432385567"
 const channel = "761314449532387368"
 
 
-const backloadRatings = async () => {
+const backloadRatings = (async () => {
 
     const dbConn = await db.getDbConnection()
     const statsDb = new db.StatsDB(dbConn)
@@ -110,7 +110,7 @@ const backloadRatings = async () => {
         console.log(`${names[discordId]}: ${rating}`)
     })
 
-}
+})
 
 
 (async () => {

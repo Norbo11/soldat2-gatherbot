@@ -1,6 +1,6 @@
-const logger = require("../utils/logger")
+import logger from '../utils/logger';
 
-module.exports = {
+export default {
     aliases: ["help"],
     description: "Show a help message.",
     execute(client, message, args) {

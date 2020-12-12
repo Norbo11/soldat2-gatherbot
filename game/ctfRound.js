@@ -1,5 +1,5 @@
-const gatherRound = require("./gatherRound")
-const constants = require("./constants")
+import gatherRound from './gatherRound';
+import constants from './constants';
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
@@ -50,6 +50,6 @@ class CtfRound extends gatherRound.GatherRound {
     }
 }
 
-module.exports = {
+export default {
     CtfRound
-}
+};

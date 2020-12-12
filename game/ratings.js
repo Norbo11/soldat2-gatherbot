@@ -1,7 +1,7 @@
-require("lodash.combinations")
-const trueskill = require("ts-trueskill")
-const logger = require("../utils/logger")
-const _ = require("lodash")
+import 'lodash.combinations';
+import trueskill from 'ts-trueskill';
+import logger from '../utils/logger';
+import _ from 'lodash';
 
 // The library has a bug where the constructor doesn't properly initialize "sigma", "beta" and "tau" unless you pass
 // undefined.
@@ -136,6 +136,6 @@ const getBalancedMatch = (discordIdToRating, size) => {
     return sortedByQuality[0]
 }
 
-module.exports = {
+export default {
     createRating, rateRounds, getBalancedMatch, getSkillEstimate, getRating, rateRound
-}
+};

@@ -1,13 +1,13 @@
-const logger = require("./logger")
-const moment = require("moment")
-const _ = require("lodash")
-const constants = require("../game/constants")
-const stats = require("../game/stats")
-const statsFormatting = require("../game/statsFormatting")
+import logger from './logger';
+import moment from 'moment';
+import _ from 'lodash';
+import constants from '../game/constants';
+import stats from '../game/stats';
+import statsFormatting from '../game/statsFormatting';
 
 const GAME_MODES = constants.GAME_MODES
 
-teamEmoji = (teamName) => {
+const teamEmoji = (teamName) => {
     if (teamName === constants.SOLDAT_TEAMS.RED) {
         return ":a:"
     } else if (teamName === constants.SOLDAT_TEAMS.BLUE) {
@@ -21,14 +21,14 @@ teamEmoji = (teamName) => {
 
 
 
-getPlayerNameStrings = (redTeamIds, blueTeamIds, delim = "\n") => {
+const getPlayerNameStrings = (redTeamIds, blueTeamIds, delim = "\n") => {
     const redPlayersString = redTeamIds.length > 0 ? redTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
     const bluePlayersString = blueTeamIds.length > 0 ? blueTeamIds.map(id => `<@${id}>`).join(delim) : "No players"
 
     return {redPlayersString, bluePlayersString}
 }
 
-getPlayerFields = (match) => {
+const getPlayerFields = (match) => {
     const {redDiscordIds, blueDiscordIds} = match
     const {redPlayersString, bluePlayersString} = getPlayerNameStrings(redDiscordIds, blueDiscordIds)
 
@@ -44,7 +44,7 @@ getPlayerFields = (match) => {
     ];
 }
 
-getMatchQualityField = (matchQuality) => {
+const getMatchQualityField = (matchQuality) => {
     return {
         name: "Match Quality",
         value: `${_.round(matchQuality, 1)}% chance to draw`,
@@ -52,7 +52,7 @@ getMatchQualityField = (matchQuality) => {
     }
 }
 
-getDurationField = (startTime, endTime, inline = false, prefix = "Gather") => {
+const getDurationField = (startTime, endTime, inline = false, prefix = "Gather") => {
     const momentDuration = moment.duration(endTime - startTime)
     return {
         name: `${prefix} Duration`,
@@ -61,7 +61,7 @@ getDurationField = (startTime, endTime, inline = false, prefix = "Gather") => {
     }
 }
 
-getMapField = (mapName, inline = false) => {
+const getMapField = (mapName, inline = false) => {
     return {
         name: "Map",
         value: `${mapName}`,
@@ -69,7 +69,7 @@ getMapField = (mapName, inline = false) => {
     }
 }
 
-getResultField = (winner, inline = false) => {
+const getResultField = (winner, inline = false) => {
     const roundResult = `${teamEmoji(winner)} ${winner} ` + (winner === constants.SOLDAT_TEAMS.TIE ? "" : "Win")
 
     return {
@@ -80,14 +80,14 @@ getResultField = (winner, inline = false) => {
 }
 
 
-getGameModeField = (gameMode) => {
+const getGameModeField = (gameMode) => {
     return {
         name: "Game Mode",
         value: constants.formatGameMode(gameMode)
     }
 }
 
-getServerLinkField = (password = "") => {
+const getServerLinkField = (password = "") => {
     return {
         name: "Link",
         value: `IP: ${process.env.SERVER_IP} - Port: ${process.env.SERVER_PORT}`,
@@ -95,7 +95,7 @@ getServerLinkField = (password = "") => {
 }
 
 
-getPlayerNameStringsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
+const getPlayerNameStringsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
     return discordIds.map(discordId => {
         const kills = (playerKillsAndDeaths[discordId] || {kills: 0}).kills
         const deaths = (playerKillsAndDeaths[discordId] || {deaths: 0}).deaths
@@ -105,7 +105,7 @@ getPlayerNameStringsWithKillsAndDeaths = (discordIds, playerKillsAndDeaths) => {
 }
 
 
-getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating) => {
+const getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, playerKillsAndDeaths, discordIdToOldRating, discordIdToNewRating) => {
 
     const playerNameStrings = getPlayerNameStringsWithKillsAndDeaths(discordIds, playerKillsAndDeaths)
     const skillChangeStrings = statsFormatting.getSkillChangeStrings(discordIds, discordIdToOldRating, discordIdToNewRating)
@@ -131,7 +131,7 @@ getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, playerKillsAndDeat
 }
 
 
-getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
+const getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
     const allEvents = _.flatMap(game.rounds, round => round.events)
     const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(allEvents)
 
@@ -145,7 +145,7 @@ getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRati
 }
 
 
-getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
+const getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
 
     // TODO: Hook this up
     const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(round.events)
@@ -170,7 +170,7 @@ getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
 }
 
 
-module.exports = {
+export default {
     teamEmoji,
     getPlayerNameStrings,
     getPlayerFields,
@@ -182,4 +182,4 @@ module.exports = {
     getGameModeField,
     getMatchQualityField,
 
-}
+};

@@ -1,19 +1,19 @@
-const _ = require("lodash")
-const MongoClient = require('mongodb').MongoClient;
+import _ from 'lodash';
+import mongodb from 'mongodb';
+const MongoClient = mongodb.MongoClient;
 
-const chai = require('chai');
-const chaiSubset = require('chai-subset');
+import chai from 'chai';
+import chaiSubset from 'chai-subset';
 chai.use(chaiSubset)
 
 const expect = chai.expect
 
-const moment = require("moment")
-
-const stats = require("../game/stats")
-const db = require("../game/db")
-const constants = require("../game/constants")
-const ratings = require("../game/ratings")
-const statsFormatting = require("../game/statsFormatting")
+import moment from 'moment';
+import stats from '../game/stats';
+import db from '../game/db';
+import constants from '../game/constants';
+import ratings from '../game/ratings';
+import statsFormatting from '../game/statsFormatting';
 
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
@@ -22,7 +22,7 @@ const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
 const GAME_MODES = constants.GAME_MODES
 
 
-getMockGames = () => {
+const getMockGames = () => {
     return [
         {
             gameMode: GAME_MODES.CAPTURE_THE_FLAG,

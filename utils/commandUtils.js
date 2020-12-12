@@ -1,6 +1,6 @@
-const logger = require("./logger")
-const constants = require("../game/constants")
-const discord = require("../utils/discord")
+import logger from './logger';
+import constants from '../game/constants';
+import discord from '../utils/discord';
 
 
 ensureWebrconAlive = () => {
@@ -99,6 +99,6 @@ displayQueueWithServerInfo = () => {
 }
 
 
-module.exports = {
+export default {
     displayGatherStatus, displayServerInfo, displayQueueWithServerInfo, ensureWebrconAlive
-}
+};

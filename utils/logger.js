@@ -1,9 +1,9 @@
-const pino = require('pino')
-const pinoms = require('pino-multi-stream');
-const pinoPretty = require('pino-pretty');
-const fs = require('fs');
+import pino from 'pino';
+import pinoms from 'pino-multi-stream';
+import pinoPretty from 'pino-pretty';
+import fs from 'fs';
 
-streams = [
+const streams = [
     {
         stream: fs.createWriteStream("./ttw-gatherbot.log", {
             flags: "a" // append mode
@@ -25,6 +25,6 @@ streams = [
 const log = pino({
 }, pinoms.multistream(streams))
 
-module.exports = {
+export default {
     log
-}
+};

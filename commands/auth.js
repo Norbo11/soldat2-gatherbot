@@ -1,6 +1,6 @@
-const logger = require("../utils/logger")
+import logger from '../utils/logger';
 
-module.exports = {
+export default {
     aliases: ["auth"],
     description: "Authenticate your in-game account with the bot.",
     execute(client, message, args) {

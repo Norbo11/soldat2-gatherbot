@@ -1,15 +1,14 @@
-const _ = require("lodash")
-
-const logger = require("../utils/logger")
-const constants = require("./constants")
-const ratings = require("./ratings")
+import _ from 'lodash';
+import logger from '../utils/logger';
+import constants from './constants';
+import ratings from './ratings';
 
 const SOLDAT_EVENTS = constants.SOLDAT_EVENTS
 const SOLDAT_WEAPONS = constants.SOLDAT_WEAPONS
 const SOLDAT_TEAMS = constants.SOLDAT_TEAMS
 const GAME_MODES = constants.GAME_MODES
 
-getCaps = (discordId, events) => {
+const getCaps = (discordId, events) => {
     events = _.filter(events, event =>
         event.type === SOLDAT_EVENTS.FLAG_CAP
         && event.discordId === discordId
@@ -19,27 +18,27 @@ getCaps = (discordId, events) => {
 }
 
 
-filterKillEvent = (event) => {
+const filterKillEvent = (event) => {
     return event.type === SOLDAT_EVENTS.PLAYER_KILL
     && event.killerDiscordId !== event.victimDiscordId // Do not count selfkills as kills
     && event.killerTeam !== event.victimTeam // Do not count friendly kills
 }
 
-filterDeathEvent = (event, discordId = null) => {
+const filterDeathEvent = (event, discordId = null) => {
     return event.type === SOLDAT_EVENTS.PLAYER_KILL
     // Count deaths from other people, or selfkills
     && (event.killerTeam !== event.victimTeam || event.killerDiscordId === discordId)
 }
 
-filterKillEventsByPlayer = (events, discordId) => {
+const filterKillEventsByPlayer = (events, discordId) => {
     return _.filter(events, event => event.killerDiscordId === discordId && filterKillEvent(event));
 }
 
-filterDeathEventsByPlayer = (events, discordId) => {
+const filterDeathEventsByPlayer = (events, discordId) => {
     return _.filter(events, event => event.victimDiscordId === discordId && filterDeathEvent(event, discordId));
 }
 
-getKillsAndDeathsPerWeapon = (discordId, events) => {
+const getKillsAndDeathsPerWeapon = (discordId, events) => {
     const weaponStats = {}
 
     Object.keys(SOLDAT_WEAPONS).forEach(weaponKey => {
@@ -62,7 +61,7 @@ getKillsAndDeathsPerWeapon = (discordId, events) => {
     return weaponStats
 }
 
-getTeamKills = (discordId, events) => {
+const getTeamKills = (discordId, events) => {
 
     const teamKillEvents = _.filter(events, event =>
         event.type === SOLDAT_EVENTS.PLAYER_KILL
@@ -73,7 +72,7 @@ getTeamKills = (discordId, events) => {
     return teamKillEvents.length
 }
 
-getPlayerStats = async (statsDb, discordId) => {
+const getPlayerStats = async (statsDb, discordId) => {
     const ratingNumbers = await statsDb.getMuSigma(discordId)
 
     if (ratingNumbers === undefined) {
@@ -331,7 +330,7 @@ const getKillsAndDeathsPerPlayer = (events) => {
 
 
 
-module.exports = {
+export default {
     getPlayerStats, getGatherStats,
     getTopPlayers, getTeamCaps, getKillsAndDeathsPerPlayer
-}
+};

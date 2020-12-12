@@ -1,11 +1,11 @@
 require("dotenv").config()
-const db = require("../game/db")
-const _ = require("lodash")
-const Discord = require("discord.js")
-const ratings = require("../game/ratings")
+import db from '../game/db';
+import _ from 'lodash';
+import Discord from 'discord.js';
+import ratings from '../game/ratings';
 
 
-const backloadRatings = async () => {
+const backloadRatings = (async () => {
 
     const dbConn = await db.getDbConnection()
     const statsDb = new db.StatsDB(dbConn)
@@ -76,7 +76,7 @@ const backloadRatings = async () => {
         console.log(`${rating.name}: ${rating.rating} = ${rating.conservativeSkillEstimate}`)
     })
 
-}
+})
 
 
 (async () => {

@@ -1,7 +1,7 @@
-const _ = require("lodash")
-const logger = require("../utils/logger")
-const util = require("util")
-const constants = require("../game/constants")
+import _ from 'lodash';
+import logger from '../utils/logger';
+import util from 'util';
+import constants from '../game/constants';
 
 class GatherRound {
 
@@ -55,7 +55,7 @@ class GatherRound {
     }
 }
 
-module.exports = {
+export default {
     GatherRound,
-}
+};
 

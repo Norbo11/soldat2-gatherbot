@@ -1,9 +1,9 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
-const maps = require("../utils/maps")
-const constants = require("../game/constants")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
+import maps from '../utils/maps';
+import constants from '../game/constants';
 
-module.exports = {
+export default {
     aliases: ["maps"],
     description: "List available maps.",
     execute(client, message, args) {

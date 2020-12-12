@@ -1,6 +1,6 @@
-const _ = require("lodash")
-const random = require("../utils/random")
-const logger = require("../utils/logger")
+import _ from 'lodash';
+import random from '../utils/random';
+import logger from '../utils/logger';
 
 class Authenticator {
 
@@ -39,7 +39,7 @@ class Authenticator {
     }
 }
 
-module.exports = {
+export default {
     Authenticator
-}
+};
 

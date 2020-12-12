@@ -1,10 +1,10 @@
-const logger = require("../utils/logger")
-const stats = require("../game/stats")
-const statsFormatting = require("../game/statsFormatting")
-const utils = require("util")
+import logger from '../utils/logger';
+import stats from '../game/stats';
+import statsFormatting from '../game/statsFormatting';
+import utils from 'util';
 
 
-module.exports = {
+export default {
     aliases: ["stats"],
     description: "Show yours or someone else's personal gather statistics (use @mentions).",
     execute(client, message, args) {

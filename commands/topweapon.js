@@ -1,12 +1,12 @@
-const logger = require("../utils/logger")
-const utils = require("../utils/commandUtils")
-const stats = require("../game/stats")
-const discord = require("../utils/discord")
-const constants = require("../game/constants")
-const statsFormatting = require("../game/statsFormatting")
-const _ = require("lodash")
+import logger from '../utils/logger';
+import utils from '../utils/commandUtils';
+import stats from '../game/stats';
+import discord from '../utils/discord';
+import constants from '../game/constants';
+import statsFormatting from '../game/statsFormatting';
+import _ from 'lodash';
 
-module.exports = {
+export default {
     aliases: ["topweapon", "topwep"],
     description: "Show the top players by weapon.",
     execute(client, message, args) {

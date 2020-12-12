@@ -1,7 +1,7 @@
-const _ = require("lodash")
-const logger = require("../utils/logger")
+import _ from 'lodash';
+import logger from '../utils/logger';
 
-module.exports = (client, message) => {
+export default (client, message) => {
     // Do not process messages that don't start with our prefix, or come from a bot
     if (!message.content.startsWith(process.env.PREFIX) || message.author.bot) return;
 
@@ -22,4 +22,4 @@ module.exports = (client, message) => {
         console.error(error);
         message.reply("there was an error trying to execute that command!");
     }
-}
+};

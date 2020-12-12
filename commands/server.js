@@ -1,7 +1,7 @@
-const logger = require("../utils/logger")
-const discord = require("../utils/discord")
+import logger from '../utils/logger';
+import discord from '../utils/discord';
 
-module.exports = {
+export default {
     aliases: ["server"],
     description: "Get the IP address of the server.",
     execute(client, message, args) {
