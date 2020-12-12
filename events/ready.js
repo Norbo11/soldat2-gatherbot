@@ -4,6 +4,7 @@ import soldat from '../game/soldat2';
 import soldatEvents from '../game/soldatEvents';
 import db from '../game/db';
 import git from '../utils/git';
+import {ClipManager} from "../game/clipManager";
 
 export default (client, webrconCredentials) => {
     logger.log.info(`Logged in to Discord server as ${client.user.username}!`)
@@ -15,11 +16,15 @@ export default (client, webrconCredentials) => {
         const {sessionId, cKey} = webrconCredentials
         global.currentSoldatClient = soldat.Soldat2Client.fromWebRcon(sessionId, cKey)
 
+        const getCurrentTimestamp = () => Date.now()
+
         global.currentGather = new gather.Gather(
             global.currentDiscordChannel,
             global.currentStatsDb,
             global.currentSoldatClient,
-            () => Date.now())
+            getCurrentTimestamp)
+
+        global.currentClipManager = new ClipManager(currentStatsDb, getCurrentTimestamp)
 
         soldatEvents.registerSoldatEventListeners(global.currentGather, global.currentSoldatClient)
 

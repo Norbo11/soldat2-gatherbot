@@ -3,7 +3,7 @@ import fs from 'fs';
 const PATH_TO_COMMIT_FILE = "last_commit_hash"
 import _ from 'lodash';
 
-postChangelog = () => {
+const postChangelog = () => {
     nodegit.Repository.open(".").then(async repo => {
         const headCommit = await repo.getMasterCommit();
 

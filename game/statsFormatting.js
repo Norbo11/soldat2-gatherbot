@@ -261,6 +261,11 @@ const formatOverallWeaponStats = (overallWeaponStats) => {
     }
 }
 
+
+export const formatClip = (clip) => {
+    return `Clip **#${clip.id}** added by <@${clip.addedByDiscordId}> on ${moment(clip.addedTime).format("dddd, MMMM Do YYYY, h:mm:ss a")}\n${clip.clipUrl}`
+}
+
 export default {
     formatGeneralStatsForPlayer, formatGatherStats, formatTopPlayersByWeapon, formatTopPlayers, skillChangeEmoji,
     uncertaintyChangeEmoji, getSkillChangeStrings, getUncertaintyChangeStrings, formatOverallWeaponStats

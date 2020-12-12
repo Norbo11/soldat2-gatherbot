@@ -15,13 +15,14 @@ import child_process from 'child_process';
 const client = new Discord.Client()
 
 
-const setUpCommands = () => {
+const setUpCommands = async () => {
     client.commands = []
 
     const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
 
     for (const file of commandFiles) {
-        const command = require(`./commands/${file}`);
+        const module = await import(`./commands/${file}`);
+        const command = module.default
         client.commands.push(command);
     }
 }
@@ -39,7 +40,7 @@ const setUpEvents = (webrconCredentials) => {
     process.on("SIGTERM", cleanUp)
 }
 
-const setUpServer = (webrconCredentials => {
+const setUpServer = webrconCredentials => {
     const configFilename = `${process.env.SERVER_FOLDER}/autoconfig.ini`
 
     // Trim the beginning of the file because there's some weird character there that messes up the parsing
@@ -63,15 +64,15 @@ const setUpServer = (webrconCredentials => {
     });
 
     logger.log.info(`Spawned process with PID ${child.pid}`)
-})
+}
 
 (async () => {
     const afterServerSetup = async (webrconCredentials) => {
-        setUpCommands();
+        await setUpCommands();
         setUpEvents(webrconCredentials);
 
-        await client.login(process.env.BOT_TOKEN)
-    }
+        await client.login(process.env.BOT_TOKEN);
+    };
 
     if (process.env.WEBRCON_CKEY_ID === "" || process.env.WEBRCON_SESSION_ID === "")  {
         const webrconCredentials = await webrcon.fetchNewWebrconCredentials();
@@ -79,15 +80,15 @@ const setUpServer = (webrconCredentials => {
 
         // After 10 seconds, resume bot initialization. This is to prevent us from connecting to WebRcon too soon (before
         // the server is up), etc.
-        setTimeout(() => afterServerSetup(webrconCredentials), 10000)
+        setTimeout(() => afterServerSetup(webrconCredentials), 10000);
     } else {
         const webrconCredentials = {
             cKey: process.env.WEBRCON_CKEY_ID,
             sessionId: process.env.WEBRCON_SESSION_ID
         }
-        await afterServerSetup(webrconCredentials)
+        await afterServerSetup(webrconCredentials);
     }
-})()
+})();
 
 
 

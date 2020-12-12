@@ -1,10 +1,8 @@
-import mongodb from 'mongodb';
 import _ from 'lodash';
 import chai from 'chai';
 import chaiSubset from 'chai-subset';
 import sinon from 'sinon';
 import logger from '../utils/logger';
-import db from '../game/db';
 import events from 'events';
 import gather from '../game/gather';
 import {GAME_MODES, IN_GAME_STATES, SOLDAT_EVENTS, SOLDAT_TEAMS} from '../game/constants';
@@ -12,8 +10,7 @@ import {GAME_MODES, IN_GAME_STATES, SOLDAT_EVENTS, SOLDAT_TEAMS} from '../game/c
 
 import soldat from '../game/soldat2';
 import soldatEvents from '../game/soldatEvents';
-
-const MongoClient = mongodb.MongoClient;
+import {getTestStatsDb} from "../utils/testUtils";
 
 chai.use(chaiSubset)
 
@@ -54,13 +51,10 @@ describe('Gather', () => {
     let ws = undefined
     let discordChannel = undefined
     let statsDb = undefined
-    let mongoConn = undefined
     let currentTime = 0;
 
     beforeEach(async () => {
-        const mongoClient = await MongoClient.connect("mongodb://localhost:27017")
-        mongoConn = mongoClient.db("testDb")
-        statsDb = new db.StatsDB(mongoConn)
+        statsDb = await getTestStatsDb()
 
         ws = new events.EventEmitter()
         ws.send = (data) => {
@@ -92,7 +86,7 @@ describe('Gather', () => {
     });
 
     afterEach(async () => {
-        await mongoConn.dropDatabase()
+        await statsDb.dropDatabase()
     })
 
     it('should handle an entire ctf gather', async () => {
