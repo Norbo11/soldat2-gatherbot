@@ -115,9 +115,18 @@
         // The axis function is a "generator" which will generate the SVG elements that draw our axis
         .call(d3.axisBottom(x));
 
+    // TODO: Ask the community about which of these colors is better
     const colorScale = d3.scaleLinear()
+        // .domain([0, 50, 100])
         .domain([0, 100])
-        .range(["green", "red"])
+        // .range(["green", "red"])
+        // .range()
+        // .range(["#24c6dc", "#514a9d"])
+        // .range([d3.color("#24c6dc").darker(), d3.color("#514a9d").darker()])
+        .range([d3.color("#24c6dc").brighter(), d3.color("#514a9d").darker()])
+        // .range(["#1FA2FF", "#12D8FA", "#A6FFCB"])
+        // .range(["#1A2980", "#26D0CE"])
+        // .range(["#E55D87", "#5FC3E4"])
 
 
     // Create a line where we map a datapoint to its X, Y location using the earlier scale
@@ -129,10 +138,12 @@
     svg.append("linearGradient")
         .attr("id", "bellCurveGradient")
         .selectAll("stop")
-        .data([-10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110].map(x => {
-            const percentage = (jStat.normal.cdf(x, globalMu, globalSigma) * 100).toFixed(1)
+        .data(normalPoints.map(x => {
+            const percentage = (jStat.normal.cdf(x.x, globalMu, globalSigma) * 100)
             return {
                 offset: `${percentage}%`,
+                // Uncomment this to see what a regular gardient would look like without our "gaussian" gradient
+                // offset: `${x.x}%`
                 color: colorScale(percentage)
             }
         }))
@@ -146,7 +157,7 @@
         .attr("class", "line")
         .attr("d", line)
         .style("fill", "url(#bellCurveGradient)")
-        .style("opacity", "0.85")
+        .style("opacity", "0.80")
 
     const pathFullOpacity = svg.append("path")
         .datum(normalPoints)
