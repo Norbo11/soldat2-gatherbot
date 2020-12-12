@@ -56,13 +56,15 @@
     const points = inputPoints.map((d, i) => {
         const left = d.mu - 3 * d.sigma
         const right = d.mu + 3 * d.sigma
+        const percentage = jStat.normal.cdf(d.mu, globalMu, globalSigma) * 100
 
         return {
             i,
             mu: d.mu,
             sigma: d.sigma,
             left,
-            right
+            right,
+            percentage
         }
     })
 
@@ -162,8 +164,8 @@
         .append("circle")
             .attr("class", "point")
             .attr("id", (d, i) => `point${i}`)
-            .attr("fill", "red")
-            .attr("stroke", "none")
+            .attr("fill", d => colorScale(d.percentage))
+            .attr("stroke", "black")
             .attr("cx", d => x(d.left))
             .attr("cy", d => y(jStat.normal.pdf(d.left, globalMu, globalSigma)))
             .attr("r", 6)
