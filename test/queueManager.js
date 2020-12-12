@@ -1,5 +1,5 @@
 import chai from "chai";
-import {getTestDiscordChannel, getTestStatsDb, MockDiscordUser} from "../utils/testUtils";
+import {getTestDiscordChannel, getTestGather, getTestStatsDb, MockDiscordUser} from "../utils/testUtils";
 import sinon from 'sinon';
 import {QueueManager} from "../game/queueManager";
 import logger from "../utils/logger"
@@ -20,6 +20,8 @@ describe("QueueManager", () => {
     beforeEach(async () => {
         statsDb = await getTestStatsDb()
         discordChannel = getTestDiscordChannel()
+        gather1 = getTestGather()
+        gather2 = getTestGather()
 
         mockCurrentTimestamp = () => {
             return currentTime;
@@ -30,22 +32,6 @@ describe("QueueManager", () => {
         for (let i = 0; i < 20; i++) {
             players.push(new MockDiscordUser(`${i}`))
         }
-
-        gather1 = sinon.stub()
-        gather1.startNewGame = () => {
-            return new Promise((resolve, reject) => {
-                logger.log.info("Started new gather")
-                resolve()
-            })
-        }
-
-        gather2 = sinon.stub()
-        gather2.startNewGame = () => {
-            return new Promise((resolve, reject) => {
-                logger.log.info("Started new gather")
-                resolve()
-            })
-        }
     })
 
     afterEach(() => {
@@ -54,8 +40,8 @@ describe("QueueManager", () => {
 
     it("should add and remove players", async () => {
         const queueManager = new QueueManager(discordChannel)
-        queueManager.addGatherServer("eu-1", sinon.stub())
-        queueManager.addGatherServer("eu-2", sinon.stub())
+        queueManager.addGatherServer("eu-1", gather1)
+        queueManager.addGatherServer("eu-2", gather2)
 
         const queue1 = queueManager.getQueue("eu-1")
         const queue2 = queueManager.getQueue("eu-2")
@@ -80,8 +66,8 @@ describe("QueueManager", () => {
 
     it("should ensure players are only ever present in one queue", async () => {
         const queueManager = new QueueManager(discordChannel)
-        queueManager.addGatherServer("eu-1", sinon.stub())
-        queueManager.addGatherServer("eu-2", sinon.stub())
+        queueManager.addGatherServer("eu-1", gather1)
+        queueManager.addGatherServer("eu-2", gather2)
 
         const queue1 = queueManager.getQueue("eu-1")
         const queue2 = queueManager.getQueue("eu-2")
@@ -165,4 +151,11 @@ describe("QueueManager", () => {
         assert.isNull(result)
     })
 
+    it("should fail to add to non-existant server", async () => {
+        const queueManager = new QueueManager(discordChannel)
+        queueManager.addGatherServer("eu-1", gather1)
+
+        const result = queueManager.addToQueue(players[0], "invalid-code")
+        assert.isNull(result)
+    })
 })

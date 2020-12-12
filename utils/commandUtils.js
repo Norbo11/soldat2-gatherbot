@@ -3,16 +3,6 @@ import {IN_GAME_STATES} from '../game/constants';
 import discord from '../utils/discord';
 
 
-const ensureWebrconAlive = () => {
-    currentGather.soldatClient.pingServer((response) => {
-        if (response === undefined) {
-            currentDiscordChannel.send("Detected issue with webrcon connection/credentials. Restarting with fresh credentials...").then(() => {
-                // This will invoke the cleanUp function in index.js
-                process.kill(process.pid, "SIGINT")
-            })
-        }
-    })
-}
 
 
 const displayGatherStatus = (message) => {
@@ -100,5 +90,5 @@ const displayQueueWithServerInfo = () => {
 
 
 export default {
-    displayGatherStatus, displayServerInfo, displayQueueWithServerInfo, ensureWebrconAlive
+    displayGatherStatus, displayServerInfo, displayQueueWithServerInfo
 };

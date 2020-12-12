@@ -1,6 +1,7 @@
 import _ from "lodash";
 import discord from "../utils/discord";
 import logger from "../utils/logger"
+import utils from "../utils/commandUtils";
 
 export class QueueManager {
 
@@ -67,7 +68,11 @@ export class QueueManager {
     }
 
     getServer(code) {
-        return this.servers[code]
+        if (_.includes(_.keys(this.servers), code)) {
+            return this.servers[code]
+        } else {
+            return null
+        }
     }
 
     isQueueFilled(server) {
@@ -78,11 +83,17 @@ export class QueueManager {
         this.remove(discordUser)
 
         const server = this.getServer(serverCode)
+        if (server === null) {
+            return null
+        }
+
         const queue = server.queue
 
         if (this.isQueueFilled(server)) {
             return null
         }
+
+        server.gather.ensureWebrconAlive()
 
         if (!queue.includes(discordUser)) {
             queue.push(discordUser)

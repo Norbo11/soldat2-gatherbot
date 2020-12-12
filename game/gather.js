@@ -7,12 +7,10 @@ import {GAME_MODES, IN_GAME_STATES, SOLDAT_TEAMS} from './constants';
 import ctfRound from './ctfRound';
 import ctbRound from './ctbRound';
 import ratings from './ratings';
-import authentication from './authentication';
 
 class Gather {
 
     discordChannel = undefined
-    currentSize = 6
     currentQueue = []
     rematchQueue = []
     currentRound = undefined
@@ -21,13 +19,13 @@ class Gather {
     gameMode = GAME_MODES.CAPTURE_THE_FLAG
     match = undefined
 
-    constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
+    constructor(discordChannel, statsDb, soldatClient, authenticator, getCurrentTimestamp) {
         this.discordChannel = discordChannel
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
         this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
-        this.authenticator = new authentication.Authenticator(statsDb)
+        this.authenticator = authenticator
         // this.password = "placeholder_password"
     }
 
@@ -35,26 +33,6 @@ class Gather {
         return this.inGameState !== IN_GAME_STATES.NO_GATHER
     }
 
-    displayQueue(size, queue, rematch = false) {
-        const queueMembers = queue.map(user => `<@${user.id}>`)
-        for (let i = 0; i < size - queue.length; i++) {
-            queueMembers.push(":bust_in_silhouette:")
-        }
-
-        this.discordChannel.send({
-            embed: {
-                title: "Gather Info",
-                color: 0xff0000,
-                fields: [
-                    {
-                        name: "Current Queue" + (rematch ? " (rematch)" : ""),
-                        value: `${queueMembers.join(" - ")}`
-                    },
-                    discord.getGameModeField(this.gameMode),
-                ]
-            }
-        })
-    }
 
     changeSize(newSize) {
         this.currentSize = newSize
@@ -286,15 +264,7 @@ class Gather {
     }
 
     playerAdd(discordUser) {
-        if (!this.currentQueue.includes(discordUser)) {
-            this.currentQueue.push(discordUser)
 
-            if (this.currentQueue.length === this.currentSize) {
-                this.startNewGame()
-            } else {
-                this.displayQueue(this.currentSize, this.currentQueue)
-            }
-        }
     }
 
     playerRematchAdd(discordUser) {
@@ -372,6 +342,18 @@ class Gather {
                 })
             }
         }
+    }
+
+    ensureWebrconAlive() {
+        this.soldatClient.pingServer((response) => {
+            if (response === undefined) {
+                currentDiscordChannel.send("Detected issue with webrcon connection/credentials. Restarting with fresh credentials...").then(() => {
+                    // TODO: We can no longer restart the bot - we should just fetch new creds and restart the server
+                    // This will invoke the cleanUp function in index.js
+                    // process.kill(process.pid, "SIGINT")
+                })
+            }
+        })
     }
 }
 

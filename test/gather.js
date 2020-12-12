@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import chai from 'chai';
 import chaiSubset from 'chai-subset';
-import sinon from 'sinon';
 import logger from '../utils/logger';
 import events from 'events';
 import gather from '../game/gather';
@@ -10,39 +9,12 @@ import {GAME_MODES, IN_GAME_STATES, SOLDAT_EVENTS, SOLDAT_TEAMS} from '../game/c
 
 import soldat from '../game/soldat2';
 import soldatEvents from '../game/soldatEvents';
-import {getTestStatsDb} from "../utils/testUtils";
+import {getTestDiscordChannel, getTestStatsDb, MockDiscordUser} from "../utils/testUtils";
+import {Authenticator} from "../game/authentication"
 
 chai.use(chaiSubset)
 
 const expect = chai.expect
-
-
-function fourPlayersJoin(currentGather, netClient) {
-    // These tasks go to sleep until they receive the right events from the server
-    currentGather.playerJoin("a")
-    currentGather.playerJoin("b")
-    currentGather.playerJoin("c")
-    currentGather.playerJoin("d")
-
-    // Emitting an event goes through all listeners synchronously. These below "emit" calls block while they
-    // complete the playerJoin tasks above (all of which have registered some listeners and are waiting for data
-    // to arrive).
-    netClient.emit("data", "--- hwid A a")
-    netClient.emit("data", "--- hwid B b")
-    netClient.emit("data", "--- hwid C c")
-    netClient.emit("data", "--- hwid D d")
-}
-
-class MockDiscordUser {
-
-    constructor(id) {
-        this.id = id
-    }
-
-    send(message) {
-        logger.log.info(`Sending message to ${this.username}:\n${message}`)
-    }
-}
 
 
 describe('Gather', () => {
@@ -52,23 +24,15 @@ describe('Gather', () => {
     let discordChannel = undefined
     let statsDb = undefined
     let currentTime = 0;
+    let authenticator = undefined;
 
     beforeEach(async () => {
         statsDb = await getTestStatsDb()
+        discordChannel = getTestDiscordChannel()
 
         ws = new events.EventEmitter()
         ws.send = (data) => {
             logger.log.info(`Wrote to server: ${data}`)
-        }
-
-        discordChannel = sinon.stub()
-        discordChannel.send = (data) => {
-            logger.log.info(`Wrote to discord channel: ${data}`)
-        }
-
-        discordChannel.client = sinon.stub()
-        discordChannel.client.fetchUser = async discordId => {
-            return {username: "TestDiscordUser", send: () => logger.log.info(`Sending message to ${discordId}`)}
         }
 
         await statsDb.mapPlayfabIdToDiscordId("A", "a")
@@ -80,8 +44,10 @@ describe('Gather', () => {
             return currentTime;
         }
 
+        authenticator = new Authenticator(statsDb)
+
         soldatClient = new soldat.Soldat2Client(ws, true)
-        currentGather = new gather.Gather(discordChannel, statsDb, soldatClient, mockCurrentTimestamp)
+        currentGather = new gather.Gather(discordChannel, statsDb, soldatClient, authenticator, mockCurrentTimestamp)
         soldatEvents.registerSoldatEventListeners(currentGather, soldatClient)
     });
 
