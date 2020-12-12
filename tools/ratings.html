@@ -40,7 +40,7 @@
     let globalMu = 50
     let globalSigma = 50 / 3
 
-    points = [
+    const inputPoints = [
         {
             mu: 30,
             sigma: 3,
@@ -52,6 +52,19 @@
             i: 1
         },
     ]
+
+    const points = inputPoints.map((d, i) => {
+        const left = d.mu - 3 * d.sigma
+        const right = d.mu + 3 * d.sigma
+
+        return {
+            i,
+            mu: d.mu,
+            sigma: d.sigma,
+            left,
+            right
+        }
+    })
 
     let figureWidth = this.innerWidth - 100
     let figureHeight = this.innerHeight - 100
@@ -143,53 +156,60 @@
         .attr("clip-path", `url(#clipPath)`) // Assign to our earlier clip path
 
 
+    const circles = svg.selectAll("circles")
+        .data(points)
+        .enter()
+        .append("circle")
+            .attr("class", "point")
+            .attr("id", (d, i) => `point${i}`)
+            .attr("fill", "red")
+            .attr("stroke", "none")
+            .attr("cx", d => x(d.left))
+            .attr("cy", d => y(jStat.normal.pdf(d.left, globalMu, globalSigma)))
+            .attr("r", 6)
+
     const handleMouseOverPoint = (e, d) => {
-        const left = d.mu - 3 * d.sigma
-        const right = d.mu + 3 * d.sigma
-        const values = [
-            ...normal(globalMu, globalSigma, left, right),
-
-        ]
-
         pathFullOpacity.style("visibility", "visible")
 
         // Interpolate a rectangular clipPath which will smoothly reveal the area underneath our point
         let clipPath = svg.append("clipPath")
             .attr("id", `clipPath`)
             .append("path")
-            .datum([left, right]) // I think this is "datum" not "data" because we are drawing just 1 path
+            .datum([d.left, d.right]) // I think this is "datum" not "data" because we are drawing just 1 path
             .attr("class", "area")
             .attr("d", d3.area()
-                .x(x(left))
+                .x(x(d.left))
                 .y0(y(0))
                 .y1(y(1))
             )
             .transition()
-                .ease(d3.easePoly)
-                .duration(1000)
-                .attr("d", d3.area()
-                    .x(d => x(d))
-                    .y0(y(0))
-                    .y1(y(1))
-                )
+            .ease(d3.easePoly)
+            .duration(1000)
+            .attr("d", d3.area()
+                .x(d => x(d))
+                .y0(y(0))
+                .y1(y(1))
+            )
+
+        circles
+            .filter((_, i) => i !== d.i)
+            .transition()
+            .duration(1000)
+            .style("opacity", "0")
     }
 
     const handleMouseOutPoint = (e, d) => {
         d3.select(`#uncertaintyArea${d.i}`).remove();
         d3.select(`#clipPath`).remove();
         pathFullOpacity.style("visibility", "hidden")
+        circles
+            .filter((_, i) => i !== d.i)
+            .transition()
+            .duration(1000)
+            .style("opacity", "1")
     }
 
-    svg.selectAll("points")
-        .data(points)
-        .enter()
-        .append("circle")
-            .attr("id", (d, i) => `point${i}`)
-            .attr("fill", "red")
-            .attr("stroke", "none")
-            .attr("cx", d => x(d.mu))
-            .attr("cy", d => y(jStat.normal.pdf(d.mu, globalMu, globalSigma)))
-            .attr("r", 6)
+    circles
         .on("mouseover", handleMouseOverPoint)
         .on("mouseout", handleMouseOutPoint)
 
