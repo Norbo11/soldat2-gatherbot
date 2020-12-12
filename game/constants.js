@@ -108,8 +108,6 @@ const IN_GAME_STATES = {
     GATHER_STARTED: "GATHER_STARTED",
 }
 
-const NOT_AUTHED_KICK_TIMER_SECONDS = 60
-
 
 const getWeaponById = (id) => {
     const key = _.findKey(SOLDAT_WEAPONS, weapon => weapon.id === id)
@@ -122,6 +120,6 @@ const getWeaponByFormattedName = (formattedName) => {
 }
 
 export default {
-    SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, NOT_AUTHED_KICK_TIMER_SECONDS, SOLDAT_TEAMS, GAME_MODES,
+    SOLDAT_EVENTS, SOLDAT_WEAPONS, IN_GAME_STATES, SOLDAT_TEAMS, GAME_MODES,
     getWeaponById, getWeaponByFormattedName, formatGameMode, getSoldatTeamById
 };
