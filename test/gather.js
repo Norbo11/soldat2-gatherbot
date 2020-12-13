@@ -3,14 +3,14 @@ import chai from 'chai';
 import chaiSubset from 'chai-subset';
 import logger from '../utils/logger';
 import events from 'events';
-import gather from '../game/gather';
 import {GAME_MODES, IN_GAME_STATES, SOLDAT_EVENTS, SOLDAT_TEAMS} from '../game/constants';
 
 
 import soldat from '../game/soldat2';
 import soldatEvents from '../game/soldatEvents';
-import {getTestDiscordChannel, getTestStatsDb, MockDiscordUser} from "../utils/testUtils";
+import {getTestDiscordChannel, getTestServer, getTestStatsDb, MockDiscordUser} from "../utils/testUtils";
 import {Authenticator} from "../game/authentication"
+import {Gather} from "../game/gather";
 
 chai.use(chaiSubset)
 
@@ -29,6 +29,7 @@ describe('Gather', () => {
     beforeEach(async () => {
         statsDb = await getTestStatsDb()
         discordChannel = getTestDiscordChannel()
+        const server = getTestServer()
 
         ws = new events.EventEmitter()
         ws.send = (data) => {
@@ -46,8 +47,8 @@ describe('Gather', () => {
 
         authenticator = new Authenticator(statsDb)
 
-        soldatClient = new soldat.Soldat2Client(ws, true)
-        currentGather = new gather.Gather(discordChannel, statsDb, soldatClient, authenticator, mockCurrentTimestamp)
+        soldatClient = new soldat.Soldat2Client("[test]", ws, true)
+        currentGather = new Gather(server, discordChannel, statsDb, soldatClient, authenticator, mockCurrentTimestamp)
         soldatEvents.registerSoldatEventListeners(currentGather, soldatClient)
     });
 

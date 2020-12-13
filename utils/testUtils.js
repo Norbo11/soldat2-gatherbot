@@ -46,6 +46,9 @@ export const getTestGather = () => {
             resolve(true)
         })
     }
+    gather.gatherInProgress = () => {
+        return false
+    }
     return gather
 }
 
@@ -57,5 +60,11 @@ export class MockDiscordUser {
 
     send(message) {
         logger.log.info(`Sending message to ${this.username}:\n${message}`)
+    }
+}
+
+export const getTestServer = () => {
+    return {
+
     }
 }

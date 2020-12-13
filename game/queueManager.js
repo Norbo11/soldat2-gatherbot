@@ -27,7 +27,7 @@ export class QueueManager {
     }
 
     addGatherServer(server, gather) {
-        currentDiscordChannel.send(`Server **${server.config.code}** fully operational; queue is now available.`)
+        this.discordChannel.send(`Server **${server.config.code}** fully operational; queue is now available.`)
 
         server.gather = gather
         this.servers[server.config.code] = server
@@ -59,14 +59,14 @@ export class QueueManager {
         return sorted[0]
     }
 
-    addToLargestQueue(discordUser) {
+    async addToLargestQueue(discordUser) {
         const server = this.getServerWithLargestQueue()
         if (server === null) {
             this.discordChannel.send("All servers/queues are currently full.")
-            return
+            return null
         }
 
-        this.addToQueue(discordUser, server.code)
+        await this.addToQueue(discordUser, server.code)
     }
 
     displayQueue(server, rematch = false) {
@@ -127,7 +127,7 @@ export class QueueManager {
         return server.queue.length >= server.size
     }
 
-    addToQueue(discordUser, serverCode) {
+    async addToQueue(discordUser, serverCode) {
         const server = this.getServer(serverCode)
         if (server === null) {
             this.discordChannel.send(`There is no server/queue with code ${serverCode}.`)
@@ -141,24 +141,24 @@ export class QueueManager {
             return null
         }
 
-        server.gather.checkServerAlive().then(alive => {
-            if (!alive) {
-                onServerDied(server)
-                return
+        const alive = await server.gather.checkServerAlive()
+
+        if (!alive) {
+            onServerDied(server)
+            return
+        }
+
+        this.remove(discordUser, false)
+
+        if (!queue.includes(discordUser)) {
+            queue.push(discordUser)
+
+            if (queue.length === server.size) {
+                server.gather.startNewGame().catch(e => logger.log.error(e))
+            } else {
+                this.displayQueue(server)
             }
-
-            this.remove(discordUser, false)
-
-            if (!queue.includes(discordUser)) {
-                queue.push(discordUser)
-
-                if (queue.length === server.size) {
-                    server.gather.startNewGame().catch(e => logger.log.error(e))
-                } else {
-                    this.displayQueue(server)
-                }
-            }
-        })
+        }
     }
 
     findServerWithPlayer(discordUser) {
