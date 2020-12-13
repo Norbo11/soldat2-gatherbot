@@ -302,7 +302,7 @@ export class Gather {
                                 this.soldatClient.say(message1)
                                 this.soldatClient.say(message2)
 
-                                user.send(message + message2)
+                                user.send(message1 + message2)
                             }).catch(e => logger.log.error(`Could not send auth confirmation to ${discordId}: ${e}\n${util.inspect(e)}`))
                         }
                     })
