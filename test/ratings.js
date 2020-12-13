@@ -31,6 +31,7 @@ const computeRatingDiff = (oldRatings, newRatings) => {
 
 
 describe("Ratings", () => {
+
     it("should balance teams of 2 strong 2 weak", () => {
         const players = {
             "a": ratings.getRating(60, 2),
@@ -124,6 +125,41 @@ describe("Ratings", () => {
             // Same win probabilities
             blueWinProbability: 0.5000000150000002,
             redWinProbability: 0.5000000150000002
+        })
+    })
+
+    it("should balance 1v1 of same skill, different uncertainty", () => {
+        const players = {
+            "a": ratings.getRating(50, 16.67),
+            "b": ratings.getRating(50, 3),
+        }
+
+        const match = ratings.getBalancedMatch(players, 2)
+        assert.containSubset(match, {
+            matchQuality: 0.5711395705289537,
+            blueDiscordIds: ["a"],
+            redDiscordIds: ["b"],
+            blueWinProbability: 0.5000000150000002,
+            redWinProbability: 0.5000000150000002,
+        })
+    })
+
+    it("should balance 1v1 of same skill, same uncertainty", () => {
+        const players = {
+            "a": ratings.getRating(50, 3),
+            "b": ratings.getRating(50, 3),
+        }
+
+        const match = ratings.getBalancedMatch(players, 2)
+        assert.containSubset(match, {
+            // Much higher match quality, makes sense
+            matchQuality: 0.9408874118687268,
+            blueDiscordIds: ["a"],
+            redDiscordIds: ["b"],
+
+            // Probabilities don't change
+            blueWinProbability: 0.5000000150000002,
+            redWinProbability: 0.5000000150000002,
         })
     })
 
