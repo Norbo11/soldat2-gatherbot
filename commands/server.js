@@ -1,7 +1,7 @@
 import {formatServersMessage} from '../utils/discord';
 
 export default {
-    aliases: ["server"],
+    aliases: ["server", "servers"],
     description: "Get the IP address of the server.",
     execute(client, message, args) {
         const servers = currentQueueManager.getAllServers()
