@@ -127,7 +127,7 @@ export const onServerDied = (server) => {
 
         setTimeout(async () => {
             const {sessionId, cKey} = await fetchNewWebrconCredentials();
-            const {pid, port} = await startServerWithWebrconCredentials(server.config.pathToServer, result);
+            const {pid, port} = await startServerWithWebrconCredentials(server.config.pathToServer, {sessionId, cKey});
             const newServer = currentQueueManager.createGatherServer(server.config, pid, port)
 
             const gather = await initializeServer(newServer, sessionId, cKey)
