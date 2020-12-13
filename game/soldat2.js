@@ -63,8 +63,7 @@ class Soldat2Client {
                         client.initialized = true;
                         resolve(client)
                     } else {
-                        client.log("error", "Did not receive a response after initial ping; this server will not be functional")
-                        reject()
+                        reject(new Error("Did not receive a response after initial ping; this server will not be functional"))
                     }
                 }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
             });

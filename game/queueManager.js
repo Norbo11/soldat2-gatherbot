@@ -1,7 +1,7 @@
 import _ from "lodash";
 import discord from "../utils/discord";
 import logger from "../utils/logger"
-import {IN_GAME_STATES} from "./constants";
+import {onServerDied} from "./soldatServer";
 
 export class QueueManager {
 
@@ -14,14 +14,21 @@ export class QueueManager {
         return _.values(this.servers)
     }
 
-    addGatherServer(serverConfig, gather) {
+    addGatherServer(serverConfig, gather, pid = undefined) {
+        currentDiscordChannel.send(`Server **${serverConfig.code}** fully operational; queue is now available.`)
+
         this.servers[serverConfig.code] = {
             code: serverConfig.code,
             queue: [],
-            gather,
             size: 6,
-            config: serverConfig
+            config: serverConfig,
+            gather,
+            pid
         }
+    }
+
+    deleteServer(code) {
+        delete this.servers[code]
     }
 
     getServerWithLargestQueue() {
@@ -117,19 +124,24 @@ export class QueueManager {
             return null
         }
 
-        server.gather.ensureWebrconAlive()
-
-        this.remove(discordUser, false)
-
-        if (!queue.includes(discordUser)) {
-            queue.push(discordUser)
-
-            if (queue.length === server.size) {
-                server.gather.startNewGame().catch(e => logger.log.error(e))
-            } else {
-                this.displayQueue(server)
+        server.gather.checkServerAlive().then(alive => {
+            if (!alive) {
+                onServerDied(server)
+                return
             }
-        }
+
+            this.remove(discordUser, false)
+
+            if (!queue.includes(discordUser)) {
+                queue.push(discordUser)
+
+                if (queue.length === server.size) {
+                    server.gather.startNewGame().catch(e => logger.log.error(e))
+                } else {
+                    this.displayQueue(server)
+                }
+            }
+        })
     }
 
     findServerWithPlayer(discordUser) {
@@ -144,7 +156,7 @@ export class QueueManager {
         return null
     }
 
-    remove(discordUser, display=true) {
+    remove(discordUser, display = true) {
         const server = this.findServerWithPlayer(discordUser)
 
         // Do nothing if player is not added

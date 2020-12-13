@@ -344,15 +344,15 @@ export class Gather {
         }
     }
 
-    ensureWebrconAlive() {
-        this.soldatClient.pingServer((response) => {
-            if (response === undefined) {
-                currentDiscordChannel.send("Detected issue with webrcon connection/credentials. Restarting with fresh credentials...").then(() => {
-                    // TODO: We can no longer restart the bot - we should just fetch new creds and restart the server
-                    // This will invoke the cleanUp function in index.js
-                    // process.kill(process.pid, "SIGINT")
-                })
-            }
-        })
+    async checkServerAlive() {
+        return new Promise(((resolve, reject) => {
+            this.soldatClient.pingServer((response) => {
+                if (response === undefined) {
+                    resolve(false)
+                } else {
+                    resolve(true)
+                }
+            })
+        }))
     }
 }

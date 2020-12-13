@@ -40,7 +40,7 @@ export const getTestGather = () => {
             resolve()
         })
     }
-    gather.ensureWebrconAlive = () => {
+    gather.checkServerAlive = () => {
         return new Promise((resolve, reject) => {
             logger.log.info("Checked that server is alive")
             resolve(true)
