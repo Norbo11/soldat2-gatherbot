@@ -160,7 +160,7 @@ export class QueueManager {
             queue.push(discordUser)
 
             if (queue.length === server.size) {
-                server.gather.startNewGame().catch(e => logger.log.error(e))
+                server.gather.startNewGame(queue).catch(e => logger.log.error(e))
             } else {
                 this.displayQueue(server)
             }
