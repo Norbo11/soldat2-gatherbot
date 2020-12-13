@@ -48,6 +48,17 @@ export class QueueManager {
         return sorted[0]
     }
 
+    getServerWithSmallestQueue() {
+        const unfilledServers = _.filter(this.servers, server => !this.isQueueFilled(server))
+
+        if (unfilledServers.length === 0) {
+            return null
+        }
+
+        const sorted = _.sortBy(_.values(unfilledServers), server => server.queue.length)
+        return sorted[0]
+    }
+
     addToLargestQueue(discordUser) {
         const server = this.getServerWithLargestQueue()
         if (server === null) {

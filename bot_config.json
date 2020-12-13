@@ -1,13 +1,13 @@
 {
   "servers": [
     {
-      "ip": "localhost",
+      "ip": "192.168.1.110",
       "code": "local-1",
       "strategy": "RUN_SERVER_WITH_FRESH_CREDENTIALS",
       "pathToServer": "/home/norbz/soldat2-linuxserver-release"
     },
     {
-      "ip": "localhost",
+      "ip": "192.168.1.110",
       "code": "local-2",
       "strategy": "RUN_SERVER_WITH_FRESH_CREDENTIALS",
       "pathToServer": "/home/norbz/soldat2-linuxserver-release"
