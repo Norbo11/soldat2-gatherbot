@@ -88,7 +88,7 @@ const getGameModeField = (gameMode, inline=false) => {
 
 const getServerLinkField = (server) => {
     return {
-        name: `${server.code}`,
+        name: `Server: ${server.code}`,
         value: `IP: ${server.ip} - Port: ${server.port}`,
     }
 }
