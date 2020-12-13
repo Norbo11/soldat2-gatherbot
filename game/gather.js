@@ -243,6 +243,7 @@ export class Gather {
         this.inGameState = IN_GAME_STATES.NO_GATHER
         this.endedRounds = []
         this.match = undefined
+        currentQueueManager.endGame(this.server)
 
         this.discordChannel.send({
             embed: {

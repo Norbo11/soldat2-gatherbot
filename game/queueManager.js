@@ -198,4 +198,8 @@ export class QueueManager {
         server.queue = []
         this.displayQueue(server)
     }
+
+    endGame(server) {
+        server.queue = []
+    }
 }
