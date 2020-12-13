@@ -310,8 +310,15 @@ export class Gather {
         }
 
         if (firstPart === "maps") {
-            this.soldatClient.say(`CTF: ${maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_FLAG).join(', ')}`)
-            this.soldatClient.say(`CTB: ${maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_BASES).join(', ')}`)
+            // Can't send too many maps at once
+
+            _.chunk(maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_FLAG), 6).map(chunk => {
+                this.soldatClient.say(`CTF: ${chunk.join(', ')}`)
+            })
+
+            _.chunk(maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_BASES), 6).map(chunk => {
+                this.soldatClient.say(`CTB: ${chunk.join(', ')}`)
+            })
         }
     }
 
