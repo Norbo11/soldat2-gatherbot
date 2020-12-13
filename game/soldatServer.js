@@ -109,7 +109,7 @@ export const initializeServer = async (server, sessionId, cKey) => {
         currentAuthenticator,
         getCurrentTimestamp)
 
-    soldatEvents.registerSoldatEventListeners(gather, soldatClient)
+    soldatEvents.registerSoldatEventListeners(`[${server.code}]`, gather, soldatClient)
 
     return gather
 }

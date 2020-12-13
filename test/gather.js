@@ -49,7 +49,7 @@ describe('Gather', () => {
 
         soldatClient = new soldat.Soldat2Client("[test]", ws, true)
         currentGather = new Gather(server, discordChannel, statsDb, soldatClient, authenticator, mockCurrentTimestamp)
-        soldatEvents.registerSoldatEventListeners(currentGather, soldatClient)
+        soldatEvents.registerSoldatEventListeners("[test]", currentGather, soldatClient)
     });
 
     afterEach(async () => {
