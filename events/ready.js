@@ -47,6 +47,6 @@ export default (client) => {
         }
 
         await currentDiscordChannel.send("GatherBot initialized.")
-        git.postChangelog()
+        await git.postChangelog()
     })
 };
