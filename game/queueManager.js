@@ -181,6 +181,10 @@ export class QueueManager {
 
     remove(discordUser, display = true) {
         const server = this.findServerWithPlayer(discordUser)
+        if (server !== null && this.isQueueFilled(server)) {
+            this.discordChannel.send(`You are already playing in a gather!`)
+            return null
+        }
 
         // Do nothing if player is not added
         if (server !== null) {
