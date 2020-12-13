@@ -25,8 +25,11 @@ export default (client) => {
         global.currentClipManager = new ClipManager(currentStatsDb, getCurrentTimestamp)
         global.currentAuthenticator = new Authenticator(currentStatsDb)
 
+        currentDiscordChannel.send("Initializing Soldat 2 Gather Bot...").catch(e => logger.log.error(`Could not send initialization message (${e.message}):\n${util.inspect(e.response)}`))
+
         for (let serverConfig of config.servers) {
-            const {sessionId, cKey, pid} = await resolveServerStrategy(serverConfig)
+            const {sessionId, cKey, pid, port} = await resolveServerStrategy(serverConfig)
+            const server = currentQueueManager.createGatherServer(serverConfig, pid, port)
             logger.log.info(`Connecting with server ${serverConfig.code} using sessionId ${sessionId} and cKey ${cKey}`)
 
             // This await is crucial. It blocks until the connection with the current server is fully established and
@@ -35,15 +38,15 @@ export default (client) => {
             // WebRcon side. Initially I thought it was http connection pools and/or TLS session caching causing some
             // problems, but I did a fair amount of digging to try and disable those, to no avail.
             try {
-                const gather = await initializeServer(serverConfig, sessionId, cKey)
-                currentQueueManager.addGatherServer(serverConfig, gather, pid)
+                const gather = await initializeServer(server, sessionId, cKey)
+                currentQueueManager.addGatherServer(server, gather)
             } catch (e) {
                 currentDiscordChannel.send(`Server **${serverConfig.code}** not responding; will remain unavailable.`)
                 logger.log.error(`Problem with initializing server ${serverConfig.code}: ${e}`)
             }
         }
 
-        currentDiscordChannel.send("GatherBot Initialised.").catch(e => logger.log.error(`Could not send initialization message (${e.message}):\n${util.inspect(e.response)}`))
+        await currentDiscordChannel.send("GatherBot initialized.")
         git.postChangelog()
     })
 };

@@ -35,16 +35,44 @@ export const startServerWithWebrconCredentials = async (pathToServer, webrconCre
         detached: false,
 
         // stdin, stdout, stderr are all ignored; server logs should be tailed via Logs/console.txt
-        stdio: ['ignore', 'ignore', 'ignore']
+        stdio: ['ignore', 'pipe', 'ignore']
     });
 
     logger.log.info(`Spawned process with PID ${child.pid}`)
 
-    return new Promise(((resolve, reject) => {
-        setTimeout(() => {
-            resolve(child.pid)
-        }, WAIT_SECONDS_AFTER_STARTING_SERVER * 1000)
-    }))
+    return Promise.race([
+        new Promise(((resolve, reject) => {
+            let port = undefined
+
+            // TODO: Technically we could use this to receive all events from the server. However we'll still need
+            //  webrcon for sending commands. So currently we just use this for grabbing the port, all other events
+            //  are taken via the webrcon connection.
+            child.stdout.on("data", (data) => {
+                const text = data.toString()
+                const portMatch = text.match(/\[Info] {4}DefaultNetworkListener Server mounted, listening on port (?<port>.*)\./);
+
+                if (portMatch !== null) {
+                    logger.log.info("Received server port from server logs")
+                    port = portMatch.groups["port"]
+                }
+
+                const initializedMatch = text.match(/WebRcon: Loaded 0 built-in commands/);
+
+                if (initializedMatch !== null && port !== undefined) {
+                    resolve({
+                        pid: child.pid,
+                        port
+                    })
+                }
+            })
+        })),
+
+        new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject(new Error("Did not receive expected server startup message; sever did not start properly."))
+            }, WAIT_SECONDS_AFTER_STARTING_SERVER * 1000)
+        })
+    ])
 }
 
 
@@ -54,11 +82,15 @@ export const resolveServerStrategy = async (config) => {
     if (config.strategy === SERVER_STRATEGIES.ASSUME_SERVER_RUNNING_WITH_FIXED_CREDENTIALS) {
         logger.log.info(`Assuming ${config.code} is already running due to specified strategy`)
         result = config.webrconCredentials
+        result.port = config.port
 
     } else if (config.strategy === SERVER_STRATEGIES.RUN_SERVER_WITH_FRESH_CREDENTIALS) {
         logger.log.info(`Starting ${config.code} as a child process due to specified strategy`)
         result = await fetchNewWebrconCredentials();
-        result.pid = await startServerWithWebrconCredentials(config.pathToServer, result);
+        result = {
+            ...result,
+            ...(await startServerWithWebrconCredentials(config.pathToServer, result))
+        }
     } else {
         throw Error(`Invalid strategy for server ${config.code}`)
     }
@@ -66,10 +98,11 @@ export const resolveServerStrategy = async (config) => {
     return result
 }
 
-export const initializeServer = async (serverConfig, sessionId, cKey) => {
-    const soldatClient = await soldat.Soldat2Client.fromWebRcon(`[${serverConfig.code}]`, sessionId, cKey)
+export const initializeServer = async (server, sessionId, cKey) => {
+    const soldatClient = await soldat.Soldat2Client.fromWebRcon(`[${server.code}]`, sessionId, cKey)
 
     const gather = new Gather(
+        server,
         currentDiscordChannel,
         currentStatsDb,
         soldatClient,
@@ -93,10 +126,12 @@ export const onServerDied = (server) => {
         process.kill(server.pid, "SIGINT")
 
         setTimeout(async () => {
-            const {sessionId, cKey, pid} = await fetchNewWebrconCredentials();
-            result.pid = await startServerWithWebrconCredentials(server.config.pathToServer, result);
-            const gather = await initializeServer(server.config, sessionId, cKey)
-            currentQueueManager.addGatherServer(server.config, gather, pid)
+            const {sessionId, cKey} = await fetchNewWebrconCredentials();
+            const {pid, port} = await startServerWithWebrconCredentials(server.config.pathToServer, result);
+            const newServer = currentQueueManager.createGatherServer(server.config, pid, port)
+
+            const gather = await initializeServer(newServer, sessionId, cKey)
+            currentQueueManager.addGatherServer(newServer, gather)
         }, WATI_SECONDS_AFTER_STOPPING_SERVER * 1000)
     }
 }

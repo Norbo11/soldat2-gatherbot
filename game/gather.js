@@ -19,13 +19,14 @@ export class Gather {
     gameMode = GAME_MODES.CAPTURE_THE_FLAG
     match = undefined
 
-    constructor(discordChannel, statsDb, soldatClient, authenticator, getCurrentTimestamp) {
+    constructor(server, discordChannel, statsDb, soldatClient, authenticator, getCurrentTimestamp) {
         this.discordChannel = discordChannel
         this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
         this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
         this.authenticator = authenticator
+        this.server = server
         // this.password = "placeholder_password"
     }
 
@@ -77,7 +78,7 @@ export class Gather {
                     color: 0xff0000,
                     fields: [
                         discord.getGameModeField(this.gameMode),
-                        discord.getServerLinkField(this.password),
+                        discord.getServerLinkField(this.server),
                         ...discord.getPlayerFields(match),
                     ]
                 }

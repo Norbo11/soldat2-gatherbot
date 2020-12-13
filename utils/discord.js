@@ -86,10 +86,10 @@ const getGameModeField = (gameMode, inline=false) => {
     }
 }
 
-const getServerLinkField = (password = "") => {
+const getServerLinkField = (server) => {
     return {
-        name: "Link",
-        value: `IP: ${process.env.SERVER_IP} - Port: ${process.env.SERVER_PORT}`,
+        name: `${server.code}`,
+        value: `IP: ${server.ip} - Port: ${server.port}`,
     }
 }
 
@@ -166,6 +166,17 @@ const getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
             value: `${redPlayersString}`,
         },
     ]
+}
+
+
+export const formatServersMessage = (servers) => {
+    return {
+        embed: {
+            title: "Server Info",
+            color: 0xff0000,
+            fields: _.map(servers, server => getServerLinkField(server))
+        }
+    }
 }
 
 

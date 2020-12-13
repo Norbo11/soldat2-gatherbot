@@ -14,17 +14,23 @@ export class QueueManager {
         return _.values(this.servers)
     }
 
-    addGatherServer(serverConfig, gather, pid = undefined) {
-        currentDiscordChannel.send(`Server **${serverConfig.code}** fully operational; queue is now available.`)
-
-        this.servers[serverConfig.code] = {
+    createGatherServer(serverConfig, pid = undefined, port = undefined) {
+        return {
             code: serverConfig.code,
             queue: [],
             size: 6,
             config: serverConfig,
-            gather,
-            pid
+            pid,
+            port,
+            ip: serverConfig.ip
         }
+    }
+
+    addGatherServer(server, gather) {
+        currentDiscordChannel.send(`Server **${server.config.code}** fully operational; queue is now available.`)
+
+        server.gather = gather
+        this.servers[server.config.code] = server
     }
 
     deleteServer(code) {
