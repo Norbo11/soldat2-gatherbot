@@ -1,7 +1,6 @@
 import _ from "lodash";
 import discord from "../utils/discord";
 import logger from "../utils/logger"
-import utils from "../utils/commandUtils";
 
 export class QueueManager {
 
@@ -10,30 +9,32 @@ export class QueueManager {
         this.servers = {}
     }
 
-    addGatherServer(serverCode, gather) {
-        this.servers[serverCode] = {
-            code: serverCode,
+    addGatherServer(serverConfig, gather) {
+        this.servers[serverConfig.code] = {
+            code: serverConfig.code,
             queue: [],
             gather,
-            size: 6
+            size: 6,
+            config: serverConfig
         }
     }
 
     getServerWithLargestQueue() {
-        const unfilledQueues = _.filter(this.servers, server => !this.isQueueFilled(server))
+        const unfilledServers = _.filter(this.servers, server => !this.isQueueFilled(server))
 
-        if (unfilledQueues.length === 0) {
+        if (unfilledServers.length === 0) {
             return null
         }
 
-        const sorted = _.sortBy(_.values(unfilledQueues), server => -server.queue.length)
+        const sorted = _.sortBy(_.values(unfilledServers), server => -server.queue.length)
         return sorted[0]
     }
 
     addToLargestQueue(discordUser) {
         const server = this.getServerWithLargestQueue()
         if (server === null) {
-            return null
+            this.discordChannel.send("All servers/queues are currently full.")
+            return
         }
 
         this.addToQueue(discordUser, server.code)
@@ -53,10 +54,15 @@ export class QueueManager {
                 color: 0xff0000,
                 fields: [
                     {
-                        name: `**[${server.code}]** Current Queue ${rematch ? " (rematch)" : ""}`,
+                        name: `Current Queue ${rematch ? " (rematch)" : ""}`,
                         value: `${queueMembers.join(" - ")}`
                     },
-                    discord.getGameModeField(server.gather.gameMode),
+                    discord.getGameModeField(server.gather.gameMode, true),
+                    {
+                        name: `Server`,
+                        value: `${server.code}`,
+                        inline: true
+                    }
                 ]
             }
         })
@@ -80,26 +86,28 @@ export class QueueManager {
     }
 
     addToQueue(discordUser, serverCode) {
-        this.remove(discordUser)
-
         const server = this.getServer(serverCode)
         if (server === null) {
+            this.discordChannel.send(`There is no server/queue with code ${serverCode}.`)
             return null
         }
 
         const queue = server.queue
 
         if (this.isQueueFilled(server)) {
+            this.discordChannel.send(`A gather is already being played on server ${serverCode}.`)
             return null
         }
 
         server.gather.ensureWebrconAlive()
 
+        this.remove(discordUser, false)
+
         if (!queue.includes(discordUser)) {
             queue.push(discordUser)
 
             if (queue.length === server.size) {
-                server.gather.startNewGame().catch(e => logger.log.exception(e))
+                server.gather.startNewGame().catch(e => logger.log.error(e))
             } else {
                 this.displayQueue(server)
             }
@@ -118,13 +126,16 @@ export class QueueManager {
         return null
     }
 
-    remove(discordUser) {
+    remove(discordUser, display=true) {
         const server = this.findServerWithPlayer(discordUser)
 
         // Do nothing if player is not added
         if (server !== null) {
             _.remove(server.queue, (x) => x === discordUser)
-            this.displayQueue(server)
+
+            if (display) {
+                this.displayQueue(server)
+            }
         }
     }
 

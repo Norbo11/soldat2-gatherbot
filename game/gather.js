@@ -8,7 +8,7 @@ import ctfRound from './ctfRound';
 import ctbRound from './ctbRound';
 import ratings from './ratings';
 
-class Gather {
+export class Gather {
 
     discordChannel = undefined
     currentQueue = []
@@ -356,8 +356,3 @@ class Gather {
         })
     }
 }
-
-export default {
-    Gather
-};
-

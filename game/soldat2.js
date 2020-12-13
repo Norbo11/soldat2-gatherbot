@@ -16,9 +16,10 @@ const DEFAULT_RESPONSE_TIMEOUT = 7000
 
 class Soldat2Client {
 
-    constructor(ws, initialized) {
+    constructor(logPrefix, ws, initialized) {
         this.ws = ws;
         this.initialized = initialized;
+        this.logPrefix = logPrefix;
 
         // For debugging
         // ws.addListener("message", (data) =>
@@ -26,12 +27,20 @@ class Soldat2Client {
         // )
     }
 
-    static fromWebRcon(sessionId, ckey) {
+    log(logType, logLine) {
+        if (logType === "error") {
+            logger.log.error(`${this.logPrefix} ${logLine}`)
+        } else {
+            logger.log.info(`${this.logPrefix} ${logLine}`)
+        }
+    }
+
+    static fromWebRcon(logPrefix, sessionId, ckey) {
         const ws = new WebSocket(WEBSOCKET_URL);
-        const client = new Soldat2Client(ws, false)
+        const client = new Soldat2Client(logPrefix, ws, false)
 
         ws.on("open", () => {
-            logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
+            client.log("info", `WebSocket connection opened with ${WEBSOCKET_URL}`)
             let loginMessage = NetworkMessage.Login(sessionId, ckey)
 
             client.sendMessage(loginMessage);
@@ -43,9 +52,13 @@ class Soldat2Client {
             // or anything else more messy. Once we receive our echo, we can set the "initialized" flag to true; this is
             // used to kick off the soldat events handlers.
 
-           client.pingServer(() => {
-                logger.log.info("Received the initialization command; setting initialized = true.")
-                client.initialized = true;
+           client.pingServer((response) => {
+                if (response !== undefined) {
+                    client.log("info", "Received the initialization command; setting initialized = true.")
+                    client.initialized = true;
+                } else {
+                    client.log("error", "Did not receive a response after initial ping; this server will not be functional")
+                }
             }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
         });
 
@@ -54,7 +67,7 @@ class Soldat2Client {
             const messageType = networkMessage.ReadMessageType();
 
             if (messageType === MessageType.Error) {
-                logger.log.error(`Received error from server: ${networkMessage.ReadString()}`)
+                client.log("error", `Received error from server: ${networkMessage.raw}`)
             } else if (messageType === MessageType.SetState) {
                 const value = networkMessage.ReadUint8();
                 let state;
@@ -64,31 +77,32 @@ class Soldat2Client {
                         break;
                     }
                 }
-                logger.log.info(`Received new state from server: ${state.name}`)
+                client.log("info", `Received new state from server: ${state.name}`)
             } else if (messageType !== MessageType.LogLine) {
-                logger.log.info(`Received unhandled message type from server: ${messageType.name}`)
+                client.log("info", `Received unhandled message type from server: ${messageType.name}`)
             }
         })
 
         ws.on("error", error => {
-            logger.log.error(`Received error from server: ${error.message}\n${error.stack}`)
+            client.log("error", `Received error from server: ${error.message}\n${error.stack}`)
         })
 
         ws.on("close", (code, reason) => {
-            logger.log.error(`WebSocket connection was closed (code ${code}, reason ${reason})`)
+            client.log("error", `WebSocket connection was closed (code ${code}, reason ${reason})`)
         })
 
         return client;
     }
 
-    listenForServerResponse(processData,
+    listenForServerResponse(eventDescription,
+                            processData,
                             callback = () => {
                             },
                             timeout = DEFAULT_RESPONSE_TIMEOUT,
                             verbose = true) {
 
         const noResponseTimer = setTimeout(() => {
-            logger.log.error(`Did not receive expected data after ${timeout}ms has passed! Removing listener.`)
+            this.log("error", `Did not receive event "${eventDescription}" after ${timeout}ms has passed! Removing listener.`)
             this.ws.removeListener("message", listener)
             callback(undefined)
         }, timeout)
@@ -101,13 +115,13 @@ class Soldat2Client {
             }
 
             if (verbose) {
-                logger.log.info(`Received active event from server: ${eventText.trim()}`)
+                this.log("info", `Received active event from server: ${eventText.trim()}`)
             }
 
             const result = processData(eventText)
 
             if (result !== undefined && result !== false) {
-                logger.log.info(`Got the data that we wanted: ${eventText}`)
+                this.log("info", `Got the data that we wanted: ${eventText}`)
 
                 this.ws.removeListener("message", listener)
                 clearTimeout(noResponseTimer)
@@ -119,16 +133,16 @@ class Soldat2Client {
 
     }
 
-    pingServer(callback) {
+    pingServer(callback, timeout = DEFAULT_RESPONSE_TIMEOUT) {
         // This command doesn't just ping the server directly; it uses the webrcon connection send a message to thhe
         // server and expects to receive a response.
 
         let randomString = random.getRandomString()
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("ping response", (text) => {
             const regex = new RegExp("\\[(?<time>.*)] Return value: ping_command_" + randomString)
             return !!text.match(regex);
-        }, callback)
+        }, callback, timeout)
 
         this.sendMessage(NetworkMessage.Command(0, "echotest ping_command_" + randomString))
     }
@@ -140,7 +154,7 @@ class Soldat2Client {
     changeMap(mapName, gameMode, callback) {
         const message = NetworkMessage.Command(0, `loadmap ${mapName} ${gameMode}`)
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("map clear after loadmap", (text) => {
             if (text.match(/MAP CLEAR/)) {
                 return "found";
             }
@@ -158,7 +172,7 @@ class Soldat2Client {
     restart(callback) {
         const message = NetworkMessage.Command(0, `restart`)
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("map clear after restart", (text) => {
             return !!text.match(/MAP CLEAR/);
         }, callback)
 
@@ -168,7 +182,7 @@ class Soldat2Client {
     getPlayerInfo(playerName, callback) {
         const message = NetworkMessage.Command(0, `listplayers`)
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("listplayers response", (text) => {
             const match = text.match(new RegExp(`\\[(?<time>.*?)] \(?<num>.*?) ${_.escapeRegExp(playerName)} \\[id] (?<id>.*?) \\[account] (?<playfabId>.*?) \\[team] (?<teamId>.*?) \\[score] (?<score>.*?) \\[kills] (?<kills>.*?) \\[deaths] (?<deaths>.*?) \\[spawned] (?<spawned>.*)`))
 
             if (match === null) {

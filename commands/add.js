@@ -13,10 +13,7 @@ export default {
             })
         } else {
             const serverCode = args[0]
-            const result = currentQueueManager.addToQueue(message.author, serverCode)
-            if (result === null) {
-                message.reply("no server found with that code.")
-            }
+            currentQueueManager.addToQueue(message.author, serverCode)
         }
     },
 };

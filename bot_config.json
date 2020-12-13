@@ -1,0 +1,24 @@
+{
+  "servers": [
+    {
+      "ip": "localhost",
+      "port": 33073,
+      "code": "local-1",
+      "webrcon": {
+        "credentialsStrategy": "fetchOnStartup",
+        "sessionId": "V6I1TQIEARXOJT2T3CUS",
+        "cKey": "D9BFHV6561"
+      }
+    },
+    {
+      "ip": "localhost",
+      "port": 33074,
+      "code": "local-2",
+      "webrcon": {
+        "credentialsStrategy": "fixed",
+        "sessionId": "TA41CWYSZPKUX5UBXR6L",
+        "cKey": "3UNAUMZJGV"
+      }
+    }
+  ]
+}

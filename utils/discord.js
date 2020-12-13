@@ -78,10 +78,11 @@ const getResultField = (winner, inline = false) => {
 }
 
 
-const getGameModeField = (gameMode) => {
+const getGameModeField = (gameMode, inline=false) => {
     return {
         name: "Game Mode",
-        value: formatGameMode(gameMode)
+        value: formatGameMode(gameMode),
+        inline
     }
 }
 
