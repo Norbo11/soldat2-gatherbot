@@ -10,35 +10,23 @@ import ratings from './ratings';
 
 export class Gather {
 
-    discordChannel = undefined
-    currentQueue = []
-    rematchQueue = []
-    currentRound = undefined
-    endedRounds = []
-    inGameState = IN_GAME_STATES.NO_GATHER
-    gameMode = GAME_MODES.CAPTURE_THE_FLAG
-    match = undefined
-
     constructor(server, discordChannel, statsDb, soldatClient, authenticator, getCurrentTimestamp) {
+        this.server = server
         this.discordChannel = discordChannel
-        this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
-        this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
         this.authenticator = authenticator
-        this.server = server
+        this.getCurrentTimestamp = getCurrentTimestamp
+        this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
+        this.endedRounds = []
+        this.inGameState = IN_GAME_STATES.NO_GATHER
+        this.gameMode = GAME_MODES.CAPTURE_THE_FLAG
+        this.match = undefined
         // this.password = "placeholder_password"
     }
 
     gatherInProgress() {
         return this.inGameState !== IN_GAME_STATES.NO_GATHER
-    }
-
-
-    changeSize(newSize) {
-        this.currentSize = newSize
-        this.currentQueue = []
-        currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue)
     }
 
     async startNewGame() {
@@ -260,37 +248,6 @@ export class Gather {
                 title: "Gather Finished",
                 color: 0xff0000,
                 fields: discord.getGatherEndFields(game, discordIdToOldRating, discordIdToNewRating),
-            }
-        })
-    }
-
-    playerAdd(discordUser) {
-
-    }
-
-    playerRematchAdd(discordUser) {
-        this.statsDb.getLastGame().then(lastGame => {
-            if (![...lastGame.redPlayers, ...lastGame.bluePlayers].includes(discordUser.id)) {
-                discordUser.reply("you did not play in the last gather.")
-                return
-            }
-
-            if (!this.rematchQueue.includes(discordUser)) {
-                this.rematchQueue.push(discordUser)
-
-                if (this.rematchQueue.length === lastGame.size) {
-                    // Flip teams
-                    const redDiscordUsers = _.filter(this.rematchQueue, user => lastGame.bluePlayers.includes(user.id))
-                    const blueDiscordUsers = _.filter(this.rematchQueue, user => lastGame.redPlayers.includes(user.id))
-
-                    this.currentSize = lastGame.size
-
-                    this.startGame(redDiscordUsers, blueDiscordUsers)
-                } else {
-                    this.displayQueue(lastGame.size, this.rematchQueue, lastGame.mapName, true)
-                }
-            } else {
-                this.displayQueue(lastGame.size, this.rematchQueue, lastGame.mapName, true)
             }
         })
     }

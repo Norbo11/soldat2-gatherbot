@@ -175,5 +175,10 @@ export class QueueManager {
         }
     }
 
-
+    changeSize(serverCode, newSize) {
+        const server = this.getServer(serverCode)
+        server.size = newSize
+        server.queue = []
+        this.displayQueue(server)
+    }
 }
