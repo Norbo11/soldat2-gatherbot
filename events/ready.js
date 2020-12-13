@@ -48,7 +48,13 @@ export default (client) => {
             // }
             //
             logger.log.info(`Connecting with server ${serverConfig.code} using sessionId ${sessionId} and cKey ${cKey}`)
-            const soldatClient = soldat.Soldat2Client.fromWebRcon(`[${serverConfig.code}]`, sessionId, cKey)
+
+            // This await is crucial. It blocks until the connection with the current server is fully established and
+            // we've received a response to our initialization command/ping message. Without this, we will only be
+            // able to connect to one server, and the others will throw errors. Probably some poor implementation on
+            // WebRcon side. Initially I thought it was http connection pools and/or TLS session caching causing some
+            // problems, but I did a fair amount of digging to try and disable those, to no avail.
+            const soldatClient = await soldat.Soldat2Client.fromWebRcon(`[${serverConfig.code}]`, sessionId, cKey)
 
             const gather = new Gather(
                 global.currentDiscordChannel,
