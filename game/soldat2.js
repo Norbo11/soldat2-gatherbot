@@ -57,15 +57,17 @@ class Soldat2Client {
                 // important as it seems that WebRcon doesn't like us establishing multiple connections concurrently,
                 // so we make sure to connect to each server one at a time.
 
-                client.pingServer((response) => {
-                    if (response !== undefined) {
-                        client.log("info", "Received the initialization command; setting initialized = true.")
-                        client.initialized = true;
-                        resolve(client)
-                    } else {
-                        reject(new Error("Did not receive a response after initial ping; this server will not be functional"))
-                    }
-                }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
+                setTimeout(() => {
+                    client.pingServer((response) => {
+                        if (response !== undefined) {
+                            client.log("info", "Received the initialization command; setting initialized = true.")
+                            client.initialized = true;
+                            resolve(client)
+                        } else {
+                            reject(new Error("Did not receive a response after initial ping; this server will not be functional"))
+                        }
+                    }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
+                }, 5000)
             });
 
             ws.on("message", (data) => {
