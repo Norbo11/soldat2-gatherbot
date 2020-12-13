@@ -1,6 +1,3 @@
-import logger from '../utils/logger';
-import utils from '../utils/commandUtils';
-
 export default {
     aliases: ["rematch"],
     description: "Add yourself to the rematch queue.",

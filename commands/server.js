@@ -1,4 +1,3 @@
-import logger from '../utils/logger';
 import discord from '../utils/discord';
 
 export default {

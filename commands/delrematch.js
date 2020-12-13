@@ -1,5 +1,3 @@
-import logger from '../utils/logger';
-import utils from '../utils/commandUtils';
 import _ from 'lodash';
 
 export default {

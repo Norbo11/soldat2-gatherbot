@@ -1,6 +1,3 @@
-import logger from '../utils/logger';
-import utils from '../utils/commandUtils';
-
 export default {
     aliases: ["size"],
     description: "Get or set the gather size.",

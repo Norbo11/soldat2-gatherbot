@@ -1,5 +1,3 @@
-import logger from '../utils/logger';
-
 export default {
     aliases: ["auth"],
     description: "Authenticate your in-game account with the bot.",

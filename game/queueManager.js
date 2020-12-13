@@ -1,12 +1,17 @@
 import _ from "lodash";
 import discord from "../utils/discord";
 import logger from "../utils/logger"
+import {IN_GAME_STATES} from "./constants";
 
 export class QueueManager {
 
     constructor(discordChannel) {
         this.discordChannel = discordChannel
         this.servers = {}
+    }
+
+    getAllServers() {
+        return _.values(this.servers)
     }
 
     addGatherServer(serverConfig, gather) {
@@ -43,29 +48,42 @@ export class QueueManager {
     displayQueue(server, rematch = false) {
         const queue = server.queue
 
-        const queueMembers = queue.map(user => `<@${user.id}>`)
-        for (let i = 0; i < server.size - queue.length; i++) {
-            queueMembers.push(":bust_in_silhouette:")
-        }
-
-        this.discordChannel.send({
-            embed: {
-                title: "Gather Info",
-                color: 0xff0000,
-                fields: [
-                    {
-                        name: `Current Queue ${rematch ? " (rematch)" : ""}`,
-                        value: `${queueMembers.join(" - ")}`
-                    },
-                    discord.getGameModeField(server.gather.gameMode, true),
-                    {
-                        name: `Server`,
-                        value: `${server.code}`,
-                        inline: true
-                    }
-                ]
+        if (server.gather.gatherInProgress()) {
+            this.discordChannel.send({
+                embed: {
+                    color: 0xff0000,
+                    title: "Gather Info",
+                    description: "**Gather In Progress**",
+                    fields: [
+                        ...discord.getPlayerFields(server.gather.match),
+                    ]
+                }
+            })
+        } else {
+            const queueMembers = queue.map(user => `<@${user.id}>`)
+            for (let i = 0; i < server.size - queue.length; i++) {
+                queueMembers.push(":bust_in_silhouette:")
             }
-        })
+
+            this.discordChannel.send({
+                embed: {
+                    title: "Gather Info",
+                    color: 0xff0000,
+                    fields: [
+                        {
+                            name: `Current Queue ${rematch ? " (rematch)" : ""}`,
+                            value: `${queueMembers.join(" - ")}`
+                        },
+                        discord.getGameModeField(server.gather.gameMode, true),
+                        {
+                            name: `Server`,
+                            value: `${server.code}`,
+                            inline: true
+                        }
+                    ]
+                }
+            })
+        }
     }
 
     getQueue(code) {

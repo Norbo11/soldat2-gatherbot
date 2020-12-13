@@ -1,5 +1,3 @@
-import logger from '../utils/logger';
-
 export default {
     aliases: ["commands"],
     description: "View a list of commands.",
