@@ -128,6 +128,12 @@ export class QueueManager {
     }
 
     async addToQueue(discordUser, serverCode) {
+        const playerServer = this.findServerWithPlayer(discordUser)
+        if (playerServer !== null && this.isQueueFilled(playerServer)) {
+            this.discordChannel.send(`You are already playing in a gather!`)
+            return null
+        }
+
         const server = this.getServer(serverCode)
         if (server === null) {
             this.discordChannel.send(`There is no server/queue with code ${serverCode}.`)

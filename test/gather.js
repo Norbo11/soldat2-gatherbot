@@ -66,11 +66,7 @@ describe('Gather', () => {
             new MockDiscordUser("d")
         ]
 
-        // TODO: Refactor into methods on the gather class
-        currentGather.currentSize = 4
-        currentGather.currentQueue = discordUsers
-
-        await currentGather.startNewGame()
+        await currentGather.startNewGame(discordUsers)
         expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
         expect(currentGather.endedRounds.length).equal(0)
         expect(currentGather.currentRound).not.equal(undefined)
@@ -228,9 +224,7 @@ describe('Gather', () => {
     it('should handle an entire ctb gather', async () => {
         expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
 
-        // TODO: Refactor into methods on the gather class
-        currentGather.currentSize = 4
-        currentGather.currentQueue = [
+        const players = [
             new MockDiscordUser("a"),
             new MockDiscordUser("b"),
             new MockDiscordUser("c"),
@@ -238,7 +232,7 @@ describe('Gather', () => {
         ]
 
         currentGather.changeGameMode(GAME_MODES.CAPTURE_THE_BASES)
-        await currentGather.startNewGame()
+        await currentGather.startNewGame(players)
         expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
         expect(currentGather.endedRounds.length).equal(0)
         expect(currentGather.currentRound).not.equal(undefined)

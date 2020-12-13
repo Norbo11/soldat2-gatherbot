@@ -29,11 +29,11 @@ export class Gather {
         return this.inGameState !== IN_GAME_STATES.NO_GATHER
     }
 
-    async startNewGame() {
+    async startNewGame(discordUsers) {
         const discordIdToRating = {}
         const allDiscordUsers = []
 
-        for (let discordUser of this.currentQueue) {
+        for (let discordUser of discordUsers) {
             const discordId = discordUser.id
             let rating = await this.statsDb.getMuSigma(discordId)
             if (rating === undefined) {
@@ -45,7 +45,7 @@ export class Gather {
             allDiscordUsers.push(discordUser)
         }
 
-        const balancedMatch = ratings.getBalancedMatch(discordIdToRating, this.currentSize)
+        const balancedMatch = ratings.getBalancedMatch(discordIdToRating, discordUsers.length)
         balancedMatch.allDiscordUsers = allDiscordUsers
         balancedMatch.discordIdToRating = discordIdToRating
         balancedMatch.playfabIdToDiscordId = await this.authenticator.getPlayfabIdToDiscordIdMap()
@@ -199,7 +199,7 @@ export class Gather {
             gameMode: this.gameMode,
             redPlayers: this.match.redDiscordIds,
             bluePlayers: this.match.blueDiscordIds,
-            size: this.currentSize,
+            size: this.match.allDiscordUsers.length,
             startTime: this.endedRounds[0].startTime,
             endTime: this.endedRounds[this.endedRounds.length - 1].endTime,
             winner: gameWinner,
@@ -241,8 +241,6 @@ export class Gather {
         }
 
         this.inGameState = IN_GAME_STATES.NO_GATHER
-        this.currentQueue = []
-        this.rematchQueue = []
         this.endedRounds = []
         this.match = undefined
 

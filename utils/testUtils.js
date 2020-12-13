@@ -4,6 +4,7 @@ import db from "../game/db";
 import mongodb from "mongodb";
 import logger from "./logger";
 import sinon from "sinon";
+import util from "util";
 
 chai.use(chaiSubset)
 
@@ -21,12 +22,12 @@ export const getTestDiscordChannel = () => {
     const discordChannel = sinon.stub()
 
     discordChannel.send = (data) => {
-        logger.log.info(`Wrote to discord channel: ${data}`)
+        logger.log.info(`Wrote to discord channel: ${util.inspect(data, false, null, true)}`)
     }
 
     discordChannel.client = sinon.stub()
     discordChannel.client.fetchUser = async discordId => {
-        return {username: "TestDiscordUser", send: () => logger.log.info(`Sending message to ${discordId}`)}
+        return {username: "TestDiscordUser", send: (message) => logger.log.info(`Sending message to ${discordId}: ${util.inspect(message, false, null, true)}`)}
     }
 
     return discordChannel
@@ -59,7 +60,7 @@ export class MockDiscordUser {
     }
 
     send(message) {
-        logger.log.info(`Sending message to ${this.username}:\n${message}`)
+        logger.log.info(`Sending message to ${this.id}:\n${util.inspect(message, false, null, true)}`)
     }
 }
 
