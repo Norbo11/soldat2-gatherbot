@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import logger from '../utils/logger';
 import discord from '../utils/discord';
-import maps from '../utils/maps';
+import maps, {getRandomMapForGameMode} from '../utils/maps';
 import util from 'util';
 import {GAME_MODES, IN_GAME_STATES, SOLDAT_TEAMS} from './constants';
 import ctfRound from './ctfRound';
@@ -49,6 +49,7 @@ export class Gather {
         balancedMatch.allDiscordUsers = allDiscordUsers
         balancedMatch.discordIdToRating = discordIdToRating
         balancedMatch.playfabIdToDiscordId = await this.authenticator.getPlayfabIdToDiscordIdMap()
+        balancedMatch.tiebreakerMap = getRandomMapForGameMode(this.gameMode)
         this.startGame(balancedMatch)
     }
 
@@ -65,7 +66,8 @@ export class Gather {
                     title: "Gather Started",
                     color: 0xff0000,
                     fields: [
-                        discord.getGameModeField(this.gameMode),
+                        discord.getGameModeField(this.gameMode, true),
+                        discord.getMapField(this.match.tiebreakerMap, true, "Tiebreaker "),
                         discord.getServerLinkField(this.server),
                         ...discord.getPlayerFields(match),
                     ]
@@ -78,7 +80,8 @@ export class Gather {
                 title: "Gather Started",
                 color: 0xff0000,
                 fields: [
-                    discord.getGameModeField(this.gameMode),
+                    discord.getGameModeField(this.gameMode, true),
+                    discord.getMapField(this.match.tiebreakerMap, true, "Tiebreaker "),
                     ...discord.getPlayerFields(match),
                 ]
             }

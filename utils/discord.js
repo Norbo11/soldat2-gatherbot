@@ -59,9 +59,9 @@ const getDurationField = (startTime, endTime, inline = false, prefix = "Gather")
     }
 }
 
-const getMapField = (mapName, inline = false) => {
+const getMapField = (mapName, inline = false, prefix) => {
     return {
-        name: "Map",
+        name: `${prefix}Map`,
         value: `${mapName}`,
         inline,
     }
