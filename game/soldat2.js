@@ -1,7 +1,6 @@
 import logger from '../utils/logger';
 import WebSocket from 'ws';
 import random from '../utils/random';
-import util from 'util';
 import _ from 'lodash';
 
 // const sslRootCAs = require('ssl-root-cas/latest')
@@ -16,9 +15,10 @@ const DEFAULT_RESPONSE_TIMEOUT = 7000
 
 class Soldat2Client {
 
-    constructor(ws, initialized) {
+    constructor(logPrefix, ws, initialized) {
         this.ws = ws;
         this.initialized = initialized;
+        this.logPrefix = logPrefix;
 
         // For debugging
         // ws.addListener("message", (data) =>
@@ -26,69 +26,90 @@ class Soldat2Client {
         // )
     }
 
-    static fromWebRcon(sessionId, ckey) {
-        const ws = new WebSocket(WEBSOCKET_URL);
-        const client = new Soldat2Client(ws, false)
-
-        ws.on("open", () => {
-            logger.log.info(`WebSocket connection opened with ${WEBSOCKET_URL}`)
-            let loginMessage = NetworkMessage.Login(sessionId, ckey)
-
-            client.sendMessage(loginMessage);
-
-            // Upon connecting, webrcon is going to replay us all of the messages since this webrcon session started.
-            // We don't want to handle any events that have happened in the past. Thus we use the "echotest" command
-            // that simply replies with whatever input we give it. We embed a random string in order to ensure we read the correct
-            // response from echotest for this invocation of the bot, without having to deal with the message timestamp
-            // or anything else more messy. Once we receive our echo, we can set the "initialized" flag to true; this is
-            // used to kick off the soldat events handlers.
-
-           client.pingServer(() => {
-                logger.log.info("Received the initialization command; setting initialized = true.")
-                client.initialized = true;
-            }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
-        });
-
-        ws.on("message", (data) => {
-            const networkMessage = getNetworkMessage(data);
-            const messageType = networkMessage.ReadMessageType();
-
-            if (messageType === MessageType.Error) {
-                logger.log.error(`Received error from server: ${networkMessage.ReadString()}`)
-            } else if (messageType === MessageType.SetState) {
-                const value = networkMessage.ReadUint8();
-                let state;
-                for (var x in ConnectionState) {
-                    if (ConnectionState[x].value === value) {
-                        state = ConnectionState[x];
-                        break;
-                    }
-                }
-                logger.log.info(`Received new state from server: ${state.name}`)
-            } else if (messageType !== MessageType.LogLine) {
-                logger.log.info(`Received unhandled message type from server: ${messageType.name}`)
-            }
-        })
-
-        ws.on("error", error => {
-            logger.log.error(`Received error from server: ${error.message}\n${error.stack}`)
-        })
-
-        ws.on("close", (code, reason) => {
-            logger.log.error(`WebSocket connection was closed (code ${code}, reason ${reason})`)
-        })
-
-        return client;
+    log(logType, logLine) {
+        if (logType === "error") {
+            logger.log.error(`${this.logPrefix} ${logLine}`)
+        } else {
+            logger.log.info(`${this.logPrefix} ${logLine}`)
+        }
     }
 
-    listenForServerResponse(processData,
+    static async fromWebRcon(logPrefix, sessionId, ckey) {
+        return new Promise((resolve, reject) => {
+            const ws = new WebSocket(WEBSOCKET_URL);
+            const client = new Soldat2Client(logPrefix, ws, false)
+
+            ws.on("open", () => {
+                client.log("info", `WebSocket connection opened with ${WEBSOCKET_URL}`)
+                let loginMessage = NetworkMessage.Login(sessionId, ckey)
+
+                client.sendMessage(loginMessage);
+
+                // Upon connecting, webrcon is going to replay us all of the messages since this webrcon session started.
+                // We don't want to handle any events that have happened in the past. Thus we use the "echotest" command
+                // that simply replies with whatever input we give it. We embed a random string in order to ensure we read the correct
+                // response from echotest for this invocation of the bot, without having to deal with the message timestamp
+                // or anything else more messy. Once we receive our echo, we can set the "initialized" flag to true; this is
+                // used to kick off the soldat events handlers.
+
+                // Furthermore, we only resolve this promise once the initialization command is received. This is
+                // allows us to synchronously order the initial connections we make with all our servers. This is very
+                // important as it seems that WebRcon doesn't like us establishing multiple connections concurrently,
+                // so we make sure to connect to each server one at a time.
+
+                setTimeout(() => {
+                    client.pingServer((response) => {
+                        if (response !== undefined) {
+                            client.log("info", "Received the initialization command; setting initialized = true.")
+                            client.initialized = true;
+                            resolve(client)
+                        } else {
+                            reject(new Error("Did not receive a response after initial ping; this server will not be functional"))
+                        }
+                    }, DEFAULT_RESPONSE_TIMEOUT * 3, false);
+                }, 5000)
+            });
+
+            ws.on("message", (data) => {
+                const networkMessage = getNetworkMessage(data);
+                const messageType = networkMessage.ReadMessageType();
+
+                if (messageType === MessageType.Error) {
+                    client.log("error", `Received error from server: ${networkMessage.raw}`)
+                } else if (messageType === MessageType.SetState) {
+                    const value = networkMessage.ReadUint8();
+                    let state;
+                    for (var x in ConnectionState) {
+                        if (ConnectionState[x].value === value) {
+                            state = ConnectionState[x];
+                            break;
+                        }
+                    }
+                    client.log("info", `Received new state from server: ${state.name}`)
+                } else if (messageType !== MessageType.LogLine) {
+                    client.log("info", `Received unhandled message type from server: ${messageType.name}`)
+                }
+            })
+
+            ws.on("error", error => {
+                client.log("error", `Received error from server: ${error.message}\n${error.stack}`)
+            })
+
+            ws.on("close", (code, reason) => {
+                client.log("error", `WebSocket connection was closed (code ${code}, reason ${reason})`)
+            })
+        })
+    }
+
+    listenForServerResponse(eventDescription,
+                            processData,
                             callback = () => {
                             },
                             timeout = DEFAULT_RESPONSE_TIMEOUT,
                             verbose = true) {
 
         const noResponseTimer = setTimeout(() => {
-            logger.log.error(`Did not receive expected data after ${timeout}ms has passed! Removing listener.`)
+            this.log("error", `Did not receive event "${eventDescription}" after ${timeout}ms has passed! Removing listener.`)
             this.ws.removeListener("message", listener)
             callback(undefined)
         }, timeout)
@@ -101,13 +122,13 @@ class Soldat2Client {
             }
 
             if (verbose) {
-                logger.log.info(`Received active event from server: ${eventText.trim()}`)
+                this.log("info", `Received active event from server: ${eventText.trim()}`)
             }
 
             const result = processData(eventText)
 
             if (result !== undefined && result !== false) {
-                logger.log.info(`Got the data that we wanted: ${eventText}`)
+                this.log("info", `Got the data that we wanted: ${eventText}`)
 
                 this.ws.removeListener("message", listener)
                 clearTimeout(noResponseTimer)
@@ -119,16 +140,16 @@ class Soldat2Client {
 
     }
 
-    pingServer(callback) {
+    pingServer(callback, timeout = DEFAULT_RESPONSE_TIMEOUT) {
         // This command doesn't just ping the server directly; it uses the webrcon connection send a message to thhe
         // server and expects to receive a response.
 
         let randomString = random.getRandomString()
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("ping response", (text) => {
             const regex = new RegExp("\\[(?<time>.*)] Return value: ping_command_" + randomString)
             return !!text.match(regex);
-        }, callback)
+        }, callback, timeout)
 
         this.sendMessage(NetworkMessage.Command(0, "echotest ping_command_" + randomString))
     }
@@ -140,7 +161,7 @@ class Soldat2Client {
     changeMap(mapName, gameMode, callback) {
         const message = NetworkMessage.Command(0, `loadmap ${mapName} ${gameMode}`)
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("map clear after loadmap", (text) => {
             if (text.match(/MAP CLEAR/)) {
                 return "found";
             }
@@ -158,7 +179,7 @@ class Soldat2Client {
     restart(callback) {
         const message = NetworkMessage.Command(0, `restart`)
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("map clear after restart", (text) => {
             return !!text.match(/MAP CLEAR/);
         }, callback)
 
@@ -168,7 +189,7 @@ class Soldat2Client {
     getPlayerInfo(playerName, callback) {
         const message = NetworkMessage.Command(0, `listplayers`)
 
-        this.listenForServerResponse((text) => {
+        this.listenForServerResponse("listplayers response", (text) => {
             const match = text.match(new RegExp(`\\[(?<time>.*?)] \(?<num>.*?) ${_.escapeRegExp(playerName)} \\[id] (?<id>.*?) \\[account] (?<playfabId>.*?) \\[team] (?<teamId>.*?) \\[score] (?<score>.*?) \\[kills] (?<kills>.*?) \\[deaths] (?<deaths>.*?) \\[spawned] (?<spawned>.*)`))
 
             if (match === null) {
@@ -187,6 +208,15 @@ class Soldat2Client {
             }
         }, callback)
 
+        this.sendMessage(message)
+    }
+
+    say(text) {
+        // Having a space in the "rcon say" message doesn't work... So we replace spaces with a unicode equivalent
+        // Also, certain characters like "(" don't work either.. we don't do anything about this for now.
+        text = text.split(" ").join('\u{00A0}')
+        logger.log.info(`Writing global message to players on server: ${text}`)
+        const message = NetworkMessage.Command(0, `say ${text}`)
         this.sendMessage(message)
     }
 }

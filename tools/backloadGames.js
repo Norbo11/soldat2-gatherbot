@@ -82,7 +82,7 @@ const backloadGames = (async () => {
     }
 
     const soldatClient = new soldat.SoldatClient(netClient)
-    const currentGather = new gather.Gather(soldatClient, discordChannel, statsDb, hwidToDiscordId, () => currentTimestamp)
+    const currentGather = new gather.Gather(sinon.stub(), soldatClient, discordChannel, statsDb, hwidToDiscordId, () => currentTimestamp)
     soldatEvents.registerSoldatEventListeners(currentGather, netClient)
 
     const directory = "/home/norbz/gatherserverlogs"

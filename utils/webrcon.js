@@ -22,6 +22,6 @@ const fetchNewWebrconCredentials = async () => {
 }
 
 
-export default {
+export {
     fetchNewWebrconCredentials
 };

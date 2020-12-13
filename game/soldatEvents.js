@@ -87,8 +87,8 @@ const DEDUPLICATE_INTERVAL_MS = 1000
 
 const seenMessages = new Set()
 
-const registerSoldatEventListeners = (gather, soldatClient) => {
-    logger.log.info("Registered non-command event listeners.")
+const registerSoldatEventListeners = (logPrefix, gather, soldatClient) => {
+    logger.log.info(`${logPrefix} Registered non-command event listeners.`)
 
     // It's important for this function to not be marked "async", as the underlying EventEmitter won't await it!
     // This might cause events to be handled out-of-order!
@@ -112,7 +112,7 @@ const registerSoldatEventListeners = (gather, soldatClient) => {
                     const textWithoutTimestamp = text.substring(11) // 11 chars present in the above, including space
 
                     if (seenMessages.has(textWithoutTimestamp)) {
-                        logger.log.info(`Received duplicated ${eventSpec.name} event, ignoring: ${text}`)
+                        logger.log.info(`${logPrefix} Received duplicated ${eventSpec.name} event, ignoring: ${text}`)
                         return
                     }
 
@@ -122,12 +122,12 @@ const registerSoldatEventListeners = (gather, soldatClient) => {
                     }, DEDUPLICATE_INTERVAL_MS)
                 }
 
-                logger.log.info(`Received ${eventSpec.name} event from server: ${text}`)
+                logger.log.info(`${logPrefix} Received ${eventSpec.name} event from server: ${text}`)
 
                 try {
                     eventSpec.handler(gather, match)
                 } catch (e) {
-                    logger.log.error(`There was an error processing a ${eventSpec.name} event from the server: ${e.stack}`)
+                    logger.log.error(`${logPrefix} There was an error processing a ${eventSpec.name} event from the server: ${e.stack}`)
                 }
             }
         }

@@ -1,7 +1,6 @@
 import logger from '../utils/logger';
 import stats from '../game/stats';
 import statsFormatting from '../game/statsFormatting';
-import utils from 'util';
 
 
 export default {

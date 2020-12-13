@@ -1,5 +1,3 @@
-import logger from '../utils/logger';
-
 export default {
     aliases: ["trueskill", "ratings", "ratinghelp"],
     description: "Show a help message about the rating system.",

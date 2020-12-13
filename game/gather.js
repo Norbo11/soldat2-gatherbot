@@ -1,33 +1,27 @@
 import _ from 'lodash';
 import logger from '../utils/logger';
 import discord from '../utils/discord';
-import maps from '../utils/maps';
+import maps, {getRandomMapForGameMode} from '../utils/maps';
 import util from 'util';
 import {GAME_MODES, IN_GAME_STATES, SOLDAT_TEAMS} from './constants';
 import ctfRound from './ctfRound';
 import ctbRound from './ctbRound';
 import ratings from './ratings';
-import authentication from './authentication';
 
-class Gather {
+export class Gather {
 
-    discordChannel = undefined
-    currentSize = 6
-    currentQueue = []
-    rematchQueue = []
-    currentRound = undefined
-    endedRounds = []
-    inGameState = IN_GAME_STATES.NO_GATHER
-    gameMode = GAME_MODES.CAPTURE_THE_FLAG
-    match = undefined
-
-    constructor(discordChannel, statsDb, soldatClient, getCurrentTimestamp) {
+    constructor(server, discordChannel, statsDb, soldatClient, authenticator, getCurrentTimestamp) {
+        this.server = server
         this.discordChannel = discordChannel
-        this.getCurrentTimestamp = getCurrentTimestamp
         this.statsDb = statsDb
         this.soldatClient = soldatClient
+        this.authenticator = authenticator
+        this.getCurrentTimestamp = getCurrentTimestamp
         this.currentRound = new ctfRound.CtfRound(getCurrentTimestamp)
-        this.authenticator = new authentication.Authenticator(statsDb)
+        this.endedRounds = []
+        this.inGameState = IN_GAME_STATES.NO_GATHER
+        this.gameMode = GAME_MODES.CAPTURE_THE_FLAG
+        this.match = undefined
         // this.password = "placeholder_password"
     }
 
@@ -35,38 +29,11 @@ class Gather {
         return this.inGameState !== IN_GAME_STATES.NO_GATHER
     }
 
-    displayQueue(size, queue, rematch = false) {
-        const queueMembers = queue.map(user => `<@${user.id}>`)
-        for (let i = 0; i < size - queue.length; i++) {
-            queueMembers.push(":bust_in_silhouette:")
-        }
-
-        this.discordChannel.send({
-            embed: {
-                title: "Gather Info",
-                color: 0xff0000,
-                fields: [
-                    {
-                        name: "Current Queue" + (rematch ? " (rematch)" : ""),
-                        value: `${queueMembers.join(" - ")}`
-                    },
-                    discord.getGameModeField(this.gameMode),
-                ]
-            }
-        })
-    }
-
-    changeSize(newSize) {
-        this.currentSize = newSize
-        this.currentQueue = []
-        currentGather.displayQueue(currentGather.currentSize, currentGather.currentQueue)
-    }
-
-    async startNewGame() {
+    async startNewGame(discordUsers) {
         const discordIdToRating = {}
         const allDiscordUsers = []
 
-        for (let discordUser of this.currentQueue) {
+        for (let discordUser of discordUsers) {
             const discordId = discordUser.id
             let rating = await this.statsDb.getMuSigma(discordId)
             if (rating === undefined) {
@@ -78,10 +45,11 @@ class Gather {
             allDiscordUsers.push(discordUser)
         }
 
-        const balancedMatch = ratings.getBalancedMatch(discordIdToRating, this.currentSize)
+        const balancedMatch = ratings.getBalancedMatch(discordIdToRating, discordUsers.length)
         balancedMatch.allDiscordUsers = allDiscordUsers
         balancedMatch.discordIdToRating = discordIdToRating
         balancedMatch.playfabIdToDiscordId = await this.authenticator.getPlayfabIdToDiscordIdMap()
+        balancedMatch.tiebreakerMap = getRandomMapForGameMode(this.gameMode)
         this.startGame(balancedMatch)
     }
 
@@ -98,8 +66,9 @@ class Gather {
                     title: "Gather Started",
                     color: 0xff0000,
                     fields: [
-                        discord.getGameModeField(this.gameMode),
-                        discord.getServerLinkField(this.password),
+                        discord.getGameModeField(this.gameMode, true),
+                        discord.getMapField(this.match.tiebreakerMap, true, "Tiebreaker "),
+                        discord.getServerLinkField(this.server),
                         ...discord.getPlayerFields(match),
                     ]
                 }
@@ -111,7 +80,8 @@ class Gather {
                 title: "Gather Started",
                 color: 0xff0000,
                 fields: [
-                    discord.getGameModeField(this.gameMode),
+                    discord.getGameModeField(this.gameMode, true),
+                    discord.getMapField(this.match.tiebreakerMap, true, "Tiebreaker "),
                     ...discord.getPlayerFields(match),
                 ]
             }
@@ -229,7 +199,7 @@ class Gather {
             gameMode: this.gameMode,
             redPlayers: this.match.redDiscordIds,
             bluePlayers: this.match.blueDiscordIds,
-            size: this.currentSize,
+            size: this.match.allDiscordUsers.length,
             startTime: this.endedRounds[0].startTime,
             endTime: this.endedRounds[this.endedRounds.length - 1].endTime,
             winner: gameWinner,
@@ -271,55 +241,15 @@ class Gather {
         }
 
         this.inGameState = IN_GAME_STATES.NO_GATHER
-        this.currentQueue = []
-        this.rematchQueue = []
         this.endedRounds = []
         this.match = undefined
+        currentQueueManager.endGame(this.server)
 
         this.discordChannel.send({
             embed: {
                 title: "Gather Finished",
                 color: 0xff0000,
                 fields: discord.getGatherEndFields(game, discordIdToOldRating, discordIdToNewRating),
-            }
-        })
-    }
-
-    playerAdd(discordUser) {
-        if (!this.currentQueue.includes(discordUser)) {
-            this.currentQueue.push(discordUser)
-
-            if (this.currentQueue.length === this.currentSize) {
-                this.startNewGame()
-            } else {
-                this.displayQueue(this.currentSize, this.currentQueue)
-            }
-        }
-    }
-
-    playerRematchAdd(discordUser) {
-        this.statsDb.getLastGame().then(lastGame => {
-            if (![...lastGame.redPlayers, ...lastGame.bluePlayers].includes(discordUser.id)) {
-                discordUser.reply("you did not play in the last gather.")
-                return
-            }
-
-            if (!this.rematchQueue.includes(discordUser)) {
-                this.rematchQueue.push(discordUser)
-
-                if (this.rematchQueue.length === lastGame.size) {
-                    // Flip teams
-                    const redDiscordUsers = _.filter(this.rematchQueue, user => lastGame.bluePlayers.includes(user.id))
-                    const blueDiscordUsers = _.filter(this.rematchQueue, user => lastGame.redPlayers.includes(user.id))
-
-                    this.currentSize = lastGame.size
-
-                    this.startGame(redDiscordUsers, blueDiscordUsers)
-                } else {
-                    this.displayQueue(lastGame.size, this.rematchQueue, lastGame.mapName, true)
-                }
-            } else {
-                this.displayQueue(lastGame.size, this.rematchQueue, lastGame.mapName, true)
             }
         })
     }
@@ -360,22 +290,47 @@ class Gather {
                 this.soldatClient.getPlayerInfo(playerName, player => {
                     this.authenticator.authenticate(player.playfabId, authCode, (discordId) => {
                         if (discordId === false) {
-                            // TODO Auth code is incorrect. Message the player in-game once we
-                            //  have an "rcon say" command
+                            this.soldatClient.say("Invalid auth code - use !auth in Discord for a new code.")
                             logger.log.info(`${playerName} failed to authenticate with invalid auth code ${authCode}`)
                         } else {
                             this.discordChannel.client.fetchUser(discordId).then(user => {
-                                user.send("You have been successfully authenticated.")
+                                const message1 = `You have successfully linked your steam account with your Discord account.`
+                                const message2 = `You will need to do this again if you ever change steam or Discord accounts.`
+
+                                // Server has an issue with sending these together, so sending them seperately...
+                                this.soldatClient.say(message1)
+                                this.soldatClient.say(message2)
+
+                                user.send(message1 + message2)
                             }).catch(e => logger.log.error(`Could not send auth confirmation to ${discordId}: ${e}\n${util.inspect(e)}`))
                         }
                     })
                 })
             }
         }
+
+        if (firstPart === "maps") {
+            // Can't send too many maps at once
+
+            _.chunk(maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_FLAG), 6).map(chunk => {
+                this.soldatClient.say(`CTF: ${chunk.join(', ')}`)
+            })
+
+            _.chunk(maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_BASES), 6).map(chunk => {
+                this.soldatClient.say(`CTB: ${chunk.join(', ')}`)
+            })
+        }
+    }
+
+    async checkServerAlive() {
+        return new Promise(((resolve, reject) => {
+            this.soldatClient.pingServer((response) => {
+                if (response === undefined) {
+                    resolve(false)
+                } else {
+                    resolve(true)
+                }
+            })
+        }))
     }
 }
-
-export default {
-    Gather
-};
-

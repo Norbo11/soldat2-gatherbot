@@ -59,9 +59,9 @@ const getDurationField = (startTime, endTime, inline = false, prefix = "Gather")
     }
 }
 
-const getMapField = (mapName, inline = false) => {
+const getMapField = (mapName, inline = false, prefix) => {
     return {
-        name: "Map",
+        name: `${prefix}Map`,
         value: `${mapName}`,
         inline,
     }
@@ -78,17 +78,18 @@ const getResultField = (winner, inline = false) => {
 }
 
 
-const getGameModeField = (gameMode) => {
+const getGameModeField = (gameMode, inline=false) => {
     return {
         name: "Game Mode",
-        value: formatGameMode(gameMode)
+        value: formatGameMode(gameMode),
+        inline
     }
 }
 
-const getServerLinkField = (password = "") => {
+const getServerLinkField = (server) => {
     return {
-        name: "Link",
-        value: `IP: ${process.env.SERVER_IP} - Port: ${process.env.SERVER_PORT}`,
+        name: `Server: ${server.code}`,
+        value: `IP: ${server.ip} - Port: ${server.port}`,
     }
 }
 
@@ -165,6 +166,17 @@ const getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
             value: `${redPlayersString}`,
         },
     ]
+}
+
+
+export const formatServersMessage = (servers) => {
+    return {
+        embed: {
+            title: "Server Info",
+            color: 0xff0000,
+            fields: _.map(servers, server => getServerLinkField(server))
+        }
+    }
 }
 
 

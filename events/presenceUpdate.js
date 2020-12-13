@@ -1,15 +1,13 @@
-import _ from 'lodash';
-import logger from '../utils/logger';
-
 export default (client, oldMember, newMember) => {
-    if (!currentGather.gatherInProgress()) {
-        if (currentGather.currentQueue.includes(newMember.user)) {
+    const server = currentQueueManager.findServerWithPlayer(newMember.user)
 
+    if (server !== null) {
+        if (!server.gather.gatherInProgress()) {
             if (newMember.presence.status !== "online") {
                 currentDiscordChannel.send(`<@${newMember.user.id}> changed status to \`${newMember.presence.status}\` and ` +
                     "was removed from the gather queue.")
 
-                _.remove(currentGather.currentQueue, (x) => x === newMember.user)
+                currentQueueManager.remove(newMember.user)
             }
         }
     }

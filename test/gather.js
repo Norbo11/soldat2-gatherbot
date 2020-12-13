@@ -1,48 +1,20 @@
 import _ from 'lodash';
 import chai from 'chai';
 import chaiSubset from 'chai-subset';
-import sinon from 'sinon';
 import logger from '../utils/logger';
 import events from 'events';
-import gather from '../game/gather';
 import {GAME_MODES, IN_GAME_STATES, SOLDAT_EVENTS, SOLDAT_TEAMS} from '../game/constants';
 
 
 import soldat from '../game/soldat2';
 import soldatEvents from '../game/soldatEvents';
-import {getTestStatsDb} from "../utils/testUtils";
+import {getTestDiscordChannel, getTestServer, getTestStatsDb, MockDiscordUser} from "../utils/testUtils";
+import {Authenticator} from "../game/authentication"
+import {Gather} from "../game/gather";
 
 chai.use(chaiSubset)
 
 const expect = chai.expect
-
-
-function fourPlayersJoin(currentGather, netClient) {
-    // These tasks go to sleep until they receive the right events from the server
-    currentGather.playerJoin("a")
-    currentGather.playerJoin("b")
-    currentGather.playerJoin("c")
-    currentGather.playerJoin("d")
-
-    // Emitting an event goes through all listeners synchronously. These below "emit" calls block while they
-    // complete the playerJoin tasks above (all of which have registered some listeners and are waiting for data
-    // to arrive).
-    netClient.emit("data", "--- hwid A a")
-    netClient.emit("data", "--- hwid B b")
-    netClient.emit("data", "--- hwid C c")
-    netClient.emit("data", "--- hwid D d")
-}
-
-class MockDiscordUser {
-
-    constructor(id) {
-        this.id = id
-    }
-
-    send(message) {
-        logger.log.info(`Sending message to ${this.username}:\n${message}`)
-    }
-}
 
 
 describe('Gather', () => {
@@ -52,23 +24,16 @@ describe('Gather', () => {
     let discordChannel = undefined
     let statsDb = undefined
     let currentTime = 0;
+    let authenticator = undefined;
 
     beforeEach(async () => {
         statsDb = await getTestStatsDb()
+        discordChannel = getTestDiscordChannel()
+        const server = getTestServer()
 
         ws = new events.EventEmitter()
         ws.send = (data) => {
             logger.log.info(`Wrote to server: ${data}`)
-        }
-
-        discordChannel = sinon.stub()
-        discordChannel.send = (data) => {
-            logger.log.info(`Wrote to discord channel: ${data}`)
-        }
-
-        discordChannel.client = sinon.stub()
-        discordChannel.client.fetchUser = async discordId => {
-            return {username: "TestDiscordUser", send: () => logger.log.info(`Sending message to ${discordId}`)}
         }
 
         await statsDb.mapPlayfabIdToDiscordId("A", "a")
@@ -80,9 +45,11 @@ describe('Gather', () => {
             return currentTime;
         }
 
-        soldatClient = new soldat.Soldat2Client(ws, true)
-        currentGather = new gather.Gather(discordChannel, statsDb, soldatClient, mockCurrentTimestamp)
-        soldatEvents.registerSoldatEventListeners(currentGather, soldatClient)
+        authenticator = new Authenticator(statsDb)
+
+        soldatClient = new soldat.Soldat2Client("[test]", ws, true)
+        currentGather = new Gather(server, discordChannel, statsDb, soldatClient, authenticator, mockCurrentTimestamp)
+        soldatEvents.registerSoldatEventListeners("[test]", currentGather, soldatClient)
     });
 
     afterEach(async () => {
@@ -99,11 +66,7 @@ describe('Gather', () => {
             new MockDiscordUser("d")
         ]
 
-        // TODO: Refactor into methods on the gather class
-        currentGather.currentSize = 4
-        currentGather.currentQueue = discordUsers
-
-        await currentGather.startNewGame()
+        await currentGather.startNewGame(discordUsers)
         expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
         expect(currentGather.endedRounds.length).equal(0)
         expect(currentGather.currentRound).not.equal(undefined)
@@ -261,9 +224,7 @@ describe('Gather', () => {
     it('should handle an entire ctb gather', async () => {
         expect(currentGather.inGameState).equal(IN_GAME_STATES.NO_GATHER)
 
-        // TODO: Refactor into methods on the gather class
-        currentGather.currentSize = 4
-        currentGather.currentQueue = [
+        const players = [
             new MockDiscordUser("a"),
             new MockDiscordUser("b"),
             new MockDiscordUser("c"),
@@ -271,7 +232,7 @@ describe('Gather', () => {
         ]
 
         currentGather.changeGameMode(GAME_MODES.CAPTURE_THE_BASES)
-        await currentGather.startNewGame()
+        await currentGather.startNewGame(players)
         expect(currentGather.inGameState).equal(IN_GAME_STATES.GATHER_STARTED)
         expect(currentGather.endedRounds.length).equal(0)
         expect(currentGather.currentRound).not.equal(undefined)
