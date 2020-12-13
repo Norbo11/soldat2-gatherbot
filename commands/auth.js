@@ -23,6 +23,8 @@ export default {
             `Press T to open the chat, then press CTRL+V to paste the text. Press enter to authenticate.\n` +
             `If this is successful, you will receive a confirmation via Discord PM.`
 
+
         message.author.send(authMessage)
+        message.reply("please check your private Discord messages.")
     },
 };

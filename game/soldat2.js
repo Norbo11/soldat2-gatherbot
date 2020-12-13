@@ -208,6 +208,15 @@ class Soldat2Client {
 
         this.sendMessage(message)
     }
+
+    say(text) {
+        // Having a space in the "rcon say" message doesn't work... So we replace spaces with a unicode equivalent
+        // Also, certain characters like "(" don't work either.. we don't do anything about this for now.
+        text = text.split(" ").join('\u{00A0}')
+        logger.log.info(`Writing global message to players on server: ${text}`)
+        const message = NetworkMessage.Command(0, `say ${text}`)
+        this.sendMessage(message)
+    }
 }
 
 function toArrayBuffer(buf) {

@@ -288,17 +288,28 @@ export class Gather {
                 this.soldatClient.getPlayerInfo(playerName, player => {
                     this.authenticator.authenticate(player.playfabId, authCode, (discordId) => {
                         if (discordId === false) {
-                            // TODO Auth code is incorrect. Message the player in-game once we
-                            //  have an "rcon say" command
+                            this.soldatClient.say("Invalid auth code - use !auth in Discord for a new code.")
                             logger.log.info(`${playerName} failed to authenticate with invalid auth code ${authCode}`)
                         } else {
                             this.discordChannel.client.fetchUser(discordId).then(user => {
-                                user.send("You have been successfully authenticated.")
+                                const message1 = `You have successfully linked your steam account with your Discord account.`
+                                const message2 = `You will need to do this again if you ever change steam or Discord accounts.`
+
+                                // Server has an issue with sending these together, so sending them seperately...
+                                this.soldatClient.say(message1)
+                                this.soldatClient.say(message2)
+
+                                user.send(message + message2)
                             }).catch(e => logger.log.error(`Could not send auth confirmation to ${discordId}: ${e}\n${util.inspect(e)}`))
                         }
                     })
                 })
             }
+        }
+
+        if (firstPart === "maps") {
+            this.soldatClient.say(`CTF: ${maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_FLAG).join(', ')}`)
+            this.soldatClient.say(`CTB: ${maps.getMapsForGameMode(GAME_MODES.CAPTURE_THE_BASES).join(', ')}`)
         }
     }
 
