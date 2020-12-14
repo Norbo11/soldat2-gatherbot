@@ -123,7 +123,11 @@ export const onServerDied = (server) => {
 
         currentQueueManager.deleteServer(server.code)
 
-        process.kill(server.pid, "SIGINT")
+        try {
+            process.kill(server.pid, "SIGINT")
+        } catch (e) {
+            logger.log.error(`Tried to kill server ${server.code}, but couldn't. Maybe it's already dead? Reason: ${e}`)
+        }
 
         setTimeout(async () => {
             const {sessionId, cKey} = await fetchNewWebrconCredentials();
