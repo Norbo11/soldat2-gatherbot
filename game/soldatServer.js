@@ -10,7 +10,7 @@ import soldatEvents from "./soldatEvents";
 
 
 // Give enough time for ports to clear
-const WATI_SECONDS_AFTER_STOPPING_SERVER = 90
+const WAIT_SECONDS_AFTER_STOPPING_SERVER = 90
 
 // Give enough time for server to start before we attempt to connect to it
 const WAIT_SECONDS_AFTER_STARTING_SERVER = 10
@@ -119,14 +119,17 @@ export const onServerDied = (server) => {
     if (server.config.strategy === SERVER_STRATEGIES.ASSUME_SERVER_RUNNING_WITH_FIXED_CREDENTIALS) {
         currentDiscordChannel.send("Detected issue with webrcon connection/credentials. This server will remain unusable until action is taken.")
     } else if (server.config.strategy === SERVER_STRATEGIES.RUN_SERVER_WITH_FRESH_CREDENTIALS) {
-        currentDiscordChannel.send("Detected issue with webrcon connection/credentials. Restarting server...")
+        currentDiscordChannel.send(`Detected issue with webrcon connection/credentials. Restarting server; will attempt connection in ${WAIT_SECONDS_AFTER_STOPPING_SERVER + WAIT_SECONDS_AFTER_STARTING_SERVER} seconds...`)
 
         currentQueueManager.deleteServer(server.code)
+        let timeout
 
         try {
             process.kill(server.pid, "SIGINT")
+            timeout = WAIT_SECONDS_AFTER_STOPPING_SERVER * 1000
         } catch (e) {
-            logger.log.error(`Tried to kill server ${server.code}, but couldn't. Maybe it's already dead? Reason: ${e}`)
+            logger.log.error(`Tried to kill server ${server.code}, but couldn't. It's probably already dead. Reason: ${e}`)
+            timeout = 0
         }
 
         setTimeout(async () => {
@@ -136,6 +139,6 @@ export const onServerDied = (server) => {
 
             const gather = await initializeServer(newServer, sessionId, cKey)
             currentQueueManager.addGatherServer(newServer, gather)
-        }, WATI_SECONDS_AFTER_STOPPING_SERVER * 1000)
+        }, timeout)
     }
 }
