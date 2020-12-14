@@ -2,6 +2,8 @@ import nodegit from 'nodegit';
 import fs from 'fs';
 const PATH_TO_COMMIT_FILE = "last_commit_hash"
 import _ from 'lodash';
+import logger from "./logger";
+import util from "util";
 
 const postChangelog = () => {
     nodegit.Repository.open(".").then(async repo => {
@@ -28,7 +30,7 @@ const postChangelog = () => {
                     changeLog = _.reverse(changeLog)
                     changeLog = changeLog.map((line, i) => `\`${i + 1}. ${line}\``)
 
-                    currentDiscordChannel.send("**Changes since last restart:**\n" + changeLog.join("\n"))
+                    currentDiscordChannel.send("**Changes since last restart:**\n" + changeLog.join("\n")).catch(e => logger.log.error(`Could not send initialization message (${e.message}):\n${util.inspect(e.response)}`))
                 }
             })
 

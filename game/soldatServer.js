@@ -119,8 +119,6 @@ export const onServerDied = (server) => {
     if (server.config.strategy === SERVER_STRATEGIES.ASSUME_SERVER_RUNNING_WITH_FIXED_CREDENTIALS) {
         currentDiscordChannel.send("Detected issue with webrcon connection/credentials. This server will remain unusable until action is taken.")
     } else if (server.config.strategy === SERVER_STRATEGIES.RUN_SERVER_WITH_FRESH_CREDENTIALS) {
-        currentDiscordChannel.send(`Detected issue with webrcon connection/credentials. Restarting server; will attempt connection in ${WAIT_SECONDS_AFTER_STOPPING_SERVER + WAIT_SECONDS_AFTER_STARTING_SERVER} seconds...`)
-
         currentQueueManager.deleteServer(server.code)
         let timeout
 
@@ -131,6 +129,8 @@ export const onServerDied = (server) => {
             logger.log.error(`Tried to kill server ${server.code}, but couldn't. It's probably already dead. Reason: ${e}`)
             timeout = 0
         }
+
+        currentDiscordChannel.send(`Detected issue with webrcon connection/credentials. Restarting server; will attempt connection in ${timeout + WAIT_SECONDS_AFTER_STARTING_SERVER} seconds...`)
 
         setTimeout(async () => {
             const {sessionId, cKey} = await fetchNewWebrconCredentials();
