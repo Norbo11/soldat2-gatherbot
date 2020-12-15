@@ -1,3 +1,5 @@
+import {onServerDied} from "../game/soldatServer";
+
 export default {
     aliases: ["auth"],
     description: "Authenticate your in-game account with the bot.",
@@ -16,15 +18,23 @@ export default {
             return
         }
 
-        const authCode = server.gather.authenticator.requestAuthentication(message.author.id)
+        server.gather.checkServerAlive().then(alive => {
+            if (!alive) {
+                onServerDied(server)
+                message.reply("please try again after a server restart.")
+                return
+            }
 
-        const authMessage = `Please copy this line of text:\n\`!auth ${authCode}\`\n` +
-            `Now join the server on IP **${server.ip}** and port **${server.port}**.\n` +
-            `Press T to open the chat, then press CTRL+V to paste the text. Press enter to authenticate.\n` +
-            `If this is successful, you will receive a confirmation via Discord PM.`
+            const authCode = server.gather.authenticator.requestAuthentication(message.author.id)
+
+            const authMessage = `Please copy this line of text:\n\`!auth ${authCode}\`\n` +
+                `Now join the server on IP **${server.ip}** and port **${server.port}**.\n` +
+                `Press T to open the chat, then press CTRL+V to paste the text. Press enter to authenticate.\n` +
+                `If this is successful, you will receive a confirmation via Discord PM.`
 
 
-        message.author.send(authMessage)
-        message.reply("please check your private Discord messages.")
+            message.author.send(authMessage)
+            message.reply("please check your private Discord messages.")
+        })
     },
 };

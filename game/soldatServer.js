@@ -124,7 +124,7 @@ export const onServerDied = (server) => {
 
         try {
             process.kill(server.pid, "SIGINT")
-            timeout = WAIT_SECONDS_AFTER_STOPPING_SERVER * 1000
+            timeout = WAIT_SECONDS_AFTER_STOPPING_SERVER
         } catch (e) {
             logger.log.error(`Tried to kill server ${server.code}, but couldn't. It's probably already dead. Reason: ${e}`)
             timeout = 0
@@ -139,6 +139,6 @@ export const onServerDied = (server) => {
 
             const gather = await initializeServer(newServer, sessionId, cKey)
             currentQueueManager.addGatherServer(newServer, gather)
-        }, timeout)
+        }, timeout * 1000)
     }
 }
