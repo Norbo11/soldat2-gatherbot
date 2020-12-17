@@ -1,5 +1,3 @@
-import logger from '../utils/logger';
-import utils from '../utils/commandUtils';
 import stats from '../game/stats';
 import statsFormatting from '../game/statsFormatting';
 

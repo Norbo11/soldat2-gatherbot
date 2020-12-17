@@ -1,0 +1,14 @@
+{
+  "servers": [
+    {
+      "ip": "192.168.1.110",
+      "port": "33073",
+      "code": "local-1",
+      "strategy": "ASSUME_SERVER_RUNNING_WITH_FIXED_CREDENTIALS",
+      "webrconCredentials": {
+        "sessionId": "W2ZC6S2ZN90ZLU72MH1V",
+        "cKey": "X5CLGKZBC3"
+      }
+    }
+  ]
+}

@@ -4,17 +4,27 @@ export default {
     aliases: ["mode", "gamemode", "game"],
     description: "Change game mode.",
     execute(client, message, args) {
-        if (currentGather.gatherInProgress()) {
+        if (args.length !== 2) {
+            message.reply("command format: !mode [server] [CTF|CTB]")
+            return
+        }
+
+        const serverCode = args[0]
+        const server = currentQueueManager.getServer(serverCode)
+
+        if (server === null) {
+            message.reply(`There is no server/queue with code ${serverCode}.`)
+            return
+        }
+
+        const gather = server.gather
+
+        if (gather.gatherInProgress()) {
             message.channel.send("A gather is currently in progress.")
             return
         }
 
-        if (args.length !== 1) {
-            currentDiscordChannel.send("Please choose one of these gamemodes: CTF, CTB")
-            return
-        }
-
-        const gameMode = args[0].toUpperCase()
+        const gameMode = args[1].toUpperCase()
         let inGameMode = undefined
 
         if (gameMode === "CTF") {
@@ -26,6 +36,6 @@ export default {
             return
         }
 
-        currentGather.changeGameMode(inGameMode)
+        gather.changeGameMode(inGameMode)
     },
 };

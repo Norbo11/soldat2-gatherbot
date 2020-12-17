@@ -2,7 +2,7 @@ import _ from 'lodash';
 import random from '../utils/random';
 import logger from '../utils/logger';
 
-class Authenticator {
+export class Authenticator {
 
     constructor(statsDb) {
         this.statsDb = statsDb
@@ -38,8 +38,4 @@ class Authenticator {
         }).catch((e) => logger.log.error(`There was an error authenticating discord ID ${discordId}: ${e}`))
     }
 }
-
-export default {
-    Authenticator
-};
 

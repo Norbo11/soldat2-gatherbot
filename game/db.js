@@ -27,6 +27,10 @@ class StatsDB {
         this.db = db;
     }
 
+    async dropDatabase() {
+        await this.db.dropDatabase()
+    }
+
     async getAllGames() {
         const result = await this.db.collection("Game").find({})
         const games = await result.toArray()
@@ -122,6 +126,46 @@ class StatsDB {
             upsert: true
         })
         return result.insertedId
+    }
+
+    async getAllClips() {
+        const result = await this.db.collection("Clip").find({})
+        const clips = await result.toArray()
+        return clips
+    }
+
+    async getClip(clipId) {
+        const result = await this.db.collection("Clip").findOne({id: clipId})
+        if (result) {
+            return result
+        } else {
+            return null
+        }
+    }
+
+    async getNewClipId() {
+        const clips = await this.getAllClips()
+        const max = _.maxBy(clips, clip => clip.id)
+        if (max === undefined) {
+            return 1
+        }
+        return max.id + 1
+    }
+
+    async addClip(clipUrl, addedByDiscordId, addedTime) {
+        const newId = await this.getNewClipId()
+
+        await this.db.collection("Clip").insertOne({
+            clipUrl, addedByDiscordId, addedTime, id: newId
+        })
+
+        return newId
+    }
+
+    async deleteClip(clipId) {
+        return await this.db.collection("Clip").deleteOne({
+            id: clipId
+        })
     }
 }
 

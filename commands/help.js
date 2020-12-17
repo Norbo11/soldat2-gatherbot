@@ -1,5 +1,3 @@
-import logger from '../utils/logger';
-
 export default {
     aliases: ["help"],
     description: "Show a help message.",

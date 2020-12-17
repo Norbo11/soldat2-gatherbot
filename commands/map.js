@@ -1,31 +1,39 @@
-import logger from '../utils/logger';
-import utils from '../utils/commandUtils';
 import maps from '../utils/maps';
 
 export default {
     aliases: ["map"],
     description: "Change the map on the server",
     execute(client, message, args) {
-        if (currentGather.gatherInProgress()) {
+        if (args.length !== 2) {
+            message.reply("command format: !map [server] [map]")
+            return
+        }
+
+        const serverCode = args[0]
+        const server = currentQueueManager.getServer(serverCode)
+
+        if (server === null) {
+            message.reply(`There is no server/queue with code ${serverCode}.`)
+            return
+        }
+
+        const gather = server.gather
+
+        if (gather.gatherInProgress()) {
             message.channel.send("A gather is currently in progress.")
             return
         }
 
-        if (args.length !== 1) {
-            message.channel.send("Please specify a map name.")
+        const mapName = args[1];
+
+        if (!(maps.verifyMap(mapName, gather.gameMode))) {
+            message.channel.send(`**${mapName}** is an invalid map for current game mode **${gather.gameMode}**.`)
             return
         }
 
-        const mapName = args[0];
-
-        if (!(maps.verifyMap(mapName, currentGather.gameMode))) {
-            message.channel.send(`**${mapName}** is an invalid map for current game mode **${currentGather.gameMode}**.`)
-            return
-        }
-
-        currentSoldatClient.changeMap(mapName, currentGather.gameMode, (result) => {
+        gather.soldatClient.changeMap(mapName, gather.gameMode, (result) => {
             if (result === "found") {
-                message.channel.send(`Map changed to **${mapName}** (game mode **${currentGather.gameMode}**).`)
+                message.channel.send(`Map changed to **${mapName}** (game mode **${gather.gameMode}**).`)
             }
 
             if (result === "not_found") {

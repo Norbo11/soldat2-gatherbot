@@ -10,6 +10,13 @@ const getMapsForGameMode = (gameMode) => {
 }
 
 
+export const getRandomMapForGameMode = (gameMode) => {
+    let maps = getMapsForGameMode(gameMode)
+    maps = _.shuffle(maps)
+    return maps[0]
+}
+
+
 const verifyMap = (mapName, gameMode) => {
     const maps = getMapsForGameMode(gameMode)
     return _.includes(maps, mapName)
