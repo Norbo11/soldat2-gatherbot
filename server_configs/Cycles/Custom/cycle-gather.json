@@ -3,79 +3,73 @@
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_guardian",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "rules": "CaptureTheFlag",
     "level": "ctf_steel",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_rotten",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_laos",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_berry",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_blitz",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_Snakebite",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_cobra",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_ash",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_nubya",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_division",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
-    "Condition": ""
-  },
-  {
-    "Rules": "CaptureTheFlag",
-    "Level": "ctf_strike",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_magpie",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
+    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01"],
     "Condition": ""
   }
 ]
