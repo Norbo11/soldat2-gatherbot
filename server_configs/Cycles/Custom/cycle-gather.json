@@ -68,12 +68,6 @@
   },
   {
     "Rules": "CaptureTheFlag",
-    "Level": "ctf_strike",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
-    "Condition": ""
-  },
-  {
-    "Rules": "CaptureTheFlag",
     "Level": "ctf_magpie",
     "Modifiers": ["FasterWeaponSwap", "Gather", "wm007_impucz"],
     "Condition": ""
