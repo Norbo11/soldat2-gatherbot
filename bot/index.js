@@ -7,6 +7,9 @@ import message from './events/message';
 import ready from './events/ready';
 import presenceUpdate from './events/presenceUpdate';
 
+import express from "express"
+import cors from "cors"
+
 dotenv.config()
 
 const client = new Discord.Client()
@@ -37,11 +40,27 @@ const setUpEvents = () => {
     process.on("SIGTERM", cleanUp)
 }
 
+const setUpApi = async () => {
+    const app = express()
+    const endpointFiles = fs.readdirSync("./api").filter(file => file.endsWith(".js"));
+
+    app.use(cors())
+
+    for (const file of endpointFiles) {
+        const module = await import(`./api/${file}`);
+        for (const route of module.default.routes) {
+            app[route.method](route.path, route.handler)
+        }
+    }
+
+    app.listen(process.env.API_PORT, () => {
+        logger.log.info(`Gather Bot API listening on port ${process.env.API_PORT}`)
+    })
+}
+
 (async () => {
     await setUpCommands()
     setUpEvents();
     await client.login(process.env.BOT_TOKEN);
+    await setUpApi();
 })();
-
-
-

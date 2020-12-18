@@ -15,7 +15,7 @@ export default (client) => {
         const config = readBotConfig()
 
         if (config.servers.length === 0)  {
-            throw Error("Need at least one server")
+            logger.log.warn("You haven't configured any servers!")
         }
 
         global.getCurrentTimestamp = () => Date.now()

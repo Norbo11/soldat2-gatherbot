@@ -81,17 +81,25 @@ class StatsDB {
         return _.sortBy(games, game => game.startTime)
     }
 
-    async getMuSigma(discordId) {
+    async getRatingUpdates(discordId) {
         const result = await this.db.collection("RatingUpdates").find({discordId})
         const ratingUpdates = await result.toArray()
+
+        const sorted = _.sortBy(ratingUpdates,
+            ratingUpdate => -ratingUpdate.gameStartTime,
+            ratingUpdate => -ratingUpdate.roundStartTime
+        )
+
+        return sorted
+    }
+
+    async getMuSigma(discordId) {
+        const ratingUpdates = await this.getRatingUpdates(discordId)
+
         if (ratingUpdates.length === 0) {
             return undefined
         } else {
-            const sorted = _.sortBy(ratingUpdates,
-                    ratingUpdate => -ratingUpdate.gameStartTime,
-                    ratingUpdate => -ratingUpdate.roundStartTime
-            )
-            const latest = sorted[0]
+            const latest = ratingUpdates[0]
             return {
                 mu: latest.newMu,
                 sigma: latest.newSigma,

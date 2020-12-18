@@ -6,7 +6,7 @@ import logger from "./logger";
 import util from "util";
 
 const postChangelog = () => {
-    nodegit.Repository.open(".").then(async repo => {
+    nodegit.Repository.open("../").then(async repo => {
         const headCommit = await repo.getMasterCommit();
 
         if (fs.existsSync(PATH_TO_COMMIT_FILE)) {
