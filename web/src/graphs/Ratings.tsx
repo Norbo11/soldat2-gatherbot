@@ -1,9 +1,11 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse} from "../util/api";
 import _ from "lodash"
+import {Checkbox, Form, Grid, Input, Loader, Radio, Segment} from "semantic-ui-react";
+import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 
 
 interface NormalPoint {
@@ -47,10 +49,33 @@ const normal = (mean: number,
 
 export function Ratings({ratings}: Props) {
     const d3Container = useRef(null)
+    const [alignment, setAlignment] = useState("left")
+
     const figureWidth = 1500
-    const figureHeight = 500
+    const figureHeight = 600
 
     useEffect(() => {
+
+        const percentageForAlignment = (d: EnrichedPoint) => {
+            if (alignment === "left") {
+                return d.leftPercentage
+            } else if (alignment === "right") {
+                return d.rightPercentage
+            } else {
+                return d.muPercentage
+            }
+        }
+
+        const xPositionForAlignment = (d: EnrichedPoint) => {
+            if (alignment === "left") {
+                return d.left
+            } else if (alignment === "right") {
+                return d.right
+            } else {
+                return d.mu
+            }
+        }
+
 
         if (!d3Container.current) {
             return
@@ -78,7 +103,7 @@ export function Ratings({ratings}: Props) {
             }
         })
 
-        const margin = {top: 20, right: 30, bottom: 30, left: 40}
+        const margin = {top: 30, right: 10, bottom: 30, left: 20}
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom
 
@@ -90,25 +115,18 @@ export function Ratings({ratings}: Props) {
 
         // Return a function that maps our q values to the width of our graph
         let x = d3.scaleLinear<number>()
-            .rangeRound([0, width])
             .domain([minX, maxX])
+            .rangeRound([margin.left, width])
             .nice() // This extends the domain so that it starts and ends on nice round values
 
         // Return a function that maps our p values to the height of our graph
         let y = d3.scaleLinear<number>()
             .domain([0, maxDensity])
-            .range([height, 0]);  // Height comes first because origin is at the top left of the graph
+            .range([height, margin.top]);  // Height comes first because origin is at the top left of the graph
 
         let svg = d3.select(d3Container.current)
 
-            // Create an SVG with a given width and height
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-
-            // Create a group of elements and apply margins
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        svg.selectAll("*").remove()
 
         // Create a group for the X axis
         let gX = svg.append("g")
@@ -181,10 +199,10 @@ export function Ratings({ratings}: Props) {
             .append("circle")
             .attr("class", "point")
             .attr("id", (d, i) => `point${i}`)
-            .attr("fill", d => colorScale(d.leftPercentage))
+            .attr("fill", d => colorScale(percentageForAlignment(d)))
             .attr("stroke", "black")
-            .attr("cx", d => x(d.left))
-            .attr("cy", d => y(jStat.normal.pdf(d.left, globalMu, globalSigma)))
+            .attr("cx", d => x(xPositionForAlignment(d)))
+            .attr("cy", d => y(jStat.normal.pdf(xPositionForAlignment(d), globalMu, globalSigma)))
             .attr("r", 6)
 
         const handleMouseOverPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
@@ -232,23 +250,55 @@ export function Ratings({ratings}: Props) {
             .on("mouseover", handleMouseOverPoint)
             .on("mouseout", handleMouseOutPoint)
 
-    }, [ratings, d3Container.current])
+    }, [ratings, d3Container.current, alignment])
 
     // Prevent double-rendering
     if (ratings.length === 0) {
-        return <div>Loading...</div>
+        return (
+            <Dimmer active inverted>
+                <Loader inverted>Loading ratings graph...</Loader>
+            </Dimmer>
+        )
     }
 
     return (
-        <div className={"svg-container"}>
-            <svg
-                width={figureWidth}
-                height={figureHeight}
-                ref={d3Container}
-                preserveAspectRatio="xMinYMin meet"
-                viewBox={`0 0 ${figureWidth} ${figureHeight}`}
-                className={"svg-content-responsive"}
-            />
+        <div>
+            <h3>Ratings</h3>
+
+            <Form>
+                <h5>Point Alignment</h5>
+                <Form.Group widths={"equal"}>
+                    <Form.Radio
+                        inline
+                        label={"Lower Ratings Estimate"}
+                        value={"left"}
+                        checked={alignment === "left"}
+                        onChange={(e, {value}) => setAlignment(value as string)}
+                    />
+                    <Form.Radio
+                        inline
+                        label={"Skill Average"}
+                        value={"mu"}
+                        checked={alignment === "mu"}
+                        onChange={(e, {value}) => setAlignment(value as string)}
+                    />
+                    <Form.Radio
+                        inline
+                        label={"Upper Ratings Estimate"}
+                        value={"right"}
+                        checked={alignment === "right"}
+                        onChange={(e, {value}) => setAlignment(value as string)}
+                    />
+                </Form.Group>
+            </Form>
+            <div className={"svg-container"}>
+                {ratings.length > 0 ? <svg
+                    ref={d3Container}
+                    preserveAspectRatio="xMinYMin meet"
+                    viewBox={`0 0 ${figureWidth} ${figureHeight}`}
+                    className={"svg-content-responsive"}
+                /> : null}
+            </div>
         </div>
     );
 }
