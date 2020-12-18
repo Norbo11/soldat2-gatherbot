@@ -2,6 +2,8 @@ import React, {useEffect, useRef} from "react";
 import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
+import {RatingResponse} from "../util/api";
+import _ from "lodash"
 
 
 interface NormalPoint {
@@ -18,54 +20,51 @@ interface InputPoint {
 interface EnrichedPoint extends InputPoint {
     left: number,
     right: number,
-    percentage: number,
+    muPercentage: number,
+    leftPercentage: number,
+    rightPercentage: number,
 }
 
-export function Ratings() {
-    const d3Container = useRef(null)
+interface Props {
+    ratings: RatingResponse[]
+}
 
+
+const normal = (mean: number,
+                sd: number,
+                start: number = mean - 4 * sd,
+                end: number = mean + 4 * sd): NormalPoint[] => {
+
+    const data: NormalPoint[] = [];
+    for (let i = start; i <= end; i += 1) {
+        data.push({
+            x: i,
+            density: jStat.normal.pdf(i, mean, sd)
+        });
+    }
+    return data;
+}
+
+export function Ratings({ratings}: Props) {
+    const d3Container = useRef(null)
     const figureWidth = 1500
     const figureHeight = 500
 
     useEffect(() => {
+
         if (!d3Container.current) {
             return
-        }
-
-        function normal(mean: number,
-                        sd: number,
-                        start: number = mean - 4 * sd,
-                        end: number = mean + 4 * sd): NormalPoint[] {
-            const data: NormalPoint[] = [];
-            for (let i = start; i <= end; i += 1) {
-                data.push({
-                    x: i,
-                    density: jStat.normal.pdf(i, mean, sd)
-                });
-            }
-            return data;
         }
 
         let globalMu = 50
         let globalSigma = 50 / 3
 
-        const inputPoints: InputPoint[] = [
-            {
-                mu: 30,
-                sigma: 3,
-                i: 0
-            },
-            {
-                mu: 50,
-                sigma: 5,
-                i: 1
-            },
-        ]
-
-        const points: EnrichedPoint[] = inputPoints.map((d, i) => {
+        const points: EnrichedPoint[] = ratings.map((d, i) => {
             const left = d.mu - 3 * d.sigma
             const right = d.mu + 3 * d.sigma
-            const percentage = jStat.normal.cdf(d.mu, globalMu, globalSigma) * 100
+            const muPercentage = jStat.normal.cdf(d.mu, globalMu, globalSigma) * 100
+            const leftPercentage = jStat.normal.cdf(left, globalMu, globalSigma) * 100
+            const rightPercentage = jStat.normal.cdf(right, globalMu, globalSigma) * 100
 
             return {
                 i,
@@ -73,12 +72,14 @@ export function Ratings() {
                 sigma: d.sigma,
                 left,
                 right,
-                percentage
+                muPercentage,
+                leftPercentage,
+                rightPercentage
             }
         })
 
         const margin = {top: 20, right: 30, bottom: 30, left: 40}
-        const width =  figureWidth - margin.left - margin.right
+        const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom
 
         let normalPoints: NormalPoint[] = normal(globalMu, globalSigma);
@@ -180,7 +181,7 @@ export function Ratings() {
             .append("circle")
             .attr("class", "point")
             .attr("id", (d, i) => `point${i}`)
-            .attr("fill", d => colorScale(d.percentage))
+            .attr("fill", d => colorScale(d.leftPercentage))
             .attr("stroke", "black")
             .attr("cx", d => x(d.left))
             .attr("cy", d => y(jStat.normal.pdf(d.left, globalMu, globalSigma)))
@@ -231,8 +232,12 @@ export function Ratings() {
             .on("mouseover", handleMouseOverPoint)
             .on("mouseout", handleMouseOutPoint)
 
-    })
+    }, [ratings, d3Container.current])
 
+    // Prevent double-rendering
+    if (ratings.length === 0) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className={"svg-container"}>

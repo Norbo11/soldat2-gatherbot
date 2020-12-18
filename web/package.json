@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.10",
     "d3": "^6.3.1",
     "jstat": "^1.9.4",
+    "lodash": "^4.17.20",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1",
@@ -43,6 +44,7 @@
     ]
   },
   "devDependencies": {
-    "@types/d3": "^6.2.0"
+    "@types/d3": "^6.2.0",
+    "@types/lodash": "^4.14.165"
   }
 }
