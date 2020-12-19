@@ -4,7 +4,7 @@ import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse} from "../util/api";
-import {Button, Card, Form, Icon, Image, List, Loader} from "semantic-ui-react";
+import {Button, Card, Container, Form, Icon, Image, List, Loader} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 import moment from "moment"
 import {UserCache} from "../App";
@@ -348,10 +348,10 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 console.log("clicked")
                 d3.select(`#playerStatsDrawing${d.i}`)
                     .remove()
-                    // .transition()
-                    // .duration(1000)
-                    // .attr("width", statsBoxWidth)
-                    // .attr("height", statsBoxHeight)
+                // .transition()
+                // .duration(1000)
+                // .attr("width", statsBoxWidth)
+                // .attr("height", statsBoxHeight)
             }
 
             if (user !== undefined) {
@@ -376,24 +376,25 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                                     {user.displayName}
                                 </Card.Header>
                                 <Card.Meta>
-                                    <span className='date'>First Gather: {moment(user.playerStats.firstGameTimestamp).format("DD-MM-YYYY")}</span>
+                                    <span
+                                        className='date'>First Gather: {moment(user.playerStats.firstGameTimestamp).format("DD-MM-YYYY")}</span>
                                 </Card.Meta>
                                 <Card.Content>
                                     <List>
                                         <List.Item>
-                                            <List.Icon name={"gamepad"} />
+                                            <List.Icon name={"gamepad"}/>
                                             <List.Content>
                                                 Games Played: {user.playerStats.totalGames}
                                             </List.Content>
                                         </List.Item>
                                         <List.Item>
-                                            <List.Icon name={"gamepad"} />
+                                            <List.Icon name={"gamepad"}/>
                                             <List.Content>
                                                 Rounds Played: {user.playerStats.totalRounds}
                                             </List.Content>
                                         </List.Item>
                                         <List.Item>
-                                            <List.Icon name={"trophy"} />
+                                            <List.Icon name={"trophy"}/>
                                             <List.Content>
                                                 Games Won: {user.playerStats.wonGames}
                                             </List.Content>
@@ -517,34 +518,41 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
 
     return (
         <div>
-            <h3>Ratings</h3>
+            <h1>Soldat 2 Gather Ratings</h1>
 
-            <Form>
-                <h5>Point Alignment</h5>
-                <Form.Group widths={"equal"}>
-                    <Form.Radio
-                        inline
-                        label={"Lower Ratings Estimate"}
-                        value={"left"}
-                        checked={alignment === "left"}
-                        onChange={(e, {value}) => setAlignment(value as string)}
-                    />
-                    <Form.Radio
-                        inline
-                        label={"Skill Average"}
-                        value={"mu"}
-                        checked={alignment === "mu"}
-                        onChange={(e, {value}) => setAlignment(value as string)}
-                    />
-                    <Form.Radio
-                        inline
-                        label={"Upper Ratings Estimate"}
-                        value={"right"}
-                        checked={alignment === "right"}
-                        onChange={(e, {value}) => setAlignment(value as string)}
-                    />
-                </Form.Group>
-            </Form>
+            <Container>
+                <Form>
+                    <Form.Group inline>
+                        <Form.Input
+                            width={6}
+                            label={"Search"}
+                            placeholder={"Enter player names..."}
+                        />
+                        <label>Point Alignment</label>
+                        <Form.Radio
+                            inline
+                            label={"Lower Ratings Estimate"}
+                            value={"left"}
+                            checked={alignment === "left"}
+                            onChange={(e, {value}) => setAlignment(value as string)}
+                        />
+                        <Form.Radio
+                            inline
+                            label={"Skill Average"}
+                            value={"mu"}
+                            checked={alignment === "mu"}
+                            onChange={(e, {value}) => setAlignment(value as string)}
+                        />
+                        <Form.Radio
+                            inline
+                            label={"Upper Ratings Estimate"}
+                            value={"right"}
+                            checked={alignment === "right"}
+                            onChange={(e, {value}) => setAlignment(value as string)}
+                        />
+                    </Form.Group>
+                </Form>
+            </Container>
             <div className={"svg-container"}>
                 {ratings.length > 0 ? <svg
                     ref={d3Container}
