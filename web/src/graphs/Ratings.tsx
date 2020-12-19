@@ -475,7 +475,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                         <Form.Input
                             width={6}
                             label={"Search"}
-                            placeholder={"Enter player names..."}
+                            // placeholder={"Enter player names..."}
+                            placeholder={"Currently under construction..."}
                         />
                         <label>Point Alignment</label>
                         <Form.Radio
