@@ -15,6 +15,8 @@ interface Round {
 
 
 export interface Game {
+    bluePlayers: string[],
+    redPlayers: string[],
     gameMode: string,
     size: number,
     startTime: number,
@@ -37,14 +39,38 @@ export interface RatingResponse {
     lastGames: Game[]
 }
 
+export interface GameModeStats {
+    totalGames: number,
+    wonGames: number,
+    lostGames: number,
+    tiedGames: number,
+}
+
 export interface UserResponse {
+    discordId: string
     avatarUrl: string,
     displayName: string,
     playerStats: {
         totalGames: number,
         totalRounds: number,
+        totalRoundsAfterKillTrackingWasImplemented: number,
         wonGames: number,
-        firstGameTimestamp: number
+        lostGames: number,
+        tiedGames: number,
+        weaponStats: {
+            [weaponName: string]: {
+                kills: number,
+                deaths: number,
+                totalRounds: number,
+            }
+        },
+        firstGameTimestamp: number,
+        totalKills: number,
+        totalDeaths: number,
+        gameModeStats: {
+            CaptureTheFlag: GameModeStats,
+            CaptureTheBases: GameModeStats,
+        }
     },
     ratingChanges: object,
     sortedGames: Game[]

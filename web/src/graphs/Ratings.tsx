@@ -97,7 +97,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const figureHeight = 800
 
     const statsBoxWidth = 250
-    const statsBoxHeight = 300
+    const statsBoxHeight = 400
     const lineLength = 20
 
     useDeepCompareEffect(() => {

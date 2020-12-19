@@ -38,6 +38,7 @@ export default {
                 const sortedGames = _.sortBy(games, game => -game.startTime)
 
                 const result = {
+                    discordId,
                     avatarUrl: user.displayAvatarURL,
                     displayName: member !== null ? member.displayName : user.username,
                     playerStats,

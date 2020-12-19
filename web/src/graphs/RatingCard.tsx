@@ -1,10 +1,11 @@
-import {Card, Image, List, Loader} from "semantic-ui-react";
+import {Card, Icon, Image, List, Loader} from "semantic-ui-react";
 import moment from "moment";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 import React from "react";
 import {UserResponse} from "../util/api";
 import _ from "lodash"
 import * as d3 from "d3";
+import "./RatingCard.css";
 
 
 interface Props {
@@ -25,7 +26,10 @@ interface Props {
 export const RatingCard = ({user}: Props) => {
 
     return (
-        <div style={{margin: "5px", height: "95%"}}>
+        <div
+            className={"rating-card"}
+            style={{margin: "5px", height: "95%"}}
+        >
             {user !== undefined ? <Card style={{height: "100%"}} fluid>
                 <Card.Content>
                     <Card.Header>
@@ -37,35 +41,56 @@ export const RatingCard = ({user}: Props) => {
                             className='date'>First Gather: {moment(user.playerStats.firstGameTimestamp).format("DD-MM-YYYY")}</span>
                     </Card.Meta>
                     <Card.Content>
-                        <List>
+                        <br />
+                        <p><b>Stats</b></p>
+                        <List className={"stats-list"}>
                             <List.Item>
-                                <List.Icon name={"gamepad"}/>
+                                <List.Icon name={"gamepad"} fitted/>
                                 <List.Content>
-                                    Games Played: {user.playerStats.totalGames}
+                                    <b>Games Played</b>: {user.playerStats.totalGames}
                                 </List.Content>
                             </List.Item>
                             <List.Item>
-                                <List.Icon name={"gamepad"}/>
+                                <List.Icon name={"gamepad"} fitted/>
                                 <List.Content>
-                                    Rounds Played: {user.playerStats.totalRounds}
+                                    <b>Rounds Played</b>: {user.playerStats.totalRounds}
                                 </List.Content>
                             </List.Item>
                             <List.Item>
-                                <List.Icon name={"trophy"}/>
+                                <List.Icon name={"trophy"} fitted/>
                                 <List.Content>
-                                    Games Won: {user.playerStats.wonGames}
+                                    <b>CTF W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheFlag.wonGames}-{user.playerStats.gameModeStats.CaptureTheFlag.tiedGames}-{user.playerStats.gameModeStats.CaptureTheFlag.lostGames}
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Icon name={"trophy"} fitted/>
+                                <List.Content>
+                                    <b>CTB W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheBases.wonGames}-{user.playerStats.gameModeStats.CaptureTheBases.tiedGames}-{user.playerStats.gameModeStats.CaptureTheBases.lostGames}
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Icon name={"crosshairs"} fitted/>
+                                <List.Content>
+                                    <b>Kills/Deaths</b>: {user.playerStats.totalKills}/{user.playerStats.totalDeaths} ({(user.playerStats.totalKills / user.playerStats.totalDeaths).toFixed(2)})
                                 </List.Content>
                             </List.Item>
                         </List>
-                        <List divided relaxed>
-                            <p>Last 5 Games</p>
+                        <p><b>Last 5 Games</b></p>
+                        <List className={"games-list"} divided>
                             {_.take(user.sortedGames, 5).map(game => {
+                                const teamName = _.includes(game.redPlayers, user.discordId) ? "Red" : "Blue"
+                                const won = game.winner === teamName
+                                const winProbability = teamName === "Red" ? game.redWinProbability : game.blueWinProbability
+                                const color = won ? "rgb(161, 239, 139, 0.6)" : "rgb(224, 54, 22, 0.6)"
+
                                 return (
-                                    <List.Item key={game.startTime}>
+                                    <List.Item
+                                        key={game.startTime}
+                                        style={{backgroundColor: color}}
+                                    >
+                                        <Icon name={"flag"} fitted/>
                                         <List.Content>
-                                            <List.Description as='a'>
-                                                {game.blueRoundWins} - {game.redRoundWins} ({moment.duration(moment().valueOf() - game.startTime).humanize()} ago)
-                                            </List.Description>
+                                             {game.blueRoundWins} - {game.redRoundWins} | {(winProbability * 100).toFixed(1)}% | {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
                                         </List.Content>
                                     </List.Item>
                                 )
