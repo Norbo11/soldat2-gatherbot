@@ -1,16 +1,23 @@
 import React, {useEffect, useRef, useState} from "react";
+import ReactDOMServer from "react-dom/server"
 import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse} from "../util/api";
 import _ from "lodash"
-import {Checkbox, Form, Grid, Input, Loader, Radio, Segment} from "semantic-ui-react";
+import {Card, Checkbox, Form, Grid, Icon, Image, Input, List, Loader, Radio, Segment} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-
+import profile_pic from "../images/profile_pic.jpg"
+import moment from "moment"
 
 interface NormalPoint {
     x: number,
     density: number
+}
+
+interface HoverLinePoint {
+    x: number,
+    y: number
 }
 
 interface InputPoint {
@@ -20,11 +27,14 @@ interface InputPoint {
 }
 
 interface EnrichedPoint extends InputPoint {
+    stats: RatingResponse,
     left: number,
     right: number,
     muPercentage: number,
     leftPercentage: number,
     rightPercentage: number,
+    lastX: number,
+    xPos: number,
 }
 
 interface Props {
@@ -47,12 +57,45 @@ const normal = (mean: number,
     return data;
 }
 
+const perpendicularToNormal = (globalMu: number, globalSigma: number, x: number) => {
+    // From: https://math.stackexchange.com/questions/461139/differential-of-normal-distribution
+
+    const x2 = x - globalMu
+
+    const numerator = x2 * (Math.exp((-Math.pow(x2, 2)) / (2 * Math.pow(globalSigma, 2))))
+    const denominator = Math.pow(globalSigma, 3) * Math.sqrt(2 * Math.PI)
+    const gradient = -(numerator / denominator)
+    // const m = - 1 / gradient
+    const m = -1 / gradient
+
+    console.log(globalMu)
+    console.log(globalSigma)
+    console.log(x)
+    console.log(gradient)
+    console.log(m)
+
+    const y = jStat.normal.pdf(x, globalMu, globalSigma)
+    const c = y - m * x
+    return {m, c}
+}
+
+const straightLinePoints = (m: number, c: number, x: number) => {
+    return {
+        x,
+        y: m * x + c
+    }
+}
+
 export function Ratings({ratings}: Props) {
     const d3Container = useRef(null)
     const [alignment, setAlignment] = useState("left")
 
     const figureWidth = 1500
-    const figureHeight = 600
+    const figureHeight = 800
+
+    const statsBoxWidth = 250
+    const statsBoxHeight = 150
+    const lineLength = 20
 
     useEffect(() => {
 
@@ -67,13 +110,7 @@ export function Ratings({ratings}: Props) {
         }
 
         const xPositionForAlignment = (d: EnrichedPoint) => {
-            if (alignment === "left") {
-                return d.left
-            } else if (alignment === "right") {
-                return d.right
-            } else {
-                return d.mu
-            }
+
         }
 
 
@@ -91,6 +128,18 @@ export function Ratings({ratings}: Props) {
             const leftPercentage = jStat.normal.cdf(left, globalMu, globalSigma) * 100
             const rightPercentage = jStat.normal.cdf(right, globalMu, globalSigma) * 100
 
+            let xPos
+
+            if (alignment === "left") {
+                xPos = left
+            } else if (alignment === "right") {
+                xPos = right
+            } else {
+                xPos = d.mu
+            }
+
+            const lastX = xPos < globalMu ? xPos - lineLength : xPos + lineLength
+
             return {
                 i,
                 mu: d.mu,
@@ -99,11 +148,14 @@ export function Ratings({ratings}: Props) {
                 right,
                 muPercentage,
                 leftPercentage,
-                rightPercentage
+                rightPercentage,
+                stats: d,
+                xPos,
+                lastX
             }
         })
 
-        const margin = {top: 30, right: 10, bottom: 30, left: 20}
+        const margin = {top: 200, right: 10, bottom: 30, left: 20}
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom
 
@@ -113,16 +165,20 @@ export function Ratings({ratings}: Props) {
         let maxX = d3.max(normalPoints, d => d.x)!
         let maxDensity = d3.max(normalPoints, d => d.density)!
 
+        const lineUpLength = maxDensity * 0.03
+
         // Return a function that maps our q values to the width of our graph
         let x = d3.scaleLinear<number>()
             .domain([minX, maxX])
             .rangeRound([margin.left, width])
-            .nice() // This extends the domain so that it starts and ends on nice round values
+        // .clamp(true)
+        // .nice() // This extends the domain so that it starts and ends on nice round values
 
         // Return a function that maps our p values to the height of our graph
         let y = d3.scaleLinear<number>()
             .domain([0, maxDensity])
-            .range([height, margin.top]);  // Height comes first because origin is at the top left of the graph
+            .range([height, margin.top])  // Height comes first because origin is at the top left of the graph
+        // .clamp(true)
 
         let svg = d3.select(d3Container.current)
 
@@ -199,10 +255,10 @@ export function Ratings({ratings}: Props) {
             .append("circle")
             .attr("class", "point")
             .attr("id", (d, i) => `point${i}`)
-            .attr("fill", d => colorScale(percentageForAlignment(d)))
+            .attr("fill", d => colorScale(d.xPos))
             .attr("stroke", "black")
-            .attr("cx", d => x(xPositionForAlignment(d)))
-            .attr("cy", d => y(jStat.normal.pdf(xPositionForAlignment(d), globalMu, globalSigma)))
+            .attr("cx", d => x(d.xPos))
+            .attr("cy", d => y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)))
             .attr("r", 6)
 
         const handleMouseOverPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
@@ -233,11 +289,120 @@ export function Ratings({ratings}: Props) {
                 .transition()
                 .duration(1000)
                 .style("opacity", "0")
+
+
+            let hoverLine = d3.line<HoverLinePoint>()
+                .x(d => x(d.x))
+                .y(d => y(d.y));
+
+            // let {m, c} = perpendicularToNormal(globalMu, globalSigma, xPos)
+            // const firstX = -20
+            // const lastX = 120
+            // const perpendicularPoints = [straightLinePoints(m, c, firstX), straightLinePoints(m, c, lastX)]
+            // (-20, -0.031348623135028925) -> (20, 1208.0580317747126) Ratings.tsx:288
+            // (120, 0.08901343491960517) -> (1470, -1356.9298867691095)
+            //
+            // console.log(`xPos: ${xPos}`)
+            // console.log(`firstX: ${firstX}`)
+            // console.log(`lastX: ${lastX}`)
+            // console.log(`y=${m}x + ${c}`)
+            // console.log(`(${perpendicularPoints[0].x}, ${perpendicularPoints[0].y}) -> (${x(perpendicularPoints[0].x)}, ${y(perpendicularPoints[0].y)})`)
+            // console.log(`(${perpendicularPoints[1].x}, ${perpendicularPoints[1].y}) -> (${x(perpendicularPoints[1].x)}, ${y(perpendicularPoints[1].y)})`)
+            // console.log(`maxDensity: ${maxDensity}`)
+
+            const perpendicularPoints = [
+                {
+                    x: d.xPos,
+                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma)
+                },
+                {
+                    x: d.lastX,
+                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma)
+                },
+                {
+                    x: d.lastX,
+                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma) + lineUpLength
+                }
+            ]
+
+            console.log(`(${perpendicularPoints[0].x}, ${perpendicularPoints[0].y}) -> (${x(perpendicularPoints[0].x)}, ${y(perpendicularPoints[0].y)})`)
+            console.log(`(${perpendicularPoints[1].x}, ${perpendicularPoints[1].y}) -> (${x(perpendicularPoints[1].x)}, ${y(perpendicularPoints[1].y)})`)
+
+            const playerStatsBox = svg.insert("g", `#point${d.i}`)
+                .attr("id", "playerStatsDrawing")
+
+            playerStatsBox.append("path")
+                .datum(perpendicularPoints)
+                .attr("stroke", "black")
+                .attr("fill", "none")
+                .attr("d", hoverLine)
+
+            playerStatsBox.append("foreignObject")
+                .attr("id", `playerStatsBox`)
+                .attr("x", x(d.lastX) - statsBoxWidth / 2)
+                .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight - 10)
+                .attr("width", statsBoxWidth)
+                .attr("height", statsBoxHeight)
+                .html(ReactDOMServer.renderToStaticMarkup(
+                    <div style={{margin: "5px", height: "100%"}}>
+                        {/*<Card style={{position: "absolute", bottom: 0}} fluid>*/}
+                        <Card style={{height: "100%"}} fluid>
+                            {/*<Image src={profile_pic} wrapped ui={false} avatar style={{width: "50px", height: "50px"}}/>*/}
+                            <Card.Content>
+                                <Card.Header>
+                                    <Image src={profile_pic} wrapped ui={false} avatar/>
+                                    {d.stats.discordId}
+                                </Card.Header>
+                                <Card.Meta>
+                                    <span className='date'>First Gather: 2015</span>
+                                </Card.Meta>
+                                <Card.Description>
+                                    <List divided relaxed>
+                                        {d.stats.lastGames.map(game => {
+                                            return (
+                                                <List.Item key={game.startTime}>
+                                                    <List.Content>
+                                                        <List.Description as='a'>
+                                                            {game.blueRoundWins} - {game.redRoundWins} ({moment.duration(moment().milliseconds() - (game.startTime / 1000)).humanize()} ago)
+                                                        </List.Description>
+                                                    </List.Content>
+                                                </List.Item>
+                                            )
+                                        })}
+
+                                    </List>
+                                </Card.Description>
+                            </Card.Content>
+                            {/*<Card.Content extra>*/}
+                            {/*    <a>*/}
+                            {/*        <Icon name='user'/>*/}
+                            {/*        22 Friends*/}
+                            {/*    </a>*/}
+                            {/*</Card.Content>*/}
+                        </Card>
+                    </div>
+                ))
+            // .attr("class", "ui segment")
+            // .attr("xmlns", "http://www.w3.org/1999/xhtml")
+            // .text("hello there")
+
+
+            // playerStatsBox.append("div")
+            //     .attr("class", "ui segment")
+            //     .append("p")
+            //     .text("hello")
         }
+
+        let toggled = false
 
         const handleMouseOutPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             d3.select(`#uncertaintyArea${d.i}`).remove();
             d3.select(`#clipPath`).remove();
+
+            if (!toggled) {
+                d3.select(`#playerStatsDrawing`).remove();
+            }
+
             pathFullOpacity.style("visibility", "hidden")
             circles
                 .filter((_, i) => i !== d.i)
@@ -246,9 +411,47 @@ export function Ratings({ratings}: Props) {
                 .style("opacity", "1")
         }
 
+        const handleMouseClickPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
+            toggled = !toggled
+
+            const statsBox = d3.select(`#playerStatsBox`)
+
+            const width = parseInt(statsBox.attr("width"))
+            const height = parseInt(statsBox.attr("height"))
+
+            if (toggled) {
+                // statsBox.select(".card")
+                //     .style("bottom", null)
+                //     .style("top", "0")
+
+                statsBox
+                    .transition()
+                    .duration(1000)
+                    .attr("width", width * 3)
+                    .attr("height", height * 1.4)
+                    // .attr("x", margin.left)
+                    // .attr("y", margin.top)
+            } else {
+                // statsBox.select(".card")
+                //     .style("bottom", "0")
+                //     .style("top", null)
+
+                statsBox
+                    .transition()
+                    .duration(1000)
+                    .attr("width", statsBoxWidth)
+                    .attr("height", statsBoxHeight)
+                    // .attr("x", x(d.lastX) - statsBoxWidth / 2)
+                    // .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight - 10)
+            }
+        }
+
         circles
             .on("mouseover", handleMouseOverPoint)
             .on("mouseout", handleMouseOutPoint)
+            .on("click", handleMouseClickPoint)
+        // .on("mouseup", handleMouseOverPoint)
+        // .on("mouseout", handleMouseOutPoint)
 
     }, [ratings, d3Container.current, alignment])
 
