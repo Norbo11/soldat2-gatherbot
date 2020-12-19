@@ -254,36 +254,40 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             fetchNewUser(d.stats.discordId)
             const user = userCache[d.stats.discordId]
 
-            pathFullOpacity.style("visibility", "visible")
+            if (user !== undefined) {
+                // Fade out all other circles
+                circles
+                    .filter((_, i) => i !== d.i)
+                    .transition()
+                    .duration(1000)
+                    .style("opacity", "0")
 
-            // Interpolate a rectangular clipPath which will smoothly reveal the area underneath our point
-            let clipPath = svg.append("clipPath")
-                .attr("id", `clipPath`)
-                .append("path")
-                .datum([d.left, d.right]) // I think this is "datum" not "data" because we are drawing just 1 path
-                .attr("class", "area")
-                .attr("d", d3.area<number>()
-                    .x(x(d.left))
-                    .y0(y(0))
-                    .y1(y(1))
-                )
-                .transition()
-                .ease(d3.easePoly)
-                .duration(1000)
-                .attr("d", d3.area<number>()
-                    .x(d => x(d))
-                    .y0(y(0))
-                    .y1(y(1))
-                )
+                // Make the "full opacity" version of the background visible
+                pathFullOpacity.style("visibility", "visible")
 
-            // Fade out all other circles
-            circles
-                .filter((_, i) => i !== d.i)
-                .transition()
-                .duration(1000)
-                .style("opacity", "0")
+                // Interpolate a rectangular clipPath which will smoothly reveal the area underneath our point
+                svg.append("clipPath")
+                    .attr("id", `clipPath`)
+                    .append("path")
+                    .datum([d.left, d.right]) // I think this is "datum" not "data" because we are drawing just 1 path
+                    .attr("class", "area")
+                    .attr("d", d3.area<number>()
+                        .x(x(d.left))
+                        .y0(y(0))
+                        .y1(y(1))
+                    )
+                    .transition()
+                    .ease(d3.easePoly)
+                    .duration(1000)
+                    .attr("d", d3.area<number>()
+                        .x(d => x(d))
+                        .y0(y(0))
+                        .y1(y(1))
+                    )
+            }
 
-            // Draw the player stats drawing (with a line going out from the point)
+            // Draw the player stats drawing (with a line going out from the point). We do this even before
+            // we've loaded a user, in order to show the loading bar
             let hoverLine = d3.line<HoverLinePoint>()
                 .x(d => x(d.x))
                 .y(d => y(d.y));
