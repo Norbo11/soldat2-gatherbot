@@ -452,7 +452,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         circles
             .on("mouseover", handleMouseOverPoint)
             .on("mouseout", handleMouseOutPoint)
-            .on("click", handleMouseClickPoint)
+            // TODO: Re-enable when ready
+            // .on("click", handleMouseClickPoint)
 
     }, [ratings, d3Container.current, alignment, userCache])
 
@@ -468,6 +469,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     return (
         <div>
             <h1>Soldat 2 Gather Ratings</h1>
+            <p>Note: this site is currently under construction. It will contain a lot more than just this graph.
+            Send your suggestions to Norbo!</p>
 
             <Container>
                 <Form>
