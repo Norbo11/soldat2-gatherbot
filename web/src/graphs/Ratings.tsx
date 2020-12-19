@@ -122,9 +122,9 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         const points: EnrichedPoint[] = ratings.map((d, i) => {
             const left = d.mu - 3 * d.sigma
             const right = d.mu + 3 * d.sigma
-            const muPercentage = jStat.normal.cdf(d.mu, globalMu, globalSigma) * 100
-            const leftPercentage = jStat.normal.cdf(left, globalMu, globalSigma) * 100
-            const rightPercentage = jStat.normal.cdf(right, globalMu, globalSigma) * 100
+            const muPercentage = jStat.normal.cdf(d.mu, globalMu, globalSigma)
+            const leftPercentage = jStat.normal.cdf(left, globalMu, globalSigma)
+            const rightPercentage = jStat.normal.cdf(right, globalMu, globalSigma)
 
             let xPos
 
@@ -262,6 +262,77 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                     .duration(1000)
                     .style("opacity", "0")
 
+                // Draw an arrow
+                const arrowLine = d3.line<HoverLinePoint>()
+                    .x(d => x(d.x))
+                    .y(d => y(d.y));
+
+                const arrow = (x: number, y: number, arrowWidth: number, right = false) => {
+                    return [
+                        {
+                            x: right ? d.right - arrowWidth : d.left + arrowWidth,
+                            y: 0.06 * maxDensity
+                        },
+                        {
+                            x,
+                            y
+                        },
+                        {
+                            x: right ? d.right - arrowWidth : d.left + arrowWidth,
+                            y: 0.03 * maxDensity
+                        },
+                        {
+                            x,
+                            y
+                        },
+                    ]
+                }
+
+                const gapBetweenEdgeAndArrows = 1
+                const arrowYPosition = 0.045 * maxDensity
+
+                const arrowLinePoints = [
+                    // {
+                    //     x: d.mu,
+                    //     y: jStat.normal.pdf(d.mu, globalMu, globalSigma)
+                    // },
+                    // {
+                    //     x: d.mu,
+                    //     y: 0.045 * maxDensity
+                    // },
+                    {
+                        x: d.left + gapBetweenEdgeAndArrows,
+                        y: 0.045 * maxDensity
+                    },
+                    ...arrow(d.left + gapBetweenEdgeAndArrows, arrowYPosition, 1.5),
+                    {
+                        x: d.right - gapBetweenEdgeAndArrows,
+                        y: 0.045 * maxDensity
+                    },
+                    ...arrow(d.right - gapBetweenEdgeAndArrows, arrowYPosition, 1.5, true),
+                ]
+
+                const arrowLineGroup = svg.append("g")
+                    .attr("id", "arrowLine")
+                    .attr("clip-path", "url(#clipPath)")
+
+                arrowLineGroup.append("path")
+                    .datum(arrowLinePoints)
+                    .attr("stroke", "black")
+                    .attr("fill", "none")
+                    .attr("d", arrowLine)
+                    .attr("clip-path", "url(#clipPath)")
+
+                arrowLineGroup.append("text")
+                    .attr("x", x(d.left + gapBetweenEdgeAndArrows + 0.5))
+                    .attr("y", y(arrowYPosition) - 22)
+                    .text(`TrueSkill: ${d.left.toFixed(2)} - ${d.right.toFixed(2)}`)
+
+                arrowLineGroup.append("text")
+                    .attr("x", x(d.left + gapBetweenEdgeAndArrows + 0.5))
+                    .attr("y", y(arrowYPosition) - 10)
+                    .text(`Better than ${(d.leftPercentage * 100).toFixed(1)}% - ${(d.rightPercentage * 100).toFixed(1)}%`)
+
                 // Make the "full opacity" version of the background visible
                 pathFullOpacity.style("visibility", "visible")
 
@@ -333,6 +404,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         const handleMouseOutPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             d3.select(`#uncertaintyArea${d.i}`).remove();
             d3.select(`#clipPath`).remove();
+            d3.select(`#arrowLine`).remove();
 
             if (!boxToggles[d.i]) {
                 d3.select(`#playerStatsDrawing${d.i}`)
@@ -342,7 +414,10 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                     .remove()
             }
 
+            // Hide the full opacity area
             pathFullOpacity.style("visibility", "hidden")
+
+            // Make faded-out circles visible again
             circles
                 .filter((_, i) => i !== d.i)
                 .transition()
@@ -405,7 +480,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                         <label>Point Alignment</label>
                         <Form.Radio
                             inline
-                            label={"Lower Ratings Estimate"}
+                            label={"Lower TrueSkill Estimate"}
                             value={"left"}
                             checked={alignment === "left"}
                             onChange={(e, {value}) => setAlignment(value as string)}
@@ -419,7 +494,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                         />
                         <Form.Radio
                             inline
-                            label={"Upper Ratings Estimate"}
+                            label={"Upper TrueSkill Estimate"}
                             value={"right"}
                             checked={alignment === "right"}
                             onChange={(e, {value}) => setAlignment(value as string)}
