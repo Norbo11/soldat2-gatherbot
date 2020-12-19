@@ -39,7 +39,13 @@ export interface RatingResponse {
 
 export interface UserResponse {
     avatarUrl: string,
-    displayName: string
+    displayName: string,
+    playerStats: {
+        totalGames: number,
+        totalRounds: number,
+        wonGames: number,
+        firstGameTimestamp: number
+    }
 }
 
 export const fetchAllRatings = async (): Promise<RatingResponse[]> => {

@@ -4,7 +4,7 @@ import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse} from "../util/api";
-import {Card, Form, Image, List, Loader} from "semantic-ui-react";
+import {Button, Card, Form, Icon, Image, List, Loader} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 import moment from "moment"
 import {UserCache} from "../App";
@@ -96,7 +96,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const figureHeight = 800
 
     const statsBoxWidth = 250
-    const statsBoxHeight = 150
+    const statsBoxHeight = 300
     const lineLength = 20
 
     useDeepCompareEffect(() => {
@@ -258,6 +258,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("cy", d => y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)))
             .attr("r", 6)
 
+        const boxToggles = points.map(_ => false)
+
         const handleMouseOverPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             pathFullOpacity.style("visibility", "visible")
 
@@ -325,10 +327,15 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             console.log(`(${perpendicularPoints[0].x}, ${perpendicularPoints[0].y}) -> (${x(perpendicularPoints[0].x)}, ${y(perpendicularPoints[0].y)})`)
             console.log(`(${perpendicularPoints[1].x}, ${perpendicularPoints[1].y}) -> (${x(perpendicularPoints[1].x)}, ${y(perpendicularPoints[1].y)})`)
 
-            const playerStatsBox = svg.insert("g", `#point${d.i}`)
-                .attr("id", "playerStatsDrawing")
+            const playerStatsDrawing = svg.insert("g", `#points${d.i}`)
+                .attr("id", `playerStatsDrawing${d.i}`)
+                .style("opacity", "0")
 
-            playerStatsBox.append("path")
+            playerStatsDrawing.transition()
+                .duration(1000)
+                .style("opacity", "1")
+
+            playerStatsDrawing.append("path")
                 .datum(perpendicularPoints)
                 .attr("stroke", "black")
                 .attr("fill", "none")
@@ -337,14 +344,29 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             fetchNewUser(d.stats.discordId)
             const user = userCache[d.stats.discordId]
 
-            playerStatsBox.append("foreignObject")
-                .attr("id", `playerStatsBox`)
+            const onCloseClick = () => {
+                console.log("clicked")
+                d3.select(`#playerStatsDrawing${d.i}`)
+                    .remove()
+                    // .transition()
+                    // .duration(1000)
+                    // .attr("width", statsBoxWidth)
+                    // .attr("height", statsBoxHeight)
+            }
+
+            if (user !== undefined) {
+                console.log(moment().valueOf())
+                console.log(user.playerStats.firstGameTimestamp)
+            }
+
+            playerStatsDrawing.append("foreignObject")
+                .attr("id", `playerStatsBox${d.i}`)
                 .attr("x", x(d.lastX) - statsBoxWidth / 2)
-                .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight - 10)
+                .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight / 2)
                 .attr("width", statsBoxWidth)
                 .attr("height", statsBoxHeight)
                 .html(ReactDOMServer.renderToStaticMarkup(
-                    <div style={{margin: "5px", height: "100%"}}>
+                    <div style={{margin: "5px", height: "95%"}}>
                         {/*<Card style={{position: "absolute", bottom: 0}} fluid>*/}
                         {user !== undefined ? <Card style={{height: "100%"}} fluid>
                             {/*<Image src={profile_pic} wrapped ui={false} avatar style={{width: "50px", height: "50px"}}/>*/}
@@ -354,16 +376,37 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                                     {user.displayName}
                                 </Card.Header>
                                 <Card.Meta>
-                                    <span className='date'>First Gather: 2015</span>
+                                    <span className='date'>First Gather: {moment(user.playerStats.firstGameTimestamp).format("DD-MM-YYYY")}</span>
                                 </Card.Meta>
-                                <Card.Description>
+                                <Card.Content>
+                                    <List>
+                                        <List.Item>
+                                            <List.Icon name={"gamepad"} />
+                                            <List.Content>
+                                                Games Played: {user.playerStats.totalGames}
+                                            </List.Content>
+                                        </List.Item>
+                                        <List.Item>
+                                            <List.Icon name={"gamepad"} />
+                                            <List.Content>
+                                                Rounds Played: {user.playerStats.totalRounds}
+                                            </List.Content>
+                                        </List.Item>
+                                        <List.Item>
+                                            <List.Icon name={"trophy"} />
+                                            <List.Content>
+                                                Games Won: {user.playerStats.wonGames}
+                                            </List.Content>
+                                        </List.Item>
+                                    </List>
                                     <List divided relaxed>
+                                        <p>Last 5 Games</p>
                                         {d.stats.lastGames.map(game => {
                                             return (
                                                 <List.Item key={game.startTime}>
                                                     <List.Content>
                                                         <List.Description as='a'>
-                                                            {game.blueRoundWins} - {game.redRoundWins} ({moment.duration(moment().milliseconds() - (game.startTime / 1000)).humanize()} ago)
+                                                            {game.blueRoundWins} - {game.redRoundWins} ({moment.duration(moment().valueOf() - game.startTime).humanize()} ago)
                                                         </List.Description>
                                                     </List.Content>
                                                 </List.Item>
@@ -371,7 +414,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                                         })}
 
                                     </List>
-                                </Card.Description>
+                                </Card.Content>
                             </Card.Content>
                             {/*<Card.Content extra>*/}
                             {/*    <a>*/}
@@ -386,6 +429,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                         )}
                     </div>
                 ))
+
+            // playerStatsDrawing.on("mouseout", onCloseClick)
             // .attr("class", "ui segment")
             // .attr("xmlns", "http://www.w3.org/1999/xhtml")
             // .text("hello there")
@@ -397,14 +442,16 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             //     .text("hello")
         }
 
-        let toggled = false
-
         const handleMouseOutPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             d3.select(`#uncertaintyArea${d.i}`).remove();
             d3.select(`#clipPath`).remove();
 
-            if (!toggled) {
-                d3.select(`#playerStatsDrawing`).remove();
+            if (!boxToggles[d.i]) {
+                d3.select(`#playerStatsDrawing${d.i}`)
+                    .transition()
+                    .duration(1000)
+                    .style("opacity", 0)
+                    .remove()
             }
 
             pathFullOpacity.style("visibility", "hidden")
@@ -416,14 +463,14 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         }
 
         const handleMouseClickPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
-            toggled = !toggled
+            boxToggles[d.i] = !boxToggles[d.i]
 
-            const statsBox = d3.select(`#playerStatsBox`)
+            const statsBox = d3.select(`#playerStatsBox${d.i}`)
 
             const width = parseInt(statsBox.attr("width"))
             const height = parseInt(statsBox.attr("height"))
 
-            if (toggled) {
+            if (boxToggles[d.i]) {
                 // statsBox.select(".card")
                 //     .style("bottom", null)
                 //     .style("top", "0")

@@ -1,4 +1,5 @@
 import _ from "lodash"
+import stats from "../game/stats";
 
 export default {
     routes: [
@@ -22,7 +23,7 @@ export default {
                         mu,
                         sigma,
                         lastGames,
-                        ratingUpdates
+                        ratingUpdates,
                     })
                 }
 
@@ -36,10 +37,12 @@ export default {
                 const discordId = req.params.discordId
                 const user = await currentDiscordChannel.client.fetchUser(discordId)
                 const member = await currentDiscordChannel.guild.member(user)
+                const playerStats = await stats.getPlayerStats(currentStatsDb, discordId)
 
                 const result = {
                     avatarUrl: user.displayAvatarURL,
-                    displayName: member !== null ? member.displayName : user.username
+                    displayName: member !== null ? member.displayName : user.username,
+                    playerStats
                 }
 
                 res.json(result)
