@@ -15,8 +15,8 @@
     "main": "index.js",
     "dependencies": {
         "binary-parser": "1.6.2",
-        "discord.js": "11.0.0",
         "cors": "^2.8.5",
+        "discord.js": "11.0.0",
         "dotenv": "8.2.0",
         "express": "^5.0.0-alpha.8",
         "glob": "^7.1.6",

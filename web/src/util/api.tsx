@@ -37,7 +37,15 @@ export interface RatingResponse {
     lastGames: Game[]
 }
 
+export interface UserResponse {
+    avatarUrl: string,
+    displayName: string
+}
 
 export const fetchAllRatings = async (): Promise<RatingResponse[]> => {
     return (await fetch(`${API_URL}/ratings/all`)).json()
+}
+
+export const fetchUser = async (discordId: string): Promise<UserResponse> => {
+    return (await fetch(`${API_URL}/ratings/user/${discordId}`)).json()
 }

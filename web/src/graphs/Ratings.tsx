@@ -1,14 +1,14 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import ReactDOMServer from "react-dom/server"
 import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse} from "../util/api";
-import _ from "lodash"
-import {Card, Checkbox, Form, Grid, Icon, Image, Input, List, Loader, Radio, Segment} from "semantic-ui-react";
+import {Card, Form, Image, List, Loader} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import profile_pic from "../images/profile_pic.jpg"
 import moment from "moment"
+import {UserCache} from "../App";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
 interface NormalPoint {
     x: number,
@@ -38,7 +38,9 @@ interface EnrichedPoint extends InputPoint {
 }
 
 interface Props {
-    ratings: RatingResponse[]
+    ratings: RatingResponse[],
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void
 }
 
 
@@ -86,7 +88,7 @@ const straightLinePoints = (m: number, c: number, x: number) => {
     }
 }
 
-export function Ratings({ratings}: Props) {
+export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const d3Container = useRef(null)
     const [alignment, setAlignment] = useState("left")
 
@@ -97,7 +99,7 @@ export function Ratings({ratings}: Props) {
     const statsBoxHeight = 150
     const lineLength = 20
 
-    useEffect(() => {
+    useDeepCompareEffect(() => {
 
         const percentageForAlignment = (d: EnrichedPoint) => {
             if (alignment === "left") {
@@ -108,11 +110,6 @@ export function Ratings({ratings}: Props) {
                 return d.muPercentage
             }
         }
-
-        const xPositionForAlignment = (d: EnrichedPoint) => {
-
-        }
-
 
         if (!d3Container.current) {
             return
@@ -337,6 +334,9 @@ export function Ratings({ratings}: Props) {
                 .attr("fill", "none")
                 .attr("d", hoverLine)
 
+            fetchNewUser(d.stats.discordId)
+            const user = userCache[d.stats.discordId]
+
             playerStatsBox.append("foreignObject")
                 .attr("id", `playerStatsBox`)
                 .attr("x", x(d.lastX) - statsBoxWidth / 2)
@@ -346,12 +346,12 @@ export function Ratings({ratings}: Props) {
                 .html(ReactDOMServer.renderToStaticMarkup(
                     <div style={{margin: "5px", height: "100%"}}>
                         {/*<Card style={{position: "absolute", bottom: 0}} fluid>*/}
-                        <Card style={{height: "100%"}} fluid>
+                        {user !== undefined ? <Card style={{height: "100%"}} fluid>
                             {/*<Image src={profile_pic} wrapped ui={false} avatar style={{width: "50px", height: "50px"}}/>*/}
                             <Card.Content>
                                 <Card.Header>
-                                    <Image src={profile_pic} wrapped ui={false} avatar/>
-                                    {d.stats.discordId}
+                                    <Image src={user.avatarUrl} wrapped ui={false} avatar/>
+                                    {user.displayName}
                                 </Card.Header>
                                 <Card.Meta>
                                     <span className='date'>First Gather: 2015</span>
@@ -379,7 +379,11 @@ export function Ratings({ratings}: Props) {
                             {/*        22 Friends*/}
                             {/*    </a>*/}
                             {/*</Card.Content>*/}
-                        </Card>
+                        </Card> : (
+                            <Dimmer active inverted>
+                                <Loader inverted>Loading player...</Loader>
+                            </Dimmer>
+                        )}
                     </div>
                 ))
             // .attr("class", "ui segment")
@@ -429,8 +433,8 @@ export function Ratings({ratings}: Props) {
                     .duration(1000)
                     .attr("width", width * 3)
                     .attr("height", height * 1.4)
-                    // .attr("x", margin.left)
-                    // .attr("y", margin.top)
+                // .attr("x", margin.left)
+                // .attr("y", margin.top)
             } else {
                 // statsBox.select(".card")
                 //     .style("bottom", "0")
@@ -441,8 +445,8 @@ export function Ratings({ratings}: Props) {
                     .duration(1000)
                     .attr("width", statsBoxWidth)
                     .attr("height", statsBoxHeight)
-                    // .attr("x", x(d.lastX) - statsBoxWidth / 2)
-                    // .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight - 10)
+                // .attr("x", x(d.lastX) - statsBoxWidth / 2)
+                // .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight - 10)
             }
         }
 
@@ -453,7 +457,7 @@ export function Ratings({ratings}: Props) {
         // .on("mouseup", handleMouseOverPoint)
         // .on("mouseout", handleMouseOutPoint)
 
-    }, [ratings, d3Container.current, alignment])
+    }, [ratings, d3Container.current, alignment, userCache])
 
     // Prevent double-rendering
     if (ratings.length === 0) {
