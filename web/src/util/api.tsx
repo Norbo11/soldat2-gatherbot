@@ -45,7 +45,9 @@ export interface UserResponse {
         totalRounds: number,
         wonGames: number,
         firstGameTimestamp: number
-    }
+    },
+    ratingChanges: object,
+    sortedGames: Game[]
 }
 
 export const fetchAllRatings = async (): Promise<RatingResponse[]> => {
