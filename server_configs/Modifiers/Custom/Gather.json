@@ -37,6 +37,14 @@
         "WeaponryPrefab": "StandardWeaponry",
         "ShowWeaponry": true
       },
+      "SpawnLoadout": {
+        "InitialWeapon": "",
+        "InitialWeapon2": "",
+        "Grenades": 1,
+        "GrenadesMax": 2,
+        "GrenadeType": "RGD5",
+        "RandomIfNotAvailable": true
+      },
     }
   },
   "Meta": {
