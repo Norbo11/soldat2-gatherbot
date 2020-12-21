@@ -22,8 +22,12 @@ trueSkill.beta = trueSkill.sigma / 2
 // Tau: determines how easy it is for a player to move up or down the leaderboard, i.e. how "dynamic" the scores are
 trueSkill.tau = trueSkill.sigma / 100
 
-// Draw probability: how many gathers will draw on average, as a percentage? Keeping this default for now
+// Draw probability: how many rounds will draw on average, as a percentage? Keeping this default for now
 trueSkill.drawProbability = 0.1
+
+
+const NEW_PLAYER_MU = 45
+const NEW_PLAYER_SIGMA = trueSkill.sigma
 
 
 const getRating = (ratingMu, ratingSigma) => {
@@ -32,7 +36,7 @@ const getRating = (ratingMu, ratingSigma) => {
 
 
 const createRating = () => {
-    return trueSkill.createRating()
+    return trueSkill.createRating(NEW_PLAYER_MU, NEW_PLAYER_SIGMA)
 }
 
 
