@@ -1,0 +1,28 @@
+[Unit]
+Description=Soldat 2 Gather Bot and Server
+
+# Need the network and MongoDB
+After=network.target mongod.service
+
+# If you fail to start more than 3 times within 300 seconds, stop trying to restart this service
+StartLimitBurst=3
+StartLimitIntervalSec=300
+
+[Service]
+Type=simple
+
+# Always restart
+Restart=always
+
+# Restart after 90 secs to let server ports clear
+RestartSec=90
+
+# Allow 10 seconds for clean shutdown, then SIGKILL
+TimeoutStopSec=10s
+
+User=norbz
+WorkingDirectory=/home/norbz/repos/soldat2-gatherbot
+ExecStart=/home/norbz/.nvm/versions/node/v14.3.0/bin/node --experimental-specifier-resolution=node index.js
+
+[Install]
+WantedBy=multi-user.target

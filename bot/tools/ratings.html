@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8">
+<style>
+
+    body {
+        font: 10px sans-serif;
+    }
+
+    .line {
+        stroke: #000;
+        stroke-width: 1.5px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+</style>
+<body>
+<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://cdn.jsdelivr.net/jstat/latest/jstat.min.js"></script>
+<script>
+    function normal(mean, sd, start = mean - 4 * sd, end = mean + 4 * sd) {
+        data = [];
+        for (let i = start; i <= end; i += 1) {
+            data.push({
+                x: i,
+                density: jStat.normal.pdf(i, mean, sd)
+            });
+        };
+        return data;
+    }
+
+
+    let globalMu = 50
+    let globalSigma = 50 / 3
+
+    const inputPoints = [
+        {
+            mu: 30,
+            sigma: 3,
+            i: 0
+        },
+        {
+            mu: 50,
+            sigma: 5,
+            i: 1
+        },
+    ]
+
+    const points = inputPoints.map((d, i) => {
+        const left = d.mu - 3 * d.sigma
+        const right = d.mu + 3 * d.sigma
+        const percentage = jStat.normal.cdf(d.mu, globalMu, globalSigma) * 100
+
+        return {
+            i,
+            mu: d.mu,
+            sigma: d.sigma,
+            left,
+            right,
+            percentage
+        }
+    })
+
+    let figureWidth = this.innerWidth - 100
+    let figureHeight = this.innerHeight - 100
+
+    let margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = figureWidth - margin.left - margin.right,
+        height = figureHeight - margin.top - margin.bottom;
+
+    let normalPoints = normal(globalMu, globalSigma);
+
+    let minX = d3.min(normalPoints, d => d.x);
+    let maxX = d3.max(normalPoints, d => d.x);
+    let maxDensity = d3.max(normalPoints, d => d.density);
+
+    // Return a function that maps our q values to the width of our graph
+    let x = d3.scaleLinear()
+            .rangeRound([0, width])
+            .domain([minX, maxX])
+
+    x.domain().nice;  // This extends the domain so that it starts and ends on nice round values
+
+    // Return a function that maps our p values to the height of our graph
+    let y = d3.scaleLinear()
+        .domain([0, maxDensity])
+        .range([height, 0]);  // Height comes first because origin is at the top left of the graph
+
+    let svg = d3.select("body")
+
+        // Create an SVG with a given width and height
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+
+        // Create a group of elements and apply margins
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Create a group for the X axis
+    let gX = svg.append("g")
+        .attr("class", "x axis")
+
+        // Move it to the bottom of the graph
+        .attr("transform", "translate(0," + height + ")")
+
+        // Call the "axis" function over our xAxis group
+        // The axis function is a "generator" which will generate the SVG elements that draw our axis
+        .call(d3.axisBottom(x));
+
+    // TODO: Ask the community about which of these colors is better
+    const colorScale = d3.scaleLinear()
+        // .domain([0, 50, 100])
+        .domain([0, 100])
+        // .range(["green", "red"])
+        // .range()
+        // .range(["#24c6dc", "#514a9d"])
+        // .range([d3.color("#24c6dc").darker(), d3.color("#514a9d").darker()])
+        .range([d3.color("#24c6dc").brighter(), d3.color("#514a9d").darker()])
+        // .range(["#1FA2FF", "#12D8FA", "#A6FFCB"])
+        // .range(["#1A2980", "#26D0CE"])
+        // .range(["#E55D87", "#5FC3E4"])
+
+
+    // Create a line where we map a datapoint to its X, Y location using the earlier scale
+    let line = d3.line()
+        .x(d => x(d.x))
+        .y(d => y(d.density));
+
+    // Append a linear gradient
+    svg.append("linearGradient")
+        .attr("id", "bellCurveGradient")
+        .selectAll("stop")
+        .data(normalPoints.map(x => {
+            const percentage = (jStat.normal.cdf(x.x, globalMu, globalSigma) * 100)
+            return {
+                offset: `${percentage}%`,
+                // Uncomment this to see what a regular gardient would look like without our "gaussian" gradient
+                // offset: `${x.x}%`
+                color: colorScale(percentage)
+            }
+        }))
+        .enter().append("stop")
+            .attr("offset", d => d.offset)
+            .attr("stop-color", d => d.color)
+
+    // Draw the lines, with fill
+    const path = svg.append("path")
+        .datum(normalPoints)
+        .attr("class", "line")
+        .attr("d", line)
+        .style("fill", "url(#bellCurveGradient)")
+        .style("opacity", "0.80")
+
+    const pathFullOpacity = svg.append("path")
+        .datum(normalPoints)
+        .attr("class", "line")
+        .attr("d", line)
+        .style("fill", "url(#bellCurveGradient)")
+        .style("opacity", "1.0")
+        .style("visibility", "hidden")
+        .attr("clip-path", `url(#clipPath)`) // Assign to our earlier clip path
+
+
+    const circles = svg.selectAll("circles")
+        .data(points)
+        .enter()
+        .append("circle")
+            .attr("class", "point")
+            .attr("id", (d, i) => `point${i}`)
+            .attr("fill", d => colorScale(d.percentage))
+            .attr("stroke", "black")
+            .attr("cx", d => x(d.left))
+            .attr("cy", d => y(jStat.normal.pdf(d.left, globalMu, globalSigma)))
+            .attr("r", 6)
+
+    const handleMouseOverPoint = (e, d) => {
+        pathFullOpacity.style("visibility", "visible")
+
+        // Interpolate a rectangular clipPath which will smoothly reveal the area underneath our point
+        let clipPath = svg.append("clipPath")
+            .attr("id", `clipPath`)
+            .append("path")
+            .datum([d.left, d.right]) // I think this is "datum" not "data" because we are drawing just 1 path
+            .attr("class", "area")
+            .attr("d", d3.area()
+                .x(x(d.left))
+                .y0(y(0))
+                .y1(y(1))
+            )
+            .transition()
+            .ease(d3.easePoly)
+            .duration(1000)
+            .attr("d", d3.area()
+                .x(d => x(d))
+                .y0(y(0))
+                .y1(y(1))
+            )
+
+        circles
+            .filter((_, i) => i !== d.i)
+            .transition()
+            .duration(1000)
+            .style("opacity", "0")
+    }
+
+    const handleMouseOutPoint = (e, d) => {
+        d3.select(`#uncertaintyArea${d.i}`).remove();
+        d3.select(`#clipPath`).remove();
+        pathFullOpacity.style("visibility", "hidden")
+        circles
+            .filter((_, i) => i !== d.i)
+            .transition()
+            .duration(1000)
+            .style("opacity", "1")
+    }
+
+    circles
+        .on("mouseover", handleMouseOverPoint)
+        .on("mouseout", handleMouseOutPoint)
+
+</script>

@@ -1,0 +1,1356 @@
+{
+  "Objects": {
+    "ctf_berry": {
+      "MapSettings": {
+        "Scene": "laos",
+        "Author": "Leon",
+        "Seed": 0,
+        "Generate": false,
+        "Mirror": true,
+        "Scale": {
+          "x": 3.5,
+          "y": 2.2,
+          "z": 2.0
+        },
+        "HeightAdd": 5,
+        "MonumentOffset": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "HueShift": 0.001,
+        "SaturationShift": 0.165,
+        "BrightnessShift": -0.275,
+        "SunIntensityShift": -0.142,
+        "SunVerticalAngle": 165.879,
+        "SunHorizontalAngle": 195.67
+      },
+      "VoxelMap3D": {
+        "WorldWidth": 5,
+        "WorldHeight": 6,
+        "PlatformsMaxHeight": 16,
+        "NoiseFrequency": 0.1,
+        "MainNoiseType": 4,
+        "BiomeNoiseType": 6,
+        "BaseTopDownGradient": 1.0,
+        "BaseTopBottomGradient": false,
+        "Paths": [
+          {
+            "Probability": 1.0,
+            "Height": 0.0,
+            "AboveGround": 5.0,
+            "HeightVariance": 7.0,
+            "AboveGroundVariance": 7.0,
+            "VarianceModulation": 0.0,
+            "NoiseFrequency": 0.1,
+            "NoiseType": 2
+          },
+          {
+            "Probability": 1.0,
+            "Height": 0.0,
+            "AboveGround": 7.0,
+            "HeightVariance": 14.0,
+            "AboveGroundVariance": 6.0,
+            "VarianceModulation": 11.0,
+            "NoiseFrequency": 0.3,
+            "NoiseType": 8
+          },
+          {
+            "Probability": 1.0,
+            "Height": 1.0,
+            "AboveGround": -6.0,
+            "HeightVariance": 6.0,
+            "AboveGroundVariance": 6.0,
+            "VarianceModulation": 0.0,
+            "NoiseFrequency": 0.4,
+            "NoiseType": 8
+          }
+        ],
+        "VerticalPathProbability": 0.7,
+        "VerticalPathNeedsHorizontalLength": 14,
+        "VerticalPathOnlyToHole": true,
+        "VerticalWallProbability": 0.0,
+        "VerticalNoiseType": 6,
+        "VerticalNoiseFrequency": 0.15,
+        "VerticalNoiseThreshold": 0.0,
+        "VerticalSpaceOnSides": 0,
+        "VerticalSpaceInMiddle": 0,
+        "TerrainVoxelsModulation": 0.0,
+        "TerrainVoxelsOffset": 0.0,
+        "BiomeFrequency": 0.05,
+        "BiomeAffect": 0.5,
+        "DisturbanceNoiseType": 2,
+        "FrontDisturbance": 14.86,
+        "BackDisturbance": 0.9,
+        "DisturbanceFrequency": 2.8,
+        "DisturbanceSmoothDistance": 0.001,
+        "DisturbanceHoleFactor": 0.44,
+        "DisturbanceRound": 25,
+        "BackThreshold": 0.0,
+        "BackEdgeMinWidth": 5,
+        "ScrambleEdgesFrequency": 0.21,
+        "ScrambleSmoothFactor": 0.1,
+        "OverTopBackFrequency": 0.1,
+        "OverTopWallMaxHeight": 10.0,
+        "FinalRipple": 0.09,
+        "FinalVerticalSlope": 0.3,
+        "FinalVerticalFrequency": 0.04,
+        "FinalBackSlope": 0.1,
+        "HuffmanTiles": [
+          6,
+          2,
+          34,
+          2,
+          33,
+          2,
+          34,
+          2,
+          27,
+          2,
+          5,
+          2,
+          16,
+          2,
+          16,
+          2,
+          3,
+          8,
+          6,
+          2,
+          15,
+          6,
+          9,
+          1,
+          21,
+          3,
+          10,
+          2,
+          21,
+          3,
+          11,
+          3,
+          19,
+          2,
+          33,
+          2,
+          34,
+          2,
+          33,
+          3,
+          33,
+          3,
+          33,
+          2,
+          6,
+          1,
+          3,
+          1,
+          22,
+          4,
+          4,
+          6,
+          1,
+          1,
+          20,
+          4,
+          2,
+          10,
+          19,
+          6,
+          1,
+          10,
+          18,
+          7,
+          1,
+          10,
+          18,
+          7,
+          1,
+          10,
+          17,
+          8,
+          1,
+          10,
+          17,
+          8,
+          1,
+          10,
+          17,
+          8,
+          1,
+          10,
+          17,
+          8,
+          1,
+          2,
+          5,
+          3,
+          17,
+          8,
+          10,
+          1,
+          8,
+          3,
+          6,
+          7,
+          3,
+          2,
+          3,
+          2,
+          9,
+          3,
+          7,
+          6,
+          3,
+          9,
+          15,
+          9,
+          3,
+          1,
+          7,
+          1,
+          15,
+          9,
+          19,
+          4,
+          5,
+          5,
+          21,
+          7,
+          5,
+          2,
+          22,
+          9,
+          3,
+          1,
+          8,
+          9,
+          7,
+          12,
+          7,
+          11,
+          9,
+          9,
+          6,
+          13,
+          9,
+          8,
+          5,
+          15,
+          9,
+          8,
+          3,
+          17,
+          11,
+          26,
+          10,
+          27,
+          10,
+          27,
+          11,
+          30,
+          6,
+          72,
+          1,
+          4,
+          8,
+          2,
+          6,
+          4,
+          7,
+          4
+        ]
+      },
+      "MapBoundsHandling": {
+        "DestroyObjectsOutOfBoundsBottom": true,
+        "DestroyObjectsOutOfBoundsTop": false,
+        "DestroyObjectsOutOfBoundsLeft": false,
+        "DestroyObjectsOutOfBoundsRight": false,
+        "CollideObjectsOutOfBoundsBottom": false,
+        "CollideObjectsOutOfBoundsTop": false,
+        "CollideObjectsOutOfBoundsLeft": true,
+        "CollideObjectsOutOfBoundsRight": true
+      },
+      "TerrainGenerator": {
+        "GlobalOffset": 0.0,
+        "GlobalOffsetDepth": 0.0,
+        "GlobalRotation": 0.0,
+        "RandomlyGenerate": false,
+        "MainScale": 1.0,
+        "MainSteepnessScale": 1.0,
+        "Layers": [
+          {
+            "Scale": 244.9,
+            "Steepness": 0.2,
+            "NoiseType": 1
+          },
+          {
+            "Scale": 32.9,
+            "Steepness": 1.12,
+            "NoiseType": 0
+          }
+        ],
+        "DepthNoiseScale": 20.3,
+        "DepthNoiseSize": 6.9,
+        "RippleScale": 58.7,
+        "FinalRipple": -0.26,
+        "ScaleDepthByHeight": 0.0,
+        "ScaleDepthByHeightNoiseScale": 0.1,
+        "NormalsSmoothing": 0.0,
+        "UseCurves": true,
+        "TerrainCurve": [
+          27.596,
+          27.142,
+          26.627,
+          26.229,
+          25.693,
+          25.141,
+          24.7,
+          24.241,
+          23.969,
+          22.164,
+          23.212,
+          23.278,
+          23.278,
+          21.735,
+          18.387,
+          18.016,
+          18.016,
+          19.334,
+          18.318,
+          18.543,
+          18.036,
+          18.07,
+          17.958,
+          17.785,
+          17.262,
+          17.083,
+          17.083,
+          15.922,
+          15.632,
+          15.633,
+          14.64,
+          15.207,
+          15.369,
+          15.517,
+          16.151,
+          16.699,
+          16.783,
+          18.286,
+          18.947,
+          19.418,
+          20.152,
+          20.515,
+          20.569,
+          20.559,
+          20.622,
+          20.235,
+          19.313,
+          19.342,
+          19.235,
+          19.228,
+          19.629,
+          19.83,
+          20.175,
+          20.943,
+          21.69,
+          21.69,
+          21.715,
+          21.959,
+          22.224,
+          22.224,
+          22.213,
+          21.972,
+          20.561,
+          18.992,
+          18.484,
+          18.416,
+          18.534,
+          18.656,
+          19.65,
+          20.301
+        ],
+        "CurvesTangent": 0.5,
+        "FlattenMiddleWidth": 3
+      },
+      "MapObjects": {
+        "Objects": [
+          {
+            "Prefab": "rickety bridge",
+            "Position": {
+              "x": 113.9611,
+              "y": 44.7094,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+           {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 119.2267,
+              "y": 22.1888,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 245.6923
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false
+          },
+                    {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 109.7746,
+              "y": 79.7697,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 19.5775
+            },
+            "Scale": {
+              "x": 1.2396,
+              "y": 1.2396,
+              "z": 1.2396
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 53.2578,
+              "y": 59.2457,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 37.4055,
+              "y": 59.2746,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 94.5136,
+              "y": 29.1462,
+              "z": -0.9499
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "rickety ladder",
+            "Position": {
+              "x": 113.8069,
+              "y": 36.374,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "rickety ladder",
+            "Position": {
+              "x": 113.8099,
+              "y": 54.8695,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "rickety bridge",
+            "Position": {
+              "x": 108.6735,
+              "y": 35.2137,
+              "z": -1.9869
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.5779,
+              "y": 1.5779,
+              "z": 1.5779
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+                    {
+            "Prefab": "ramp",
+            "Position": {
+              "x": 115.4047,
+              "y": 79.2799,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 26.5818
+            },
+            "Scale": {
+              "x": 2.8789,
+              "y": 1.1667,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "nevadarockramp",
+            "Position": {
+              "x": 120.6485,
+              "y": 10.8062,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 15.6015,
+              "y": 64.8059,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 5.5967,
+              "y": 68.2339,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_curve_cshape_a-x2",
+            "Position": {
+              "x": 30.0944,
+              "y": 36.0807,
+              "z": 8.7848
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.7024
+            },
+            "Scale": {
+              "x": 10.9999,
+              "y": 13.2121,
+              "z": 12.6891
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 90.9644,
+              "y": 70.1278,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+                    {
+            "Prefab": "guard tower",
+            "Position": {
+              "x": 89.0601,
+              "y": 65.8583,
+              "z": -1.333
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "guard tower",
+            "Position": {
+              "x": 73.4373,
+              "y": 30.5289,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.8588,
+              "y": 1.8588,
+              "z": 1.8588
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 70.2253,
+              "y": 30.2231,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 76.8294,
+              "y": 30.2611,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 28.9743,
+              "y": 29.1683,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 299.9495
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 30.3752,
+              "y": 29.3092,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 13.1031
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 52.1088,
+              "y": 50.2976,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0542,
+              "y": 1.0542,
+              "z": 1.0542
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 38.59,
+              "y": 50.4716,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 0.9793,
+              "y": 0.9793,
+              "z": 0.9793
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 17.1636,
+              "y": 63.7372,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "basecamp",
+            "Position": {
+              "x": 45.6815,
+              "y": 50.1709,
+              "z": -0.9012
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 8.1381,
+              "y": 66.3203,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+                    {
+            "Prefab": "rickety ladder",
+            "Position": {
+              "x": 65.7991,
+              "y": 28.0473,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+                    {
+            "Prefab": "rickety ladder",
+            "Position": {
+              "x": 29.5202,
+              "y": 30.0056,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+	{
+            "Prefab": "guard tower",
+            "Position": {
+              "x": 113.7598,
+              "y": 16.9719,
+              "z": -3.6723
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 324.7951
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 2.1613
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+
+          {
+            "Prefab": "block_curve_cshape_a-x2",
+            "Position": {
+              "x": 116.1502,
+              "y": 80.1798,
+              "z": 0.0228
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 260.5197
+            },
+            "Scale": {
+              "x": 10.2619,
+              "y": 10.2619,
+              "z": 2.5348
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 108.8393,
+              "y": 92.23,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 334.1852
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": true,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 25.1792,
+              "y": 30.9084,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 25.1977,
+              "y": 32.7867,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 316.1608
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 23.6367,
+              "y": 34.3385,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 280.7729
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "nevadablock",
+            "Position": {
+              "x": 59.1158,
+              "y": 23.7115,
+              "z": -0.8977
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 23.4728
+            },
+            "Scale": {
+              "x": 1.1374,
+              "y": 1.1374,
+              "z": -1.6292
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 11.5444,
+              "y": 64.8869,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 8.5956,
+              "y": 65.4361,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 6.0231,
+              "y": 67.2665,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 3.0651,
+              "y": 69.1911,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 2.7726,
+              "y": 70.2638,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 102.9174,
+              "y": 28.6285,
+              "z": -1.4414
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 22.9343
+            },
+            "Scale": {
+              "x": 18.833,
+              "y": 23.23,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 122.5229,
+              "y": 23.0654,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 108.0939,
+              "y": 26.4571,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 332.6284
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 112.7206,
+              "y": 22.6963,
+              "z": -5.7721
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 15.4137
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_curve_cshape_a-x2",
+            "Position": {
+              "x": 24.9884,
+              "y": 72.6712,
+              "z": 11.7504
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.3795
+            },
+            "Scale": {
+              "x": 14.6831,
+              "y": 14.6831,
+              "z": 14.6831
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 115.7701,
+              "y": 61.1437,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 33.1993
+            },
+            "Scale": {
+              "x": 1.1021,
+              "y": 0.8728,
+              "z": 1.1021
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          }
+        ]
+      }
+    }
+  },
+  "Meta": {
+    "Description": "vanilla",
+    "Thumbnail": "",
+    "Author": "MM",
+    "Version": "1",
+    "Game": "Soldat2",
+    "GameVersion": "0.7.22"
+  }
+}
