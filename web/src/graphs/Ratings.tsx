@@ -3,13 +3,14 @@ import ReactDOMServer from "react-dom/server"
 import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
-import {RatingResponse} from "../util/api";
+import {RatingResponse, UserResponse} from "../util/api";
 import {Button, Card, Container, Form, Icon, Image, List, Loader} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 import moment from "moment"
 import {UserCache} from "../App";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import {RatingCard} from "./RatingCard";
+import {RatingModal} from "./RatingModal";
 
 interface NormalPoint {
     x: number,
@@ -60,38 +61,15 @@ const normal = (mean: number,
     return data;
 }
 
-const perpendicularToNormal = (globalMu: number, globalSigma: number, x: number) => {
-    // From: https://math.stackexchange.com/questions/461139/differential-of-normal-distribution
-
-    const x2 = x - globalMu
-
-    const numerator = x2 * (Math.exp((-Math.pow(x2, 2)) / (2 * Math.pow(globalSigma, 2))))
-    const denominator = Math.pow(globalSigma, 3) * Math.sqrt(2 * Math.PI)
-    const gradient = -(numerator / denominator)
-    // const m = - 1 / gradient
-    const m = -1 / gradient
-
-    console.log(globalMu)
-    console.log(globalSigma)
-    console.log(x)
-    console.log(gradient)
-    console.log(m)
-
-    const y = jStat.normal.pdf(x, globalMu, globalSigma)
-    const c = y - m * x
-    return {m, c}
-}
-
-const straightLinePoints = (m: number, c: number, x: number) => {
-    return {
-        x,
-        y: m * x + c
-    }
+interface StatsModalState {
+    open: boolean
+    user?: UserResponse
 }
 
 export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const d3Container = useRef(null)
     const [alignment, setAlignment] = useState("left")
+    const [statsModalState, setStatsModalState] = useState({} as StatsModalState)
 
     const figureWidth = 1500
     const figureHeight = 800
@@ -191,7 +169,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             // The axis function is a "generator" which will generate the SVG elements that draw our axis
             .call(d3.axisBottom(x));
 
-        // TODO: Ask the community about which of these colors is better
         const colorScale = d3.scaleLinear<d3.RGBColor, number>()
             .domain([0, 100])
             .range([d3.rgb("#24c6dc").brighter(), d3.rgb("#514a9d").darker()])
@@ -248,8 +225,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("cy", d => y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)))
             .attr("r", 6)
 
-        const boxToggles = points.map(_ => false)
-
         const handleMouseOverPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             fetchNewUser(d.stats.discordId)
             const user = userCache[d.stats.discordId]
@@ -292,14 +267,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 const arrowYPosition = 0.045 * maxDensity
 
                 const arrowLinePoints = [
-                    // {
-                    //     x: d.mu,
-                    //     y: jStat.normal.pdf(d.mu, globalMu, globalSigma)
-                    // },
-                    // {
-                    //     x: d.mu,
-                    //     y: 0.045 * maxDensity
-                    // },
                     {
                         x: d.left + gapBetweenEdgeAndArrows,
                         y: 0.045 * maxDensity
@@ -406,13 +373,11 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             d3.select(`#clipPath`).remove();
             d3.select(`#arrowLine`).remove();
 
-            if (!boxToggles[d.i]) {
-                d3.select(`#playerStatsDrawing${d.i}`)
-                    .transition()
-                    .duration(1000)
-                    .style("opacity", 0)
-                    .remove()
-            }
+            d3.select(`#playerStatsDrawing${d.i}`)
+                .transition()
+                .duration(1000)
+                .style("opacity", 0)
+                .remove()
 
             // Hide the full opacity area
             pathFullOpacity.style("visibility", "hidden")
@@ -426,34 +391,18 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         }
 
         const handleMouseClickPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
-            boxToggles[d.i] = !boxToggles[d.i]
+            const user = userCache[d.stats.discordId]
 
-            const statsBox = d3.select(`#playerStatsBox${d.i}`)
-
-            const width = parseInt(statsBox.attr("width"))
-            const height = parseInt(statsBox.attr("height"))
-
-            if (boxToggles[d.i]) {
-                statsBox
-                    .transition()
-                    .duration(1000)
-                    .attr("width", width * 3)
-                    .attr("height", height * 1.4)
-            } else {
-
-                statsBox
-                    .transition()
-                    .duration(1000)
-                    .attr("width", statsBoxWidth)
-                    .attr("height", statsBoxHeight)
-            }
+            setStatsModalState({
+                open: true,
+                user
+            })
         }
 
         circles
             .on("mouseover", handleMouseOverPoint)
             .on("mouseout", handleMouseOutPoint)
-            // TODO: Re-enable when ready
-            // .on("click", handleMouseClickPoint)
+            .on("click", handleMouseClickPoint)
 
     }, [ratings, d3Container.current, alignment, userCache])
 
@@ -466,6 +415,13 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         )
     }
 
+    const onStatsModalClose = () => {
+        setStatsModalState({
+            open: false,
+            user: undefined
+        })
+    }
+
     return (
         <div>
             <h1>Soldat 2 Gather Ratings</h1>
@@ -473,6 +429,15 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             Send your suggestions to Norbo!</p>
 
             <Container>
+                {
+                    statsModalState.open ?
+                    <RatingModal
+                        user={statsModalState.user}
+                        onClose={onStatsModalClose}
+                    /> : null
+                }
+
+
                 <Form>
                     <Form.Group inline>
                         <Form.Input

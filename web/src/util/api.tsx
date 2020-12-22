@@ -13,6 +13,13 @@ interface Round {
     // events	[…]
 }
 
+interface RatingUpdate {
+    gameStartTime: number,
+    roundStartTime: number,
+    newMu: number,
+    newSigma: number,
+}
+
 
 export interface Game {
     bluePlayers: string[],
@@ -30,7 +37,6 @@ export interface Game {
     redWinProbability: number,
     rounds: Round[]
 }
-
 
 export interface RatingResponse {
     discordId: string,
@@ -72,7 +78,7 @@ export interface UserResponse {
             CaptureTheBases: GameModeStats,
         }
     },
-    ratingChanges: object,
+    ratingUpdates: RatingUpdate[],
     sortedGames: Game[]
 }
 

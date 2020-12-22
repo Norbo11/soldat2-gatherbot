@@ -13,13 +13,11 @@ export default {
 
                 for (const discordId of discordIds) {
                     const {mu, sigma} = await currentStatsDb.getMuSigma(discordId)
-                    const ratingUpdates = await currentStatsDb.getRatingUpdates(discordId)
 
                     result.push({
                         discordId,
                         mu,
                         sigma,
-                        ratingUpdates,
                     })
                 }
 
@@ -36,13 +34,15 @@ export default {
                 const playerStats = await stats.getPlayerStats(currentStatsDb, discordId)
                 const games = await currentStatsDb.getGamesWithPlayer(discordId)
                 const sortedGames = _.sortBy(games, game => -game.startTime)
+                const ratingUpdates = await currentStatsDb.getRatingUpdates(discordId)
 
                 const result = {
                     discordId,
                     avatarUrl: user.displayAvatarURL,
                     displayName: member !== null ? member.displayName : user.username,
                     playerStats,
-                    sortedGames
+                    sortedGames,
+                    ratingUpdates
                 }
 
                 res.json(result)

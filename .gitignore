@@ -7,3 +7,5 @@ bot/jsconfig.json
 bot/last_commit_hash
 bot/workspace.code-workspace
 
+.eslintcache
+
