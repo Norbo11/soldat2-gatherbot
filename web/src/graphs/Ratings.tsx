@@ -4,18 +4,13 @@ import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse, UserResponse} from "../util/api";
-import {Button, Card, Container, Form, Icon, Image, List, Loader} from "semantic-ui-react";
+import {Container, Form, Loader} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import moment from "moment"
 import {UserCache} from "../App";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import {RatingCard} from "./RatingCard";
 import {RatingModal} from "./RatingModal";
-
-interface NormalPoint {
-    x: number,
-    density: number
-}
+import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
 
 interface HoverLinePoint {
     x: number,
@@ -45,21 +40,6 @@ interface Props {
     fetchNewUser: (discordId: string) => void
 }
 
-
-const normal = (mean: number,
-                sd: number,
-                start: number = mean - 4 * sd,
-                end: number = mean + 4 * sd): NormalPoint[] => {
-
-    const data: NormalPoint[] = [];
-    for (let i = start; i <= end; i += 1) {
-        data.push({
-            x: i,
-            density: jStat.normal.pdf(i, mean, sd)
-        });
-    }
-    return data;
-}
 
 interface StatsModalState {
     open: boolean
@@ -94,15 +74,12 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             return
         }
 
-        let globalMu = 50
-        let globalSigma = 50 / 3
-
         const points: EnrichedPoint[] = ratings.map((d, i) => {
             const left = d.mu - 3 * d.sigma
             const right = d.mu + 3 * d.sigma
-            const muPercentage = jStat.normal.cdf(d.mu, globalMu, globalSigma)
-            const leftPercentage = jStat.normal.cdf(left, globalMu, globalSigma)
-            const rightPercentage = jStat.normal.cdf(right, globalMu, globalSigma)
+            const muPercentage = jStat.normal.cdf(d.mu, GLOBAL_MU, GLOBAL_SIGMA)
+            const leftPercentage = jStat.normal.cdf(left, GLOBAL_MU, GLOBAL_SIGMA)
+            const rightPercentage = jStat.normal.cdf(right, GLOBAL_MU, GLOBAL_SIGMA)
 
             let xPos
 
@@ -114,7 +91,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 xPos = d.mu
             }
 
-            const lastX = xPos < globalMu ? xPos - lineLength : xPos + lineLength
+            const lastX = xPos < GLOBAL_MU ? xPos - lineLength : xPos + lineLength
 
             return {
                 i,
@@ -135,7 +112,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom
 
-        let normalPoints: NormalPoint[] = normal(globalMu, globalSigma);
+        let normalPoints: NormalPoint[] = normal(GLOBAL_MU, GLOBAL_SIGMA);
 
         let minX = d3.min(normalPoints, d => d.x)!
         let maxX = d3.max(normalPoints, d => d.x)!
@@ -169,9 +146,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             // The axis function is a "generator" which will generate the SVG elements that draw our axis
             .call(d3.axisBottom(x));
 
-        const colorScale = d3.scaleLinear<d3.RGBColor, number>()
-            .domain([0, 100])
-            .range([d3.rgb("#24c6dc").brighter(), d3.rgb("#514a9d").darker()])
+        const colorScale = getNormalColorScale()
 
         // Create a line where we map a datapoint to its X, Y location using the earlier scale
         let line = d3.line<NormalPoint>()
@@ -183,7 +158,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("id", "bellCurveGradient")
             .selectAll("stop")
             .data(normalPoints.map(x => {
-                const percentage = (jStat.normal.cdf(x.x, globalMu, globalSigma) * 100)
+                const percentage = (jStat.normal.cdf(x.x, GLOBAL_MU, GLOBAL_SIGMA) * 100)
                 return {
                     offset: `${percentage}%`,
                     // Uncomment this to see what a regular gardient would look like without our "gaussian" gradient
@@ -222,7 +197,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("fill", d => colorScale(d.xPos))
             .attr("stroke", "black")
             .attr("cx", d => x(d.xPos))
-            .attr("cy", d => y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)))
+            .attr("cy", d => y(jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)))
             .attr("r", 6)
 
         const handleMouseOverPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
@@ -333,15 +308,15 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             const linePoints = [
                 {
                     x: d.xPos,
-                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma)
+                    y: jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)
                 },
                 {
                     x: d.lastX,
-                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma)
+                    y: jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)
                 },
                 {
                     x: d.lastX,
-                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma) + lineUpLength
+                    y: jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA) + lineUpLength
                 }
             ]
 
@@ -362,7 +337,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             playerStatsDrawing.append("foreignObject")
                 .attr("id", `playerStatsBox${d.i}`)
                 .attr("x", x(d.lastX) - statsBoxWidth / 2)
-                .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight / 2)
+                .attr("y", y(jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)) - statsBoxHeight / 2)
                 .attr("width", statsBoxWidth)
                 .attr("height", statsBoxHeight)
                 .html(ReactDOMServer.renderToStaticMarkup(

@@ -10,6 +10,9 @@ import "./RatingModal.css";
 import moment, {Moment} from "moment";
 import Loader from "semantic-ui-react/dist/commonjs/elements/Loader";
 import _ from "lodash"
+import * as jStat from "jstat";
+import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
+import * as domain from "domain";
 
 interface Props {
     user?: UserResponse,
@@ -41,6 +44,7 @@ export const RatingModal = ({onClose, user}: Props) => {
         const margin = {top: 10, right: 30, bottom: 30, left: 30}
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom;
+        const curveType = xAxisType == "rounds" ? d3.curveLinear : d3.curveStep
 
         // append the svg object to the body of the page
         let svg = d3.select(d3Container.current)
@@ -63,22 +67,28 @@ export const RatingModal = ({onClose, user}: Props) => {
 
         const getXScale = (data: RatingData[]) => {
             if (xAxisType === "time") {
+                const [min, max] = d3.extent(data, d => d.date) as Moment[]
+
                 return d3.scaleTime()
-                    .domain(d3.extent(data, d => d.date) as Moment[])
+                    .domain([min, max])
                     .range([0, width])
 
             } else if (xAxisType === "rounds") {
+                const [min, max] = d3.extent(data, d => d.roundNumber) as number[]
+
                 return d3.scaleLinear()
-                    .domain(d3.extent(data, d => d.roundNumber) as number[])
-                    .range([0, width]);
+                    .domain([min, max + 1])
+                    .range([0, width])
             } else {
                 throw Error(`Unexpected xAxisType: ${xAxisType}`)
             }
         }
 
         const getYScale = (data: RatingData[]) => {
+            const [min, max] = d3.extent(data, d => d.lowerTrueSkillEstimate) as number[]
+
             return d3.scaleLinear()
-                .domain(d3.extent(data, d => d.lowerTrueSkillEstimate) as number[])
+                .domain([Math.max(0, min), max])
                 .range([height, 0])
                 .nice()
         }
@@ -107,7 +117,7 @@ export const RatingModal = ({onClose, user}: Props) => {
             return d3.line<RatingData>()
                 .x(d => x(getXValue(d)))
                 .y(d => y(d.lowerTrueSkillEstimate))
-                .curve(d3.curveStepAfter)
+                .curve(curveType)
         }
 
         let x = getXScale(dataToDisplay)
@@ -120,16 +130,45 @@ export const RatingModal = ({onClose, user}: Props) => {
         const yAxis = graph.append("g")
             .call(d3.axisLeft(y));
 
+
+        const normalPoints: NormalPoint[] = normal(GLOBAL_MU, GLOBAL_SIGMA);
+        const colorScale = getNormalColorScale()
+
         // Add a rectangular clipPath: everything out of this area won't be drawn. This ensures that as we zoom into
         // our graph we won't see any lines being drawn outside of the axis area
-        const clip = graph.append("defs")
+        const defs = graph.append("defs")
+        const clip = defs
             .append("svg:clipPath")
                 .attr("id", "clip")
             .append("svg:rect")
                 .attr("width", width)
                 .attr("height", height)
                 .attr("x", 0)
-                .attr("y", 0);
+                .attr("y", 0)
+
+        const gradient = defs
+            .append("linearGradient")
+            .attr("id", "ratingGraphGradient")
+            .attr("x1", "0%")
+            .attr("y1", "100%")
+            // .attr("y1", y(100))
+            .attr("x2", "0%")
+            .attr("y2", "0%")
+            // .attr("y2", y(0))
+            .selectAll("stop")
+            .data(normalPoints.map(x => {
+                const percentage = (jStat.normal.cdf(x.x, GLOBAL_MU, GLOBAL_SIGMA) * 100)
+                return {
+                    // offset: `${y(percentage)}`,
+                    offset: `${percentage}%`,
+                    // Uncomment this to see what a regular gardient would look like without our "gaussian" gradient
+                    // offset: `${x.x}%`
+                    color: colorScale(percentage)
+                }
+            }))
+            .enter().append("stop")
+            .attr("offset", d => d.offset)
+            .attr("stop-color", d => d.color)
 
         // Create a group where both the line and the brush are drawn, link it to the earlier clip path
         const group = graph.append('g')
@@ -139,9 +178,24 @@ export const RatingModal = ({onClose, user}: Props) => {
         const line = group.append("path")
             .datum(data)
             .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1.5)
+            .attr("stroke", "black")
+            .attr("stroke-width", 3.0)
             .attr("d", getLine())
+
+        const getArea = () => {
+            return d3.area<RatingData>()
+                .x(d => x(getXValue(d)))
+                .y0(d => y(0))
+                .y1(d => y(d.lowerTrueSkillEstimate))
+                .curve(curveType)
+        }
+
+        const area = group.append("path")
+            .attr("id", "ratingGraphArea")
+            .attr("fill", "url(#ratingGraphGradient)")
+            .datum(data)
+            .attr("class", "area")
+            .attr("d", getArea())
 
         // Add a brush for selecting an area to zoom into
         const brush = d3.brushX()
@@ -151,12 +205,11 @@ export const RatingModal = ({onClose, user}: Props) => {
             .on("end", updateChart)
 
         // Generate the brush (drawn in the same group which contains the line, using the clip area)
-        group
-            .append("g")
+        group.append("g")
             .attr("class", "brush")
             .call(brush);
 
-        const transitionGraph = () => {
+        const transitionGraph = (data: RatingData[]) => {
             // Transition to new axis using the new domains
             yAxis.transition()
                 .duration(1000)
@@ -172,6 +225,52 @@ export const RatingModal = ({onClose, user}: Props) => {
                 .transition()
                 .duration(1000)
                 .attr("d", getLine())
+
+            area
+                .transition()
+                .duration(1000)
+                .attr("d", getArea())
+
+            // Draw new points
+            console.log(data.length)
+            const circles = group.selectAll(".my-circle")
+                .data(data)
+
+            circles
+                .exit()
+                .transition()
+                .duration(1000)
+                .style("opacity", "0")
+                .remove()
+
+            const radius = d3.scaleLinear()
+                .domain([0, 200])
+                .range([4, 0])
+                .clamp(true)
+
+            const r = radius(dataToDisplay.length)
+
+            circles
+                .enter()
+                .append("circle")
+                .attr("class", "my-circle")
+                .style("opacity", "0")
+                .attr("fill", d => colorScale(d.lowerTrueSkillEstimate))
+                .attr("stroke", "black")
+                .attr("cx", d => x(getXValue(d)))
+                .attr("cy", d => y(d.lowerTrueSkillEstimate))
+                .attr("r", d => r)
+                .transition()
+                .duration(1000)
+                .style("opacity", "1")
+
+            circles
+                .transition()
+                .duration(1000)
+                .attr("cx", d => x(getXValue(d)))
+                .attr("cy", d => y(d.lowerTrueSkillEstimate))
+                .attr("r", d => r)
+
         }
 
         function updateChart(event: D3BrushEvent<unknown>, d: unknown) {
@@ -193,15 +292,19 @@ export const RatingModal = ({onClose, user}: Props) => {
             }
 
             // Update axis and line position
-            transitionGraph()
+            transitionGraph(dataToDisplay)
         }
 
         // If user double click, reinitialize the chart by zooming out over the unfiltered data
         graph.on("dblclick", () => {
-            x = getXScale(data)
-            y = getYScale(data)
-            transitionGraph()
+            dataToDisplay = [...data]
+
+            x = getXScale(dataToDisplay)
+            y = getYScale(dataToDisplay)
+            transitionGraph(dataToDisplay)
         });
+
+        transitionGraph(dataToDisplay)
     })
 
     return (
