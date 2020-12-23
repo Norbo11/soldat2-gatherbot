@@ -1,29 +1,22 @@
 import {Card, Icon, Image, List, Loader} from "semantic-ui-react";
 import moment from "moment";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import React from "react";
+import React, {FunctionComponent, useState} from "react";
 import {UserResponse} from "../util/api";
 import _ from "lodash"
 import * as d3 from "d3";
 import "./RatingCard.css";
+import Input from "semantic-ui-react/dist/commonjs/elements/Input";
 
 
 interface Props {
-    user: UserResponse
+    user: UserResponse,
+    interactive: boolean,
+    numLastGames: number,
+    setNumLastGames: (numLastGames: number) => void
 }
 
-
-// const onCloseClick = (e, d) => {
-//     console.log("clicked")
-//     d3.select(`#playerStatsDrawing${d.i}`)
-//         .remove()
-    // .transition()
-    // .duration(1000)
-    // .attr("width", statsBoxWidth)
-    // .attr("height", statsBoxHeight)
-// }
-
-export const RatingCard = ({user}: Props) => {
+export const RatingCard = ({user, interactive, numLastGames, setNumLastGames}: Props) => {
 
     return (
         <div
@@ -75,9 +68,23 @@ export const RatingCard = ({user}: Props) => {
                                 </List.Content>
                             </List.Item>
                         </List>
-                        <p><b>Last 5 Games</b></p>
+                        {
+                            interactive ?
+                                <p><b>Last <Input
+                                    size={"mini"}
+                                    // value={numLastGames}
+                                    onChange={(e) => {
+                                        const newValue = parseInt(e.target.value)
+                                        if (!isNaN(newValue)) {
+                                            setNumLastGames(Math.max(1, newValue))
+                                        }
+                                    }}
+                                /> Games</b></p>
+                                :
+                                <p><b>Last Games</b></p>
+                        }
                         <List className={"games-list"} divided>
-                            {_.take(user.sortedGames, 5).map(game => {
+                            {_.take(user.sortedGames, numLastGames).map(game => {
                                 const teamName = _.includes(game.redPlayers, user.discordId) ? "Red" : "Blue"
                                 const won = game.winner === teamName
                                 const winProbability = teamName === "Red" ? game.redWinProbability : game.blueWinProbability

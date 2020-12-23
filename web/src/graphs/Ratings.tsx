@@ -365,7 +365,14 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight / 2)
                 .attr("width", statsBoxWidth)
                 .attr("height", statsBoxHeight)
-                .html(ReactDOMServer.renderToStaticMarkup(<RatingCard user={user}/>))
+                .html(ReactDOMServer.renderToStaticMarkup(
+                    <RatingCard
+                        user={user}
+                        interactive={false}
+                        numLastGames={5}
+                        setNumLastGames={() => {}}
+                    />
+                ))
         }
 
         const handleMouseOutPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
@@ -393,10 +400,13 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         const handleMouseClickPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             const user = userCache[d.stats.discordId]
 
-            setStatsModalState({
-                open: true,
-                user
-            })
+            // The click action shouldn't do anything if we haven't yet loaded the user
+            if (user !== undefined) {
+                setStatsModalState({
+                    open: true,
+                    user
+                })
+            }
         }
 
         circles
@@ -436,7 +446,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                         onClose={onStatsModalClose}
                     /> : null
                 }
-
 
                 <Form>
                     <Form.Group inline>
