@@ -1,22 +1,25 @@
-import {Card, Icon, Image, List, Loader} from "semantic-ui-react";
+import {Card, Grid, Icon, Image, List, Loader} from "semantic-ui-react";
 import moment from "moment";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import React, {FunctionComponent, useState} from "react";
+import React from "react";
 import {UserResponse} from "../util/api";
 import _ from "lodash"
-import * as d3 from "d3";
 import "./RatingCard.css";
 import Input from "semantic-ui-react/dist/commonjs/elements/Input";
+import {GamePopup} from "./GamePopup";
+import {UserCache} from "../App";
 
 
 interface Props {
     user: UserResponse,
     interactive: boolean,
     numLastGames: number,
-    setNumLastGames: (numLastGames: number) => void
+    setNumLastGames: (numLastGames: number) => void,
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void
 }
 
-export const RatingCard = ({user, interactive, numLastGames, setNumLastGames}: Props) => {
+export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastGames, setNumLastGames}: Props) => {
 
     return (
         <div
@@ -89,20 +92,41 @@ export const RatingCard = ({user, interactive, numLastGames, setNumLastGames}: P
                                 const won = game.winner === teamName
                                 const winProbability = teamName === "Red" ? game.redWinProbability : game.blueWinProbability
                                 const color = won ? "rgb(161, 239, 139, 0.6)" : "rgb(224, 54, 22, 0.6)"
+                                const kd = game.playerKillsAndDeaths[user.discordId]
 
                                 return (
-                                    <List.Item
-                                        key={game.startTime}
-                                        style={{backgroundColor: color}}
+                                    <GamePopup
+                                        game={game}
+                                        userCache={userCache}
+                                        fetchNewUser={fetchNewUser}
                                     >
-                                        <Icon name={"flag"} fitted/>
-                                        <List.Content>
-                                             {game.blueRoundWins} - {game.redRoundWins} | {(winProbability * 100).toFixed(1)}% | {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
-                                        </List.Content>
-                                    </List.Item>
+                                        <List.Item
+                                            style={{backgroundColor: color}}
+                                            // className={"monospaced"}
+                                        >
+                                            <Grid columns="equal">
+                                                <Grid.Row>
+                                                    <Grid.Column>
+                                                        <Icon name={"flag"} fitted/>
+                                                    </Grid.Column>
+                                                    <Grid.Column>
+                                                        {game.blueRoundWins} - {game.redRoundWins}
+                                                    </Grid.Column>
+                                                    <Grid.Column width={4}>
+                                                        {(kd.kills / kd.deaths).toFixed(2)} K/D
+                                                    </Grid.Column>
+                                                    <Grid.Column>
+                                                        {(winProbability * 100).toFixed(1)}%
+                                                    </Grid.Column>
+                                                    <Grid.Column width={5}>
+                                                        {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
+                                                    </Grid.Column>
+                                                </Grid.Row>
+                                            </Grid>
+                                        </List.Item>
+                                    </GamePopup>
                                 )
                             })}
-
                         </List>
                     </Card.Content>
                 </Card.Content>

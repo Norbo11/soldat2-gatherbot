@@ -59,17 +59,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const lineLength = 20
 
     useDeepCompareEffect(() => {
-
-        const percentageForAlignment = (d: EnrichedPoint) => {
-            if (alignment === "left") {
-                return d.leftPercentage
-            } else if (alignment === "right") {
-                return d.rightPercentage
-            } else {
-                return d.muPercentage
-            }
-        }
-
         if (!d3Container.current) {
             return
         }
@@ -136,7 +125,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         svg.selectAll("*").remove()
 
         // Create a group for the X axis
-        let gX = svg.append("g")
+        svg.append("g")
             .attr("class", "x axis")
 
             // Move it to the bottom of the graph
@@ -171,7 +160,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("stop-color", d => d.color)
 
         // Draw the lines, with fill
-        const path = svg.append("path")
+        svg.append("path")
             .datum(normalPoints)
             .attr("class", "line")
             .attr("d", line)
@@ -343,6 +332,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 .html(ReactDOMServer.renderToStaticMarkup(
                     <RatingCard
                         user={user}
+                        userCache={userCache}
+                        fetchNewUser={fetchNewUser}
                         interactive={false}
                         numLastGames={5}
                         setNumLastGames={() => {}}
@@ -419,6 +410,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                     <RatingModal
                         user={statsModalState.user}
                         onClose={onStatsModalClose}
+                        fetchNewUser={fetchNewUser}
+                        userCache={userCache}
                     /> : null
                 }
 

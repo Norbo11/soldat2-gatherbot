@@ -33,8 +33,19 @@ export default {
                 const member = await currentDiscordChannel.guild.member(user)
                 const playerStats = await stats.getPlayerStats(currentStatsDb, discordId)
                 const games = await currentStatsDb.getGamesWithPlayer(discordId)
-                const sortedGames = _.sortBy(games, game => -game.startTime)
                 const ratingUpdates = await currentStatsDb.getRatingUpdates(discordId)
+
+                let sortedGames = _.sortBy(games, game => -game.startTime)
+                sortedGames = sortedGames.map((game, i) => {{
+                    const allEvents = _.flatMap(game.rounds, round => round.events)
+                    const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(allEvents)
+
+                    return {
+                        ...game,
+                        gameNumberForPlayer: sortedGames.length - i,
+                        playerKillsAndDeaths
+                    }
+                }})
 
                 const result = {
                     discordId,

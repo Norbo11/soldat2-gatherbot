@@ -1,3 +1,7 @@
 .App {
   text-align: center;
 }
+
+.monospaced {
+    font-family: "Consolas", monospace;
+}

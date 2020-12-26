@@ -145,8 +145,6 @@ const getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToN
 
 
 const getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
-
-    // TODO: Hook this up
     const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(round.events)
     const redPlayersString = getPlayerNameStringsWithKillsAndDeaths(redDiscordIds, playerKillsAndDeaths).join("\n")
     const bluePlayersString = getPlayerNameStringsWithKillsAndDeaths(blueDiscordIds, playerKillsAndDeaths).join("\n")

@@ -20,8 +20,15 @@ interface RatingUpdate {
     newSigma: number,
 }
 
+interface KillsAndDeaths {
+    [discordId: string]: {
+        kills: number,
+        deaths: number
+    }
+}
 
 export interface Game {
+    gameNumberForPlayer: number,
     bluePlayers: string[],
     redPlayers: string[],
     gameMode: string,
@@ -35,7 +42,8 @@ export interface Game {
     matchQuality: number,
     blueWinProbability: number,
     redWinProbability: number,
-    rounds: Round[]
+    rounds: Round[],
+    playerKillsAndDeaths: KillsAndDeaths
 }
 
 export interface RatingResponse {

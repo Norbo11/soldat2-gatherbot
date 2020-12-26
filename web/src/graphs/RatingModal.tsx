@@ -1,8 +1,8 @@
 import {Button, Dimmer, Form, Grid} from "semantic-ui-react";
 import Modal from "semantic-ui-react/dist/commonjs/modules/Modal";
 import * as React from "react";
-import {UserResponse} from "../util/api";
 import {useEffect, useRef, useState} from "react";
+import {UserResponse} from "../util/api";
 import * as d3 from "d3";
 import {D3BrushEvent} from "d3";
 import {RatingCard} from "./RatingCard";
@@ -12,11 +12,13 @@ import Loader from "semantic-ui-react/dist/commonjs/elements/Loader";
 import _ from "lodash"
 import * as jStat from "jstat";
 import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
-import * as domain from "domain";
+import {UserCache} from "../App";
 
 interface Props {
     user?: UserResponse,
-    onClose: () => void
+    onClose: () => void,
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void
 }
 
 interface RatingData {
@@ -25,7 +27,7 @@ interface RatingData {
     roundNumber: number
 }
 
-export const RatingModal = ({onClose, user}: Props) => {
+export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => {
 
     const figureWidth = 460
     const figureHeight = 400
@@ -44,7 +46,7 @@ export const RatingModal = ({onClose, user}: Props) => {
         const margin = {top: 10, right: 30, bottom: 30, left: 30}
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom;
-        const curveType = xAxisType == "rounds" ? d3.curveLinear : d3.curveStep
+        const curveType = xAxisType === "rounds" ? d3.curveLinear : d3.curveStep
 
         // append the svg object to the body of the page
         let svg = d3.select(d3Container.current)
@@ -137,7 +139,7 @@ export const RatingModal = ({onClose, user}: Props) => {
         // Add a rectangular clipPath: everything out of this area won't be drawn. This ensures that as we zoom into
         // our graph we won't see any lines being drawn outside of the axis area
         const defs = graph.append("defs")
-        const clip = defs
+        defs
             .append("svg:clipPath")
                 .attr("id", "clip")
             .append("svg:rect")
@@ -146,7 +148,7 @@ export const RatingModal = ({onClose, user}: Props) => {
                 .attr("x", 0)
                 .attr("y", 0)
 
-        const gradient = defs
+        defs
             .append("linearGradient")
             .attr("id", "ratingGraphGradient")
             .attr("x1", "0%")
@@ -232,7 +234,6 @@ export const RatingModal = ({onClose, user}: Props) => {
                 .attr("d", getArea())
 
             // Draw new points
-            console.log(data.length)
             const circles = group.selectAll(".my-circle")
                 .data(data)
 
@@ -245,11 +246,12 @@ export const RatingModal = ({onClose, user}: Props) => {
 
             const radius = d3.scaleLinear()
                 .domain([0, 200])
-                .range([4, 0])
+                .range([5, 0])
                 .clamp(true)
 
             const r = radius(dataToDisplay.length)
 
+            // Enter selection; new circles should fade in
             circles
                 .enter()
                 .append("circle")
@@ -264,6 +266,7 @@ export const RatingModal = ({onClose, user}: Props) => {
                 .duration(1000)
                 .style("opacity", "1")
 
+            // Update selection; all existing circles should change position and radius
             circles
                 .transition()
                 .duration(1000)
@@ -328,6 +331,8 @@ export const RatingModal = ({onClose, user}: Props) => {
                                     numLastGames={numLastGames}
                                     setNumLastGames={setNumLastGames}
                                     user={user}
+                                    userCache={userCache}
+                                    fetchNewUser={fetchNewUser}
                                 />
                             </Grid.Column>
                             <Grid.Column>
