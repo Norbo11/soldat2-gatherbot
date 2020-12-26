@@ -24,7 +24,7 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
     return (
         <div
             className={"rating-card"}
-            style={{margin: "5px", height: "95%"}}
+            style={{margin: "5px", height: "100%"}}
         >
             {user !== undefined ? <Card style={{height: "100%"}} fluid>
                 <Card.Content>
@@ -37,7 +37,7 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                             className='date'>First Gather: {moment(user.playerStats.firstGameTimestamp).format("DD-MM-YYYY")}</span>
                     </Card.Meta>
                     <Card.Content>
-                        <br />
+                        <br/>
                         <p><b>Stats</b></p>
                         <List className={"stats-list"}>
                             <List.Item>
@@ -55,13 +55,15 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                             <List.Item>
                                 <List.Icon name={"trophy"} fitted/>
                                 <List.Content>
-                                    <b>CTF W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheFlag.wonGames}-{user.playerStats.gameModeStats.CaptureTheFlag.tiedGames}-{user.playerStats.gameModeStats.CaptureTheFlag.lostGames}
+                                    <b>CTF
+                                        W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheFlag.wonGames}-{user.playerStats.gameModeStats.CaptureTheFlag.tiedGames}-{user.playerStats.gameModeStats.CaptureTheFlag.lostGames}
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Icon name={"trophy"} fitted/>
                                 <List.Content>
-                                    <b>CTB W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheBases.wonGames}-{user.playerStats.gameModeStats.CaptureTheBases.tiedGames}-{user.playerStats.gameModeStats.CaptureTheBases.lostGames}
+                                    <b>CTB
+                                        W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheBases.wonGames}-{user.playerStats.gameModeStats.CaptureTheBases.tiedGames}-{user.playerStats.gameModeStats.CaptureTheBases.lostGames}
                                 </List.Content>
                             </List.Item>
                             <List.Item>
@@ -74,8 +76,10 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                         {
                             interactive ?
                                 <p><b>Last <Input
-                                    size={"mini"}
                                     // value={numLastGames}
+                                    style={{
+                                        width: "50px",
+                                    }}
                                     onChange={(e) => {
                                         const newValue = parseInt(e.target.value)
                                         if (!isNaN(newValue)) {
@@ -104,25 +108,39 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                                             style={{backgroundColor: color}}
                                             // className={"monospaced"}
                                         >
-                                            <Grid columns="equal">
-                                                <Grid.Row>
-                                                    <Grid.Column>
-                                                        <Icon name={"flag"} fitted/>
-                                                    </Grid.Column>
-                                                    <Grid.Column>
-                                                        {game.blueRoundWins} - {game.redRoundWins}
-                                                    </Grid.Column>
-                                                    <Grid.Column width={4}>
-                                                        {(kd.kills / kd.deaths).toFixed(2)} K/D
-                                                    </Grid.Column>
-                                                    <Grid.Column>
-                                                        {(winProbability * 100).toFixed(1)}%
-                                                    </Grid.Column>
-                                                    <Grid.Column width={5}>
-                                                        {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
-                                                    </Grid.Column>
-                                                </Grid.Row>
-                                            </Grid>
+                                            {
+                                                interactive ?
+                                                    <Grid
+                                                        columns="equal"
+                                                        padded
+                                                    >
+                                                        <Grid.Row
+                                                            style={{
+                                                                padding: "3px"
+                                                            }}
+                                                        >
+                                                            <Grid.Column>
+                                                                <Icon name={"flag"} fitted/>
+                                                            </Grid.Column>
+                                                            <Grid.Column>
+                                                                {game.blueRoundWins} - {game.redRoundWins}
+                                                            </Grid.Column>
+                                                            <Grid.Column width={4}>
+                                                                {(kd.kills / kd.deaths).toFixed(2)} K/D
+                                                            </Grid.Column>
+                                                            <Grid.Column>
+                                                                {(winProbability * 100).toFixed(1)}%
+                                                            </Grid.Column>
+                                                            <Grid.Column width={5}>
+                                                                {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
+                                                            </Grid.Column>
+                                                        </Grid.Row>
+                                                    </Grid>
+                                                    :
+                                                    <div>
+                                                        {game.blueRoundWins} - {game.redRoundWins} | {(kd.kills / kd.deaths).toFixed(2)} K/D | {(winProbability * 100).toFixed(1)}% | {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
+                                                    </div>
+                                            }
                                         </List.Item>
                                     </GamePopup>
                                 )

@@ -1,5 +1,5 @@
 import _ from "lodash"
-import stats from "../game/stats";
+import stats, {getKillsAndDeathsPerPlayer} from "../game/stats";
 
 export default {
     routes: [
@@ -38,7 +38,7 @@ export default {
                 let sortedGames = _.sortBy(games, game => -game.startTime)
                 sortedGames = sortedGames.map((game, i) => {{
                     const allEvents = _.flatMap(game.rounds, round => round.events)
-                    const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(allEvents)
+                    const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...game.redPlayers, ...game.bluePlayers], allEvents)
 
                     return {
                         ...game,

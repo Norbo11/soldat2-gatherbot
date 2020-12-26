@@ -289,31 +289,24 @@ const getTeamCaps = (events, teamName) => {
     return caps
 }
 
-const getKillsAndDeathsPerPlayer = (events) => {
+export const getKillsAndDeathsPerPlayer = (allPlayers, events) => {
     const playerKillsAndDeaths = {}
+
+    _.forEach(allPlayers, discordId => {
+        playerKillsAndDeaths[discordId] = {
+            kills: 0,
+            deaths: 0
+        }
+    })
 
     events.forEach(event => {
 
         if (event.type === SOLDAT_EVENTS.PLAYER_KILL) {
-            if (!(event.killerDiscordId in playerKillsAndDeaths)) {
-                playerKillsAndDeaths[event.killerDiscordId] = {
-                    kills: 0,
-                    deaths: 0
-                }
-            }
-
-            if (!(event.victimDiscordId in playerKillsAndDeaths)) {
-                playerKillsAndDeaths[event.victimDiscordId] = {
-                    kills: 0,
-                    deaths: 0
-                }
-            }
-
-            if (filterKillEvent(event)) {
+            if (filterKillEvent(event) && event.killerDiscordId in playerKillsAndDeaths) {
                 playerKillsAndDeaths[event.killerDiscordId].kills += 1
             }
 
-            if (filterDeathEvent(event)) {
+            if (filterDeathEvent(event) && event.victimDiscordId in playerKillsAndDeaths) {
                 playerKillsAndDeaths[event.victimDiscordId].deaths += 1
             }
         }
@@ -326,5 +319,5 @@ const getKillsAndDeathsPerPlayer = (events) => {
 
 export default {
     getPlayerStats, getGatherStats,
-    getTopPlayers, getTeamCaps, getKillsAndDeathsPerPlayer
+    getTopPlayers, getTeamCaps
 };

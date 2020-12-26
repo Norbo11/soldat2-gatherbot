@@ -240,7 +240,7 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
             circles
                 .exit()
                 .transition()
-                .duration(1000)
+                .duration(500)
                 .style("opacity", "0")
                 .remove()
 
@@ -308,7 +308,7 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
         });
 
         transitionGraph(dataToDisplay)
-    })
+    }, [user, numLastGames])
 
     return (
         <Modal

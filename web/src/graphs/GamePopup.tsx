@@ -85,7 +85,11 @@ export const PopupContents = ({userCache, fetchNewUser, game}: Props2) => {
 
                             if (player !== undefined) {
                                 const kd = game.playerKillsAndDeaths[player.discordId]
-                                contents = `${player.displayName}: ${kd.kills}/${kd.deaths} (${(kd.kills / kd.deaths).toFixed(2)})`
+                                contents = (
+                                    <span>
+                                        <b>{player.displayName}</b>: {kd.kills}/{kd.deaths} ({(kd.kills / kd.deaths).toFixed(2)})
+                                    </span>
+                                )
                             } else {
                                 contents = "Loading..."
                             }
@@ -140,9 +144,9 @@ export const PopupContents = ({userCache, fetchNewUser, game}: Props2) => {
                             }}
                         >
                             <List.Content>
-                                {game.blueRoundWins} - {game.redRoundWins}
+                                <b>Winner: {game.winner}</b>
                                 <br />
-                                Winner: {game.winner}
+                                {game.blueRoundWins} - {game.redRoundWins}
                             </List.Content>
                         </List.Item>
                         {
@@ -185,6 +189,8 @@ export const GamePopup = ({children, game, userCache, fetchNewUser}: Props) => {
                     userCache={userCache}
                     fetchNewUser={fetchNewUser}/>
             }
+            mouseEnterDelay={500}
+            mouseLeaveDelay={250}
             // open={true} // Useful for debugging, must hover over before changing this to avoid portal error
             key={game.startTime}
             header={<div className={"header"} style={{textAlign: "center"}}>Game #{game.gameNumberForPlayer} played on {moment(game.startTime).format("DD-MM-YYYY HH:mm:ss")} ({moment.duration(moment().valueOf() - game.startTime).humanize()} ago)</div>}
