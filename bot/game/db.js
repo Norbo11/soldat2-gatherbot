@@ -175,6 +175,26 @@ class StatsDB {
             id: clipId
         })
     }
+
+    async cacheDiscordUser(discordId, displayName, avatarUrl) {
+        logger.log.info(`Mapping ${discordId} to display name ${displayName} (avatar ${avatarUrl})`)
+        return await this.db.collection("DiscordUserCache").replaceOne({
+            discordId
+        }, {
+            discordId, displayName, avatarUrl
+        }, {
+            upsert: true
+        })
+    }
+
+    async getCachedDiscordUser(discordId) {
+        const result = await this.db.collection("DiscordUserCache").findOne({discordId})
+        if (result) {
+            return result
+        } else {
+            return null
+        }
+    }
 }
 
 export default {

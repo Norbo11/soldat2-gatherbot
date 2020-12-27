@@ -50,6 +50,7 @@
         "ratings": "node tools/backloadTrueSkill.js",
         "removeBogusRatings": "node --experimental-specifier-resolution=node tools/removeBogusRatingUpdates.js",
         "changeMap": "node --experimental-specifier-resolution=node tools/changeMap.js",
-        "test": "mocha"
+        "backloadDisplayNames": "node --experimental-specifier-resolution=node tools/backloadDisplayNames.js",
+        "test": "node --experimental-specifier-resolution=node ./node_modules/mocha/bin/mocha"
     }
 }

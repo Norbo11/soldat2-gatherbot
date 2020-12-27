@@ -55,6 +55,8 @@ export interface RatingResponse {
     discordId: string,
     mu: number,
     sigma: number,
+    displayName: string,
+    avatarUrl: string
     lastGames: Game[]
 }
 

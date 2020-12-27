@@ -4,13 +4,14 @@ import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
 import {RatingResponse, UserResponse} from "../util/api";
-import {Container, Form, Loader} from "semantic-ui-react";
+import {Container, Form, Label, Loader, Search, SearchProps, SearchResultProps} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 import {UserCache} from "../App";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import {RatingCard} from "./RatingCard";
 import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
 import {useHistory} from "react-router";
+import _ from "lodash";
 
 interface HoverLinePoint {
     x: number,
@@ -49,6 +50,8 @@ interface StatsModalState {
 export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const d3Container = useRef(null)
     const [alignment, setAlignment] = useState("left")
+    const [searchResults, setSearchResults] = useState<SearchResultProps[]>([])
+    const [searchValue, setSearchValue] = useState<string>("")
     const history = useHistory()
 
     const figureWidth = 1500
@@ -383,6 +386,23 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         )
     }
 
+    const handleSearchChange = (e: React.MouseEvent, data: SearchProps) => {
+        const value = data.value
+        setSearchValue(value || "")
+
+        const re = new RegExp(_.escapeRegExp(value), "i") // Search substrings, ignore case
+        const results = _.filter(ratings, rating => re.test(rating.displayName))
+
+        setSearchResults(results.map(result => {
+            return {
+                title: result.displayName,
+                discordId: result.discordId,
+                image: result.avatarUrl,
+                description: `Rating: ${(result.mu - 3 * result.sigma).toFixed(2)}`
+            }
+        }))
+    }
+
     return (
         <div>
             <h1>Soldat 2 Gather Ratings</h1>
@@ -392,11 +412,15 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             <Container>
                 <Form>
                     <Form.Group inline>
-                        <Form.Input
-                            width={6}
-                            label={"Search"}
-                            // placeholder={"Enter player names..."}
-                            placeholder={"Currently under construction..."}
+                        <Search
+                            onResultSelect={(e, data) =>
+                                history.push(`/stats/${data.result.discordId}`)
+                            }
+                            onSearchChange={handleSearchChange}
+                            results={searchResults}
+                            value={searchValue}
+                            className={"inline field"}
+                            // resultRenderer={(props: SearchResultProps) => <Label>{props.displayName}</Label>}
                         />
                         <label>Point Alignment</label>
                         <Form.Radio
