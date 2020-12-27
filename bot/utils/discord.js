@@ -2,7 +2,7 @@ import logger from './logger';
 import moment from 'moment';
 import _ from 'lodash';
 import {GAME_MODES, SOLDAT_TEAMS, formatGameMode} from '../game/constants';
-import stats from '../game/stats';
+import stats, {getKillsAndDeathsPerPlayer} from '../game/stats';
 import statsFormatting from '../game/statsFormatting';
 
 const teamEmoji = (teamName) => {
@@ -131,8 +131,7 @@ const getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, playerKillsA
 
 
 const getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
-    const allEvents = _.flatMap(game.rounds, round => round.events)
-    const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(allEvents)
+    const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...game.redPlayers, ...game.bluePlayers], allEvents)
 
     return [
         getResultField(game.winner, true),
@@ -145,9 +144,7 @@ const getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToN
 
 
 const getRoundEndFields = (gameMode, redDiscordIds, blueDiscordIds, round) => {
-
-    // TODO: Hook this up
-    const playerKillsAndDeaths = stats.getKillsAndDeathsPerPlayer(round.events)
+    const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...redDiscordIds, ...blueDiscordIds], round.events)
     const redPlayersString = getPlayerNameStringsWithKillsAndDeaths(redDiscordIds, playerKillsAndDeaths).join("\n")
     const bluePlayersString = getPlayerNameStringsWithKillsAndDeaths(blueDiscordIds, playerKillsAndDeaths).join("\n")
 

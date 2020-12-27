@@ -1,16 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import "./App.css";
 import {Ratings} from "./graphs/Ratings";
 import {fetchAllRatings, fetchUser, RatingResponse, UserResponse} from "./util/api";
 import 'semantic-ui-css/semantic.min.css'
 import {Container} from "semantic-ui-react";
-import soldat_2_gather_bg from "./images/soldat_2_gather_bg.png"
-import {url} from "inspector";
+import _ from "lodash";
 
 export interface UserCache {
     [discordId: string]: UserResponse
 }
 
+
+export const UserCacheContext = React.createContext({} as UserCache)
 
 function App() {
     const [ratings, setRatings] = useState<RatingResponse[]>([])
@@ -23,19 +24,25 @@ function App() {
     }, [])
 
     const fetchNewUser = async (discordId: string) => {
-        const cache = {...userCache}
-        cache[discordId] = await fetchUser(discordId)
-        setUserCache(cache)
+        if (!_.includes(_.keys(userCache), discordId)) {
+            const user = await fetchUser(discordId)
+            console.log(`Fetched user ${user.displayName}`)
+            setUserCache(oldCache => {
+                return {...oldCache, [discordId]: user}
+            })
+        }
     }
 
     return (
-        <Container fluid style={{"padding": "50px"}} textAlign={"center"}>
-            <Ratings
-                ratings={ratings}
-                userCache={userCache}
-                fetchNewUser={fetchNewUser}
-            />
-        </Container>
+        <UserCacheContext.Provider value={userCache}>
+            <Container fluid style={{"padding": "50px"}} textAlign={"center"}>
+                <Ratings
+                    ratings={ratings}
+                    userCache={userCache}
+                    fetchNewUser={fetchNewUser}
+                />
+            </Container>
+        </UserCacheContext.Provider>
     );
 }
 

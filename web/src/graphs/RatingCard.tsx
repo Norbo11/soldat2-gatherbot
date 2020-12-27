@@ -1,34 +1,31 @@
-import {Card, Icon, Image, List, Loader} from "semantic-ui-react";
+import {Card, Grid, Icon, Image, List, Loader} from "semantic-ui-react";
 import moment from "moment";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import React from "react";
+import React, {useState} from "react";
 import {UserResponse} from "../util/api";
 import _ from "lodash"
-import * as d3 from "d3";
 import "./RatingCard.css";
+import Input from "semantic-ui-react/dist/commonjs/elements/Input";
+import {GamePopup} from "./GamePopup";
+import {UserCache} from "../App";
 
 
 interface Props {
-    user: UserResponse
+    user: UserResponse,
+    interactive: boolean,
+    numLastGames: number,
+    setNumLastGames: (numLastGames: number) => void,
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void
 }
 
-
-// const onCloseClick = (e, d) => {
-//     console.log("clicked")
-//     d3.select(`#playerStatsDrawing${d.i}`)
-//         .remove()
-    // .transition()
-    // .duration(1000)
-    // .attr("width", statsBoxWidth)
-    // .attr("height", statsBoxHeight)
-// }
-
-export const RatingCard = ({user}: Props) => {
+export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastGames, setNumLastGames}: Props) => {
+    const [numLastGamesString, setNumLastGamesString] = useState("5")
 
     return (
         <div
             className={"rating-card"}
-            style={{margin: "5px", height: "95%"}}
+            style={{margin: "5px", height: "100%"}}
         >
             {user !== undefined ? <Card style={{height: "100%"}} fluid>
                 <Card.Content>
@@ -41,7 +38,7 @@ export const RatingCard = ({user}: Props) => {
                             className='date'>First Gather: {moment(user.playerStats.firstGameTimestamp).format("DD-MM-YYYY")}</span>
                     </Card.Meta>
                     <Card.Content>
-                        <br />
+                        <br/>
                         <p><b>Stats</b></p>
                         <List className={"stats-list"}>
                             <List.Item>
@@ -59,13 +56,15 @@ export const RatingCard = ({user}: Props) => {
                             <List.Item>
                                 <List.Icon name={"trophy"} fitted/>
                                 <List.Content>
-                                    <b>CTF W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheFlag.wonGames}-{user.playerStats.gameModeStats.CaptureTheFlag.tiedGames}-{user.playerStats.gameModeStats.CaptureTheFlag.lostGames}
+                                    <b>CTF
+                                        W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheFlag.wonGames}-{user.playerStats.gameModeStats.CaptureTheFlag.tiedGames}-{user.playerStats.gameModeStats.CaptureTheFlag.lostGames}
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Icon name={"trophy"} fitted/>
                                 <List.Content>
-                                    <b>CTB W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheBases.wonGames}-{user.playerStats.gameModeStats.CaptureTheBases.tiedGames}-{user.playerStats.gameModeStats.CaptureTheBases.lostGames}
+                                    <b>CTB
+                                        W-T-L</b>: {user.playerStats.gameModeStats.CaptureTheBases.wonGames}-{user.playerStats.gameModeStats.CaptureTheBases.tiedGames}-{user.playerStats.gameModeStats.CaptureTheBases.lostGames}
                                 </List.Content>
                             </List.Item>
                             <List.Item>
@@ -75,27 +74,81 @@ export const RatingCard = ({user}: Props) => {
                                 </List.Content>
                             </List.Item>
                         </List>
-                        <p><b>Last 5 Games</b></p>
+                        {
+                            interactive ?
+                                <b>Last <Input
+                                    value={numLastGamesString}
+                                    style={{
+                                        width: "50px",
+                                    }}
+                                    onChange={(e) => {
+                                        setNumLastGamesString(e.target.value)
+
+                                        const newValue = parseInt(e.target.value)
+                                        if (!isNaN(newValue)) {
+                                            setNumLastGames(Math.max(1, newValue))
+                                        }
+                                    }}
+                                /> Games</b>
+                                :
+                                <b>Last Games</b>
+                        }
                         <List className={"games-list"} divided>
-                            {_.take(user.sortedGames, 5).map(game => {
+                            {_.take(user.sortedGames, numLastGames).map(game => {
                                 const teamName = _.includes(game.redPlayers, user.discordId) ? "Red" : "Blue"
                                 const won = game.winner === teamName
                                 const winProbability = teamName === "Red" ? game.redWinProbability : game.blueWinProbability
                                 const color = won ? "rgb(161, 239, 139, 0.6)" : "rgb(224, 54, 22, 0.6)"
+                                const kd = game.playerKillsAndDeaths[user.discordId]
 
                                 return (
-                                    <List.Item
+                                    <GamePopup
                                         key={game.startTime}
-                                        style={{backgroundColor: color}}
+                                        game={game}
+                                        userCache={userCache}
+                                        fetchNewUser={fetchNewUser}
                                     >
-                                        <Icon name={"flag"} fitted/>
-                                        <List.Content>
-                                             {game.blueRoundWins} - {game.redRoundWins} | {(winProbability * 100).toFixed(1)}% | {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
-                                        </List.Content>
-                                    </List.Item>
+                                        <List.Item
+                                            style={{backgroundColor: color}}
+                                            // className={"monospaced"}
+                                        >
+                                            {
+                                                interactive ?
+                                                    <Grid
+                                                        columns="equal"
+                                                        padded
+                                                    >
+                                                        <Grid.Row
+                                                            style={{
+                                                                padding: "3px"
+                                                            }}
+                                                        >
+                                                            <Grid.Column>
+                                                                <Icon name={"flag"} fitted/>
+                                                            </Grid.Column>
+                                                            <Grid.Column>
+                                                                {game.blueRoundWins} - {game.redRoundWins}
+                                                            </Grid.Column>
+                                                            <Grid.Column width={4}>
+                                                                {(kd.kills / kd.deaths).toFixed(2)} K/D
+                                                            </Grid.Column>
+                                                            <Grid.Column>
+                                                                {(winProbability * 100).toFixed(1)}%
+                                                            </Grid.Column>
+                                                            <Grid.Column width={5}>
+                                                                {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
+                                                            </Grid.Column>
+                                                        </Grid.Row>
+                                                    </Grid>
+                                                    :
+                                                    <div>
+                                                        {game.blueRoundWins} - {game.redRoundWins} | {(kd.kills / kd.deaths).toFixed(2)} K/D | {(winProbability * 100).toFixed(1)}% | {moment.duration(moment().valueOf() - game.startTime).humanize()} ago
+                                                    </div>
+                                            }
+                                        </List.Item>
+                                    </GamePopup>
                                 )
                             })}
-
                         </List>
                     </Card.Content>
                 </Card.Content>

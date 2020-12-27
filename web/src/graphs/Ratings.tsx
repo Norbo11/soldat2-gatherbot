@@ -3,18 +3,14 @@ import ReactDOMServer from "react-dom/server"
 import "./Ratings.css";
 import {jStat} from "jstat";
 import * as d3 from "d3";
-import {RatingResponse} from "../util/api";
-import {Button, Card, Container, Form, Icon, Image, List, Loader} from "semantic-ui-react";
+import {RatingResponse, UserResponse} from "../util/api";
+import {Container, Form, Loader} from "semantic-ui-react";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import moment from "moment"
 import {UserCache} from "../App";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import {RatingCard} from "./RatingCard";
-
-interface NormalPoint {
-    x: number,
-    density: number
-}
+import {RatingModal} from "./RatingModal";
+import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
 
 interface HoverLinePoint {
     x: number,
@@ -45,53 +41,15 @@ interface Props {
 }
 
 
-const normal = (mean: number,
-                sd: number,
-                start: number = mean - 4 * sd,
-                end: number = mean + 4 * sd): NormalPoint[] => {
-
-    const data: NormalPoint[] = [];
-    for (let i = start; i <= end; i += 1) {
-        data.push({
-            x: i,
-            density: jStat.normal.pdf(i, mean, sd)
-        });
-    }
-    return data;
-}
-
-const perpendicularToNormal = (globalMu: number, globalSigma: number, x: number) => {
-    // From: https://math.stackexchange.com/questions/461139/differential-of-normal-distribution
-
-    const x2 = x - globalMu
-
-    const numerator = x2 * (Math.exp((-Math.pow(x2, 2)) / (2 * Math.pow(globalSigma, 2))))
-    const denominator = Math.pow(globalSigma, 3) * Math.sqrt(2 * Math.PI)
-    const gradient = -(numerator / denominator)
-    // const m = - 1 / gradient
-    const m = -1 / gradient
-
-    console.log(globalMu)
-    console.log(globalSigma)
-    console.log(x)
-    console.log(gradient)
-    console.log(m)
-
-    const y = jStat.normal.pdf(x, globalMu, globalSigma)
-    const c = y - m * x
-    return {m, c}
-}
-
-const straightLinePoints = (m: number, c: number, x: number) => {
-    return {
-        x,
-        y: m * x + c
-    }
+interface StatsModalState {
+    open: boolean
+    user?: UserResponse
 }
 
 export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const d3Container = useRef(null)
     const [alignment, setAlignment] = useState("left")
+    const [statsModalState, setStatsModalState] = useState({} as StatsModalState)
 
     const figureWidth = 1500
     const figureHeight = 800
@@ -101,30 +59,16 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const lineLength = 20
 
     useDeepCompareEffect(() => {
-
-        const percentageForAlignment = (d: EnrichedPoint) => {
-            if (alignment === "left") {
-                return d.leftPercentage
-            } else if (alignment === "right") {
-                return d.rightPercentage
-            } else {
-                return d.muPercentage
-            }
-        }
-
         if (!d3Container.current) {
             return
         }
 
-        let globalMu = 50
-        let globalSigma = 50 / 3
-
         const points: EnrichedPoint[] = ratings.map((d, i) => {
             const left = d.mu - 3 * d.sigma
             const right = d.mu + 3 * d.sigma
-            const muPercentage = jStat.normal.cdf(d.mu, globalMu, globalSigma)
-            const leftPercentage = jStat.normal.cdf(left, globalMu, globalSigma)
-            const rightPercentage = jStat.normal.cdf(right, globalMu, globalSigma)
+            const muPercentage = jStat.normal.cdf(d.mu, GLOBAL_MU, GLOBAL_SIGMA)
+            const leftPercentage = jStat.normal.cdf(left, GLOBAL_MU, GLOBAL_SIGMA)
+            const rightPercentage = jStat.normal.cdf(right, GLOBAL_MU, GLOBAL_SIGMA)
 
             let xPos
 
@@ -136,7 +80,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 xPos = d.mu
             }
 
-            const lastX = xPos < globalMu ? xPos - lineLength : xPos + lineLength
+            const lastX = xPos < GLOBAL_MU ? xPos - lineLength : xPos + lineLength
 
             return {
                 i,
@@ -157,7 +101,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom
 
-        let normalPoints: NormalPoint[] = normal(globalMu, globalSigma);
+        let normalPoints: NormalPoint[] = normal(GLOBAL_MU, GLOBAL_SIGMA);
 
         let minX = d3.min(normalPoints, d => d.x)!
         let maxX = d3.max(normalPoints, d => d.x)!
@@ -181,7 +125,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         svg.selectAll("*").remove()
 
         // Create a group for the X axis
-        let gX = svg.append("g")
+        svg.append("g")
             .attr("class", "x axis")
 
             // Move it to the bottom of the graph
@@ -191,10 +135,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             // The axis function is a "generator" which will generate the SVG elements that draw our axis
             .call(d3.axisBottom(x));
 
-        // TODO: Ask the community about which of these colors is better
-        const colorScale = d3.scaleLinear<d3.RGBColor, number>()
-            .domain([0, 100])
-            .range([d3.rgb("#24c6dc").brighter(), d3.rgb("#514a9d").darker()])
+        const colorScale = getNormalColorScale()
 
         // Create a line where we map a datapoint to its X, Y location using the earlier scale
         let line = d3.line<NormalPoint>()
@@ -206,7 +147,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("id", "bellCurveGradient")
             .selectAll("stop")
             .data(normalPoints.map(x => {
-                const percentage = (jStat.normal.cdf(x.x, globalMu, globalSigma) * 100)
+                const percentage = (jStat.normal.cdf(x.x, GLOBAL_MU, GLOBAL_SIGMA) * 100)
                 return {
                     offset: `${percentage}%`,
                     // Uncomment this to see what a regular gardient would look like without our "gaussian" gradient
@@ -219,7 +160,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("stop-color", d => d.color)
 
         // Draw the lines, with fill
-        const path = svg.append("path")
+        svg.append("path")
             .datum(normalPoints)
             .attr("class", "line")
             .attr("d", line)
@@ -245,10 +186,8 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             .attr("fill", d => colorScale(d.xPos))
             .attr("stroke", "black")
             .attr("cx", d => x(d.xPos))
-            .attr("cy", d => y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)))
+            .attr("cy", d => y(jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)))
             .attr("r", 6)
-
-        const boxToggles = points.map(_ => false)
 
         const handleMouseOverPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
             fetchNewUser(d.stats.discordId)
@@ -292,14 +231,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 const arrowYPosition = 0.045 * maxDensity
 
                 const arrowLinePoints = [
-                    // {
-                    //     x: d.mu,
-                    //     y: jStat.normal.pdf(d.mu, globalMu, globalSigma)
-                    // },
-                    // {
-                    //     x: d.mu,
-                    //     y: 0.045 * maxDensity
-                    // },
                     {
                         x: d.left + gapBetweenEdgeAndArrows,
                         y: 0.045 * maxDensity
@@ -366,15 +297,15 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             const linePoints = [
                 {
                     x: d.xPos,
-                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma)
+                    y: jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)
                 },
                 {
                     x: d.lastX,
-                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma)
+                    y: jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)
                 },
                 {
                     x: d.lastX,
-                    y: jStat.normal.pdf(d.xPos, globalMu, globalSigma) + lineUpLength
+                    y: jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA) + lineUpLength
                 }
             ]
 
@@ -395,10 +326,19 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             playerStatsDrawing.append("foreignObject")
                 .attr("id", `playerStatsBox${d.i}`)
                 .attr("x", x(d.lastX) - statsBoxWidth / 2)
-                .attr("y", y(jStat.normal.pdf(d.xPos, globalMu, globalSigma)) - statsBoxHeight / 2)
+                .attr("y", y(jStat.normal.pdf(d.xPos, GLOBAL_MU, GLOBAL_SIGMA)) - statsBoxHeight / 2)
                 .attr("width", statsBoxWidth)
                 .attr("height", statsBoxHeight)
-                .html(ReactDOMServer.renderToStaticMarkup(<RatingCard user={user}/>))
+                .html(ReactDOMServer.renderToStaticMarkup(
+                    <RatingCard
+                        user={user}
+                        userCache={userCache}
+                        fetchNewUser={fetchNewUser}
+                        interactive={false}
+                        numLastGames={5}
+                        setNumLastGames={() => {}}
+                    />
+                ))
         }
 
         const handleMouseOutPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
@@ -406,13 +346,11 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             d3.select(`#clipPath`).remove();
             d3.select(`#arrowLine`).remove();
 
-            if (!boxToggles[d.i]) {
-                d3.select(`#playerStatsDrawing${d.i}`)
-                    .transition()
-                    .duration(1000)
-                    .style("opacity", 0)
-                    .remove()
-            }
+            d3.select(`#playerStatsDrawing${d.i}`)
+                .transition()
+                .duration(1000)
+                .style("opacity", 0)
+                .remove()
 
             // Hide the full opacity area
             pathFullOpacity.style("visibility", "hidden")
@@ -426,34 +364,21 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         }
 
         const handleMouseClickPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
-            boxToggles[d.i] = !boxToggles[d.i]
+            const user = userCache[d.stats.discordId]
 
-            const statsBox = d3.select(`#playerStatsBox${d.i}`)
-
-            const width = parseInt(statsBox.attr("width"))
-            const height = parseInt(statsBox.attr("height"))
-
-            if (boxToggles[d.i]) {
-                statsBox
-                    .transition()
-                    .duration(1000)
-                    .attr("width", width * 3)
-                    .attr("height", height * 1.4)
-            } else {
-
-                statsBox
-                    .transition()
-                    .duration(1000)
-                    .attr("width", statsBoxWidth)
-                    .attr("height", statsBoxHeight)
+            // The click action shouldn't do anything if we haven't yet loaded the user
+            if (user !== undefined) {
+                setStatsModalState({
+                    open: true,
+                    user
+                })
             }
         }
 
         circles
             .on("mouseover", handleMouseOverPoint)
             .on("mouseout", handleMouseOutPoint)
-            // TODO: Re-enable when ready
-            // .on("click", handleMouseClickPoint)
+            .on("click", handleMouseClickPoint)
 
     }, [ratings, d3Container.current, alignment, userCache])
 
@@ -466,6 +391,13 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         )
     }
 
+    const onStatsModalClose = () => {
+        setStatsModalState({
+            open: false,
+            user: undefined
+        })
+    }
+
     return (
         <div>
             <h1>Soldat 2 Gather Ratings</h1>
@@ -473,6 +405,16 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             Send your suggestions to Norbo!</p>
 
             <Container>
+                {
+                    statsModalState.open ?
+                    <RatingModal
+                        user={statsModalState.user!}
+                        onClose={onStatsModalClose}
+                        fetchNewUser={fetchNewUser}
+                        userCache={userCache}
+                    /> : null
+                }
+
                 <Form>
                     <Form.Group inline>
                         <Form.Input
