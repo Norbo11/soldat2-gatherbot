@@ -33,9 +33,11 @@ const cleanUp = () => {
 }
 
 const setUpEvents = () => {
-    client.on("message", (...args) => message(client, ...args))
-    client.once("ready", (...args) => ready(client, ...args))
-    client.on("presenceUpdate", (...args) => presenceUpdate(client, ...args))
+    client.once("ready", (...args) => {
+        client.on("message", (...args) => message(client, ...args))
+        client.on("presenceUpdate", (...args) => presenceUpdate(client, ...args))
+        ready(client, ...args)
+    })
     process.on("SIGINT", cleanUp)
     process.on("SIGTERM", cleanUp)
 }

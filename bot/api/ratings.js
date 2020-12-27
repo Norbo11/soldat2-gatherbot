@@ -13,11 +13,14 @@ export default {
 
                 for (const discordId of discordIds) {
                     const {mu, sigma} = await currentStatsDb.getMuSigma(discordId)
+                    const user = await currentStatsDb.getCachedDiscordUser(discordId)
 
                     result.push({
                         discordId,
                         mu,
                         sigma,
+                        avatarUrl: user.avatarUrl,
+                        displayName: user.displayName
                     })
                 }
 
@@ -29,8 +32,7 @@ export default {
             path: "/api/v1/ratings/user/:discordId",
             handler: async (req, res, next) => {
                 const discordId = req.params.discordId
-                const user = await currentDiscordChannel.client.fetchUser(discordId)
-                const member = await currentDiscordChannel.guild.member(user)
+                const user = await currentStatsDb.getCachedDiscordUser(discordId)
                 const playerStats = await stats.getPlayerStats(currentStatsDb, discordId)
                 const games = await currentStatsDb.getGamesWithPlayer(discordId)
                 const ratingUpdates = await currentStatsDb.getRatingUpdates(discordId)
@@ -64,8 +66,8 @@ export default {
 
                 const result = {
                     discordId,
-                    avatarUrl: user.displayAvatarURL,
-                    displayName: member !== null ? member.displayName : user.username,
+                    avatarUrl: user.avatarUrl,
+                    displayName: user.displayName,
                     playerStats,
                     sortedGames,
                     ratingUpdates
