@@ -21,7 +21,7 @@ const backloadDisplayNames = async () => {
             const member = await channel.guild.member(user)
             const displayName = member !== null ? member.displayName : user.username
 
-            await statsDb.cacheDiscordUser(discordId, displayName, user.avatarURL)
+            await statsDb.cacheDiscordUser(discordId, displayName, user.displayAvatarURL)
         }
 
     })

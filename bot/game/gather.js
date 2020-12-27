@@ -248,7 +248,7 @@ export class Gather {
             this.discordChannel.guild.member(user).then(member => {
                 const displayName = member !== null ? member.displayName : user.username
 
-                this.statsDb.cacheDiscordUser(user.id, displayName, user.avatarURL).catch((e) => logger.log.error(`Problem with caching discord ID ${user.id}: ${e}`))
+                this.statsDb.cacheDiscordUser(user.id, displayName, user.displayAvatarURL).catch((e) => logger.log.error(`Problem with caching discord ID ${user.id}: ${e}`))
             }).catch((e) => logger.log.error(`Problem with resolving discord ID ${user.id} to guild member: ${e}`))
         }
 
