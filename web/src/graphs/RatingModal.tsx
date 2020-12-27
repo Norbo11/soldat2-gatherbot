@@ -3,7 +3,7 @@ import Modal from "semantic-ui-react/dist/commonjs/modules/Modal";
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
 import ReactDOM from "react-dom";
-import {Game, RatingUpdate, Round, UserResponse} from "../util/api";
+import {RatingUpdate, Round, UserResponse} from "../util/api";
 import * as d3 from "d3";
 import {D3BrushEvent} from "d3";
 import {RatingCard} from "./RatingCard";

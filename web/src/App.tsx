@@ -1,10 +1,12 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./App.css";
 import {Ratings} from "./graphs/Ratings";
 import {fetchAllRatings, fetchUser, RatingResponse, UserResponse} from "./util/api";
 import 'semantic-ui-css/semantic.min.css'
 import {Container} from "semantic-ui-react";
 import _ from "lodash";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {UserStatsPage} from "./UserStatsPage";
 
 export interface UserCache {
     [discordId: string]: UserResponse
@@ -36,11 +38,23 @@ function App() {
     return (
         <UserCacheContext.Provider value={userCache}>
             <Container fluid style={{"padding": "50px"}} textAlign={"center"}>
-                <Ratings
-                    ratings={ratings}
-                    userCache={userCache}
-                    fetchNewUser={fetchNewUser}
-                />
+                <Router>
+                    <Switch>
+                        <Route exact path={"/"}>
+                            <Ratings
+                                ratings={ratings}
+                                userCache={userCache}
+                                fetchNewUser={fetchNewUser}
+                            />
+                        </Route>
+                        <Route path={"/stats/:discordId"}>
+                            <UserStatsPage
+                                userCache={userCache}
+                                fetchNewUser={fetchNewUser}
+                            />
+                        </Route>
+                    </Switch>
+                </Router>
             </Container>
         </UserCacheContext.Provider>
     );
