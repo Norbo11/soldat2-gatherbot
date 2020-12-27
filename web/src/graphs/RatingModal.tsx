@@ -66,8 +66,10 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
             } as RatingData
         })
 
-        // Initially the graph will display the last N games (multiplied by 3 assuming each game is 3 rounds)
-        let dataToDisplay = _.take(data, numLastGames * 3)
+        // Find the number of rounds to display based on numLastGames
+        const lastGames = _.take(user.sortedGames, numLastGames)
+        const numLastRounds = _.reduce(lastGames.map(game => game.rounds.length), (a, b) => a + b, 0)
+        let dataToDisplay = _.take(data, numLastRounds)
 
         const getXScale = (data: RatingData[]) => {
             if (xAxisType === "time") {
