@@ -35,6 +35,8 @@ export default {
                 const games = await currentStatsDb.getGamesWithPlayer(discordId)
                 const ratingUpdates = await currentStatsDb.getRatingUpdates(discordId)
 
+                const roundStartTimeToRatingUpdate = _.groupBy(ratingUpdates, update => update.roundStartTime)
+
                 let sortedGames = _.sortBy(games, game => -game.startTime)
                 sortedGames = sortedGames.map((game, i) => {{
                     const allEvents = _.flatMap(game.rounds, round => round.events)
@@ -47,7 +49,8 @@ export default {
                             ...round,
                             playerKillsAndDeaths,
                             bluePlayers: game.bluePlayers,
-                            redPlayers: game.redPlayers
+                            redPlayers: game.redPlayers,
+                            ratingUpdate: roundStartTimeToRatingUpdate[round.startTime][0]
                         }
                     })
 

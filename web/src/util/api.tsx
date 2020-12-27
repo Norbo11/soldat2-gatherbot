@@ -14,6 +14,7 @@ export interface Round {
     playerKillsAndDeaths: KillsAndDeaths,
     bluePlayers: string[],
     redPlayers: string[]
+    ratingUpdate: RatingUpdate
     // events	[…]
 }
 

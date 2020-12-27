@@ -1,7 +1,7 @@
 import {Card, Grid, Icon, Image, List, Loader} from "semantic-ui-react";
 import moment from "moment";
 import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
-import React from "react";
+import React, {useState} from "react";
 import {UserResponse} from "../util/api";
 import _ from "lodash"
 import "./RatingCard.css";
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastGames, setNumLastGames}: Props) => {
+    const [numLastGamesString, setNumLastGamesString] = useState("5")
 
     return (
         <div
@@ -76,11 +77,13 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                         {
                             interactive ?
                                 <b>Last <Input
-                                    // value={numLastGames}
+                                    value={numLastGamesString}
                                     style={{
                                         width: "50px",
                                     }}
                                     onChange={(e) => {
+                                        setNumLastGamesString(e.target.value)
+
                                         const newValue = parseInt(e.target.value)
                                         if (!isNaN(newValue)) {
                                             setNumLastGames(Math.max(1, newValue))

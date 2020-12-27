@@ -9,10 +9,11 @@ interface Props {
     winner: Winner,
     blueScore: number,
     redScore: number,
-    rounds: Round[]
+    rounds: Round[],
+    horizontal: boolean
 }
 
-export const ResultColumn = ({blueColor, redColor, winner, blueScore, redScore, rounds}: Props) => {
+export const ResultColumn = ({blueColor, redColor, winner, blueScore, redScore, rounds, horizontal}: Props) => {
     const getColor = (winner: Winner) => {
         let color
 
@@ -36,6 +37,7 @@ export const ResultColumn = ({blueColor, redColor, winner, blueScore, redScore, 
             }}
         >
             <List
+                horizontal={horizontal}
                 // divided
             >
                 <List.Item

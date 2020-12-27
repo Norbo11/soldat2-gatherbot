@@ -255,17 +255,20 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
 
             const handleMouseOverPoint = (e: d3.ClientPointEvent, d: RatingData) => {
                 const roundBoxWidth = 400
-                const roundBoxHeight = 100
+                const roundBoxHeight = 200
 
-                // TODO: Could get rid of this find if we make the API join rating updates to rounds
                 const game = user.sortedGames.find(game => game.startTime === d.update.gameStartTime)!
                 const round = game.rounds.find(round => round.startTime === d.update.roundStartTime)!
 
+                // Make sure tooltips do not leave the bounds of the figure
+                const tooltipX = Math.max(0, Math.min(width - roundBoxWidth, x(getXValue(d)) - roundBoxWidth / 2))
+                const tooltipY = Math.max(0, Math.min(height - roundBoxHeight, y(d.lowerTrueSkillEstimate) - roundBoxHeight / 2 + 5))
+
                 // This is controlled by React.createPortal in the render method of this component
-                svg.append("foreignObject")
+                group.insert("foreignObject", `#ratingCircle${d.roundNumber}`)
                     .attr("id", `roundHoverBox${round.startTime}`)
-                    .attr("x", x(getXValue(d)) - roundBoxWidth / 2)
-                    .attr("y", y(d.lowerTrueSkillEstimate) + roundBoxHeight / 2 + 5)
+                    .attr("x", tooltipX)
+                    .attr("y", tooltipY)
                     .attr("width", roundBoxWidth)
                     .attr("height", roundBoxHeight)
 
@@ -281,6 +284,7 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
             circles
                 .enter()
                 .append("circle")
+                .attr("id", d => `ratingCircle${d.roundNumber}`)
                 .attr("class", "my-circle")
                 .style("opacity", "0")
                 .attr("fill", d => colorScale(d.lowerTrueSkillEstimate))

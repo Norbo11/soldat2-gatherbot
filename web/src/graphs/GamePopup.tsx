@@ -59,6 +59,7 @@ export const GamePopupContents = ({userCache, fetchNewUser, game}: GamePopupCont
             <Grid.Row>
                 <PlayersColumn team={teams.Blue} playerKillsAndDeaths={game.playerKillsAndDeaths} />
                 <ResultColumn
+                    horizontal={false}
                     blueColor={teams.Blue.color}
                     redColor={teams.Red.color}
                     blueScore={game.blueRoundWins}
@@ -106,6 +107,11 @@ export const RoundPopupContents = ({userCache, fetchNewUser, round}: RoundPopupP
         } as TeamInfo
     }
 
+    const rowStyles = {
+        margin: 0,
+        padding: 0
+    }
+
     return (
         <Grid
             columns={"equal"}
@@ -115,9 +121,10 @@ export const RoundPopupContents = ({userCache, fetchNewUser, round}: RoundPopupP
             padded
             textAlign={"center"}
         >
-            <Grid.Row>
+            <Grid.Row style={rowStyles}>
                 <PlayersColumn team={teams.Blue} playerKillsAndDeaths={round.playerKillsAndDeaths} />
                 <ResultColumn
+                    horizontal={false}
                     blueColor={teams.Blue.color}
                     redColor={teams.Red.color}
                     blueScore={round.blueCaps}
@@ -125,6 +132,11 @@ export const RoundPopupContents = ({userCache, fetchNewUser, round}: RoundPopupP
                     winner={round.winner}
                     rounds={[round]}
                 />
+                {/*TODO: Potentially implement an indication of rating increase*/}
+                {/*<Grid.Column color={"green"}>*/}
+                {/*    Stuff: <b>{ round.ratingUpdate.newMu }</b>*/}
+                {/*    Things: <b>{ round.ratingUpdate.newSigma }</b>*/}
+                {/*</Grid.Column>*/}
                 <PlayersColumn team={teams.Red} playerKillsAndDeaths={round.playerKillsAndDeaths} />
             </Grid.Row>
         </Grid>
