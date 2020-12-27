@@ -244,12 +244,15 @@ export class Gather {
         this.endedRounds = []
 
         // Cache all users who just played this gather by updating their display names and avatars
-        for (let user of this.match.allDiscordUsers) {
-            this.discordChannel.guild.member(user).then(member => {
+        try {
+            for (let user of this.match.allDiscordUsers) {
+                const member = this.discordChannel.guild.member(user)
                 const displayName = member !== null ? member.displayName : user.username
 
                 this.statsDb.cacheDiscordUser(user.id, displayName, user.displayAvatarURL).catch((e) => logger.log.error(`Problem with caching discord ID ${user.id}: ${e}`))
-            }).catch((e) => logger.log.error(`Problem with resolving discord ID ${user.id} to guild member: ${e}`))
+            }
+        } catch (e) {
+            logger.log.error(`Problem with caching users: ${e}`)
         }
 
         this.match = undefined
