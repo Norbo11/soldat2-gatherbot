@@ -131,6 +131,7 @@ const getGatherEndFieldsForTeam = (teamName, discordIds, roundWins, playerKillsA
 
 
 const getGatherEndFields = (game, discordIdToOldRating = undefined, discordIdToNewRating = undefined) => {
+    const allEvents = _.flatMap(game.rounds, round => round.events)
     const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...game.redPlayers, ...game.bluePlayers], allEvents)
 
     return [

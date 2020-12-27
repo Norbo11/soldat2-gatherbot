@@ -9,8 +9,8 @@ import Dimmer from "semantic-ui-react/dist/commonjs/modules/Dimmer";
 import {UserCache} from "../App";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import {RatingCard} from "./RatingCard";
-import {RatingModal} from "./RatingModal";
 import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
+import {useHistory} from "react-router";
 
 interface HoverLinePoint {
     x: number,
@@ -49,7 +49,7 @@ interface StatsModalState {
 export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     const d3Container = useRef(null)
     const [alignment, setAlignment] = useState("left")
-    const [statsModalState, setStatsModalState] = useState({} as StatsModalState)
+    const history = useHistory()
 
     const figureWidth = 1500
     const figureHeight = 800
@@ -364,15 +364,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         }
 
         const handleMouseClickPoint = (e: d3.ClientPointEvent, d: EnrichedPoint) => {
-            const user = userCache[d.stats.discordId]
-
-            // The click action shouldn't do anything if we haven't yet loaded the user
-            if (user !== undefined) {
-                setStatsModalState({
-                    open: true,
-                    user
-                })
-            }
+            history.push(`/stats/${d.stats.discordId}`)
         }
 
         circles
@@ -391,13 +383,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
         )
     }
 
-    const onStatsModalClose = () => {
-        setStatsModalState({
-            open: false,
-            user: undefined
-        })
-    }
-
     return (
         <div>
             <h1>Soldat 2 Gather Ratings</h1>
@@ -405,16 +390,6 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
             Send your suggestions to Norbo!</p>
 
             <Container>
-                {
-                    statsModalState.open ?
-                    <RatingModal
-                        user={statsModalState.user!}
-                        onClose={onStatsModalClose}
-                        fetchNewUser={fetchNewUser}
-                        userCache={userCache}
-                    /> : null
-                }
-
                 <Form>
                     <Form.Group inline>
                         <Form.Input
