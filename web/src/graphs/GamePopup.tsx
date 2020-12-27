@@ -1,29 +1,21 @@
-import {UserCache} from "../App";
-import {Game} from "../util/api";
+import {UserCache, UserCacheContext} from "../App";
+import {Game, Round} from "../util/api";
 import * as React from "react";
-import {Grid, List, Popup} from "semantic-ui-react";
-import _ from "lodash"
 import {useEffect} from "react";
-import useDeepCompareEffect from "use-deep-compare-effect";
+import {Grid, Popup} from "semantic-ui-react";
+import _ from "lodash"
 import "./GamePopup.css"
 import moment from "moment";
+import {PlayersColumn, TeamInfo} from "./PlayersColumn";
+import {ResultColumn} from "./ResultColumn";
 
-interface Props {
-    game: Game,
-    userCache: UserCache,
-    fetchNewUser: (discordId: string) => void,
-    children: React.ReactNode,
-}
-
-
-interface Props2 {
+interface GamePopupContentsProps {
     game: Game,
     userCache: UserCache,
     fetchNewUser: (discordId: string) => void,
 }
 
-
-export const PopupContents = ({userCache, fetchNewUser, game}: Props2) => {
+export const GamePopupContents = ({userCache, fetchNewUser, game}: GamePopupContentsProps) => {
     useEffect(() => {
         const fetchUsers = async () => {
             for (let discordId of [...game.bluePlayers, ...game.redPlayers]) {
@@ -45,76 +37,15 @@ export const PopupContents = ({userCache, fetchNewUser, game}: Props2) => {
             color: "rgb(13, 33, 161, 0.6)",
             winProbability: game.blueWinProbability,
             floated: "left"
-        },
+        } as TeamInfo,
         Red: {
             teamName: "Red",
             players: redPlayers,
             color: "rgb(224, 54, 22, 0.6)",
             winProbability: game.redWinProbability,
             floated: "right"
-        }
+        } as TeamInfo
     }
-
-    const displayTeam = (team: typeof teams.Blue) => {
-        return (
-            <Grid.Column
-                // width={6}
-                floated={team.floated as "left" | "right"}
-                style={{
-                    padding: 0,
-                    margin: 0,
-                }}
-            >
-                <List
-                    className={"player-list"}
-                    // divided
-                >
-                    <List.Item
-                        style={{
-                            backgroundColor: team.color,
-                            padding: "5px"
-                        }}
-                    >
-                        <List.Content>
-                            <b>{team.teamName} Team<br />({(team.winProbability * 100).toFixed(1)}% chance to win)</b>
-                        </List.Content>
-                    </List.Item>
-                    {
-                        team.players.map(player => {
-                            let contents
-
-                            if (player !== undefined) {
-                                const kd = game.playerKillsAndDeaths[player.discordId]
-                                contents = (
-                                    <span>
-                                        <b>{player.displayName}</b>: {kd.kills}/{kd.deaths} ({(kd.kills / kd.deaths).toFixed(2)})
-                                    </span>
-                                )
-                            } else {
-                                contents = "Loading..."
-                            }
-
-                            return (
-                                <List.Item
-                                    style={{
-                                        backgroundColor: team.color,
-                                        padding: "5px",
-                                    }}
-                                >
-                                    <List.Content>
-                                        { contents }
-                                    </List.Content>
-                                </List.Item>
-                            )
-                        })
-                    }
-                </List>
-            </Grid.Column>
-        )
-    }
-
-    const team = teams[game.winner as "Blue" | "Red"]
-    const color = team !== undefined ? team.color : "gray" // Handle ties
 
     return (
         <Grid
@@ -126,57 +57,89 @@ export const PopupContents = ({userCache, fetchNewUser, game}: Props2) => {
             textAlign={"center"}
         >
             <Grid.Row>
-                {displayTeam(teams.Blue)}
-                <Grid.Column
-                    width={5}
-                    style={{
-                        padding: 0,
-                        margin: 0,
-                    }}
-                >
-                    <List
-                        // divided
-                    >
-                        <List.Item
-                            style={{
-                                backgroundColor: color,
-                                padding: "5px",
-                            }}
-                        >
-                            <List.Content>
-                                <b>Winner: {game.winner}</b>
-                                <br />
-                                {game.blueRoundWins} - {game.redRoundWins}
-                            </List.Content>
-                        </List.Item>
-                        {
-                            game.rounds.map(round => {
-                                const team = teams[round.winner as "Blue" | "Red"]
-                                const color = team !== undefined ? team.color : "gray" // Handle ties
-
-                                return (
-                                    <List.Item
-                                        style={{
-                                            backgroundColor: color,
-                                            padding: "5px",
-                                        }}
-                                    >
-                                        <List.Content>
-                                            <b>{round.mapName}</b>: {round.blueCaps} - {round.redCaps}
-                                        </List.Content>
-                                    </List.Item>
-                                )
-                            })
-                        }
-                    </List>
-                </Grid.Column>
-                {displayTeam(teams.Red)}
+                <PlayersColumn team={teams.Blue} playerKillsAndDeaths={game.playerKillsAndDeaths} />
+                <ResultColumn
+                    blueColor={teams.Blue.color}
+                    redColor={teams.Red.color}
+                    blueScore={game.blueRoundWins}
+                    redScore={game.redRoundWins}
+                    winner={game.winner}
+                    rounds={game.rounds}
+                />
+                <PlayersColumn team={teams.Red} playerKillsAndDeaths={game.playerKillsAndDeaths} />
             </Grid.Row>
         </Grid>
     )
 }
 
-export const GamePopup = ({children, game, userCache, fetchNewUser}: Props) => {
+interface RoundPopupProps {
+    round: Round,
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void,
+}
+
+export const RoundPopupContents = ({userCache, fetchNewUser, round}: RoundPopupProps) => {
+    useEffect(() => {
+        const fetchUsers = async () => {
+            for (let discordId of [...round.bluePlayers, ...round.redPlayers]) {
+                await fetchNewUser(discordId)
+            }
+        }
+
+        fetchUsers().then().catch(e => console.log("Error"))
+    }, [])
+
+    const bluePlayers = round.bluePlayers.map(discordId => userCache[discordId])
+    const redPlayers = round.redPlayers.map(discordId => userCache[discordId])
+    const teams = {
+        Blue: {
+            teamName: "Blue",
+            players: bluePlayers,
+            color: `rgb(61, 102, 198)`,
+            floated: "left"
+        } as TeamInfo,
+        Red: {
+            teamName: "Red",
+            players: redPlayers,
+            color: `rgb(224, 54, 22, 1.0)`,
+            floated: "right"
+        } as TeamInfo
+    }
+
+    return (
+        <Grid
+            columns={"equal"}
+            // divided
+            // style={{width: "600px"}}
+            // container // Provide a fixed-width container
+            padded
+            textAlign={"center"}
+        >
+            <Grid.Row>
+                <PlayersColumn team={teams.Blue} playerKillsAndDeaths={round.playerKillsAndDeaths} />
+                <ResultColumn
+                    blueColor={teams.Blue.color}
+                    redColor={teams.Red.color}
+                    blueScore={round.blueCaps}
+                    redScore={round.redCaps}
+                    winner={round.winner}
+                    rounds={[round]}
+                />
+                <PlayersColumn team={teams.Red} playerKillsAndDeaths={round.playerKillsAndDeaths} />
+            </Grid.Row>
+        </Grid>
+    )
+}
+
+
+interface GamePopupProps {
+    game: Game,
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void,
+    children: React.ReactNode,
+}
+
+export const GamePopup = ({children, game, userCache, fetchNewUser}: GamePopupProps) => {
 
     return (
         <Popup
@@ -184,10 +147,11 @@ export const GamePopup = ({children, game, userCache, fetchNewUser}: Props) => {
             // Content is in a separate component in order only trigger loading of user data once someone
             // hovers over the popup
             content={
-                <PopupContents
+                <GamePopupContents
                     game={game}
                     userCache={userCache}
-                    fetchNewUser={fetchNewUser}/>
+                    fetchNewUser={fetchNewUser}
+                />
             }
             mouseEnterDelay={500}
             mouseLeaveDelay={250}

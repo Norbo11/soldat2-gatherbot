@@ -2,7 +2,8 @@ import {Button, Dimmer, Form, Grid} from "semantic-ui-react";
 import Modal from "semantic-ui-react/dist/commonjs/modules/Modal";
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
-import {UserResponse} from "../util/api";
+import ReactDOM from "react-dom";
+import {Game, RatingUpdate, Round, UserResponse} from "../util/api";
 import * as d3 from "d3";
 import {D3BrushEvent} from "d3";
 import {RatingCard} from "./RatingCard";
@@ -13,9 +14,11 @@ import _ from "lodash"
 import * as jStat from "jstat";
 import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
 import {UserCache} from "../App";
+import {RoundPopupContents} from "./GamePopup";
+
 
 interface Props {
-    user?: UserResponse,
+    user: UserResponse,
     onClose: () => void,
     userCache: UserCache,
     fetchNewUser: (discordId: string) => void
@@ -24,26 +27,24 @@ interface Props {
 interface RatingData {
     date: Moment,
     lowerTrueSkillEstimate: number,
-    roundNumber: number
+    roundNumber: number,
+    update: RatingUpdate
 }
 
 export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => {
 
-    const figureWidth = 460
-    const figureHeight = 400
+    const figureWidth = 700
+    const figureHeight = 450
 
     const d3Container = useRef(null)
 
     const [xAxisType, setXAxisType] = useState("rounds")
     const [numLastGames, setNumLastGames] = useState(5)
+    const [hoverRound, setHoverRound] = useState<Round | undefined>(undefined)
 
     useEffect(() => {
-        if (user === undefined) {
-            return
-        }
-
         // set the dimensions and margins of the graph
-        const margin = {top: 10, right: 30, bottom: 30, left: 30}
+        const margin = {top: 50, right: 30, bottom: 30, left: 30}
         const width = figureWidth - margin.left - margin.right
         const height = figureHeight - margin.top - margin.bottom;
         const curveType = xAxisType === "rounds" ? d3.curveLinear : d3.curveStep
@@ -60,7 +61,8 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
             return {
                 date: moment(update.roundStartTime),
                 lowerTrueSkillEstimate: update.newMu - 3 * update.newSigma,
-                roundNumber: user.ratingUpdates.length - i
+                roundNumber: user.ratingUpdates.length - i,
+                update
             } as RatingData
         })
 
@@ -141,12 +143,12 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
         const defs = graph.append("defs")
         defs
             .append("svg:clipPath")
-                .attr("id", "clip")
+            .attr("id", "clip")
             .append("svg:rect")
-                .attr("width", width)
-                .attr("height", height)
-                .attr("x", 0)
-                .attr("y", 0)
+            .attr("width", width)
+            .attr("height", height)
+            .attr("x", 0)
+            .attr("y", 0)
 
         defs
             .append("linearGradient")
@@ -201,7 +203,7 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
 
         // Add a brush for selecting an area to zoom into
         const brush = d3.brushX()
-            // Cover the full extent of the graph
+        // Cover the full extent of the graph
             .extent([[0, 0], [width, height]])
             // Each time the brush selection changes, trigger the 'updateChart' function
             .on("end", updateChart)
@@ -251,6 +253,30 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
 
             const r = radius(dataToDisplay.length)
 
+            const handleMouseOverPoint = (e: d3.ClientPointEvent, d: RatingData) => {
+                const roundBoxWidth = 400
+                const roundBoxHeight = 100
+
+                // TODO: Could get rid of this find if we make the API join rating updates to rounds
+                const game = user.sortedGames.find(game => game.startTime === d.update.gameStartTime)!
+                const round = game.rounds.find(round => round.startTime === d.update.roundStartTime)!
+
+                // This is controlled by React.createPortal in the render method of this component
+                svg.append("foreignObject")
+                    .attr("id", `roundHoverBox${round.startTime}`)
+                    .attr("x", x(getXValue(d)) - roundBoxWidth / 2)
+                    .attr("y", y(d.lowerTrueSkillEstimate) + roundBoxHeight / 2 + 5)
+                    .attr("width", roundBoxWidth)
+                    .attr("height", roundBoxHeight)
+
+                setHoverRound(round)
+            }
+
+            const handleMouseOutPoint = (e: d3.ClientPointEvent, d: RatingData) => {
+                d3.select(`#roundHoverBox${d.update.roundStartTime}`).remove();
+                setHoverRound(undefined)
+            }
+
             // Enter selection; new circles should fade in
             circles
                 .enter()
@@ -262,6 +288,8 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
                 .attr("cx", d => x(getXValue(d)))
                 .attr("cy", d => y(d.lowerTrueSkillEstimate))
                 .attr("r", d => r)
+                .on("mouseover", handleMouseOverPoint)
+                .on("mouseout", handleMouseOutPoint)
                 .transition()
                 .duration(1000)
                 .style("opacity", "1")
@@ -308,7 +336,20 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
         });
 
         transitionGraph(dataToDisplay)
-    }, [user, numLastGames])
+    }, [user, numLastGames, xAxisType])
+
+    let portal = null;
+    if (hoverRound !== undefined) {
+        const hoverBoxElem = document.getElementById(`roundHoverBox${hoverRound.startTime}`)!
+
+        portal = ReactDOM.createPortal(
+            <RoundPopupContents
+                round={hoverRound}
+                userCache={userCache}
+                fetchNewUser={fetchNewUser}
+            />, hoverBoxElem
+        )
+    }
 
     return (
         <Modal
@@ -316,8 +357,12 @@ export const RatingModal = ({onClose, user, userCache, fetchNewUser}: Props) => 
             open={true}
             onClose={onClose}
             size="large"
+            style={{
+                width: "95%"
+            }}
         >
-            <Modal.Header>{ user !== undefined ? `Stats for ${user.displayName}` : "Loading stats..."}</Modal.Header>
+            { portal }
+            <Modal.Header>{user !== undefined ? `Stats for ${user.displayName}` : "Loading stats..."}</Modal.Header>
             <Modal.Content
                 scrolling
                 className={"rating-modal"}

@@ -408,7 +408,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
                 {
                     statsModalState.open ?
                     <RatingModal
-                        user={statsModalState.user}
+                        user={statsModalState.user!}
                         onClose={onStatsModalClose}
                         fetchNewUser={fetchNewUser}
                         userCache={userCache}

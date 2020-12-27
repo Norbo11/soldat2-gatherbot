@@ -40,9 +40,21 @@ export default {
                     const allEvents = _.flatMap(game.rounds, round => round.events)
                     const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...game.redPlayers, ...game.bluePlayers], allEvents)
 
+                    const rounds = game.rounds.map(round => {
+                        const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...game.redPlayers, ...game.bluePlayers], round.events)
+
+                        return {
+                            ...round,
+                            playerKillsAndDeaths,
+                            bluePlayers: game.bluePlayers,
+                            redPlayers: game.redPlayers
+                        }
+                    })
+
                     return {
                         ...game,
                         gameNumberForPlayer: sortedGames.length - i,
+                        rounds,
                         playerKillsAndDeaths
                     }
                 }})

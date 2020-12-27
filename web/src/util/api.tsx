@@ -1,26 +1,30 @@
 import {API_URL} from "./constants";
 
 
+export type Winner = "Blue" | "Red" | "Tie"
 
 
-interface Round {
+export interface Round {
     startTime: number
     endTime: number
     mapName: string
     blueCaps: number
     redCaps: number
-    winner: string
+    winner: Winner
+    playerKillsAndDeaths: KillsAndDeaths,
+    bluePlayers: string[],
+    redPlayers: string[]
     // events	[…]
 }
 
-interface RatingUpdate {
+export interface RatingUpdate {
     gameStartTime: number,
     roundStartTime: number,
     newMu: number,
     newSigma: number,
 }
 
-interface KillsAndDeaths {
+export interface KillsAndDeaths {
     [discordId: string]: {
         kills: number,
         deaths: number
@@ -35,7 +39,7 @@ export interface Game {
     size: number,
     startTime: number,
     endTime: number,
-    winner: string,
+    winner: Winner,
     totalRounds: number,
     redRoundWins: number,
     blueRoundWins: number,

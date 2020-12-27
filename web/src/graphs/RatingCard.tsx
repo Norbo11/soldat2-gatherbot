@@ -75,7 +75,7 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                         </List>
                         {
                             interactive ?
-                                <p><b>Last <Input
+                                <b>Last <Input
                                     // value={numLastGames}
                                     style={{
                                         width: "50px",
@@ -86,9 +86,9 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
                                             setNumLastGames(Math.max(1, newValue))
                                         }
                                     }}
-                                /> Games</b></p>
+                                /> Games</b>
                                 :
-                                <p><b>Last Games</b></p>
+                                <b>Last Games</b>
                         }
                         <List className={"games-list"} divided>
                             {_.take(user.sortedGames, numLastGames).map(game => {
@@ -100,6 +100,7 @@ export const RatingCard = ({userCache, fetchNewUser, user, interactive, numLastG
 
                                 return (
                                     <GamePopup
+                                        key={game.startTime}
                                         game={game}
                                         userCache={userCache}
                                         fetchNewUser={fetchNewUser}
