@@ -1,0 +1,4725 @@
+{
+  "Objects": {
+    "ctf_x": {
+      "MapSettings": {
+        "Scene": "nevada",
+        "Author": "",
+        "Seed": 0,
+        "Generate": false,
+        "Mirror": true,
+        "Scale": {
+          "x": 3.5,
+          "y": 2.2,
+          "z": 2.0
+        },
+        "HeightAdd": 5,
+        "MonumentOffset": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "HueShift": 0.092,
+        "SaturationShift": -0.23,
+        "BrightnessShift": 0.0,
+        "SunIntensityShift": 0.0,
+        "SunVerticalAngle": 131.802,
+        "SunHorizontalAngle": -180.1
+      },
+      "VoxelMap3D": {
+        "WorldWidth": 3,
+        "WorldHeight": 5,
+        "PlatformsMaxHeight": 16,
+        "NoiseFrequency": 0.1,
+        "MainNoiseType": 4,
+        "BiomeNoiseType": 6,
+        "BaseTopDownGradient": 1.0,
+        "BaseTopBottomGradient": false,
+        "Paths": [
+          {
+            "Probability": 1.0,
+            "Height": 0.0,
+            "AboveGround": 5.0,
+            "HeightVariance": 7.0,
+            "AboveGroundVariance": 7.0,
+            "VarianceModulation": 0.0,
+            "NoiseFrequency": 0.1,
+            "NoiseType": 2
+          },
+          {
+            "Probability": 1.0,
+            "Height": 0.0,
+            "AboveGround": 7.0,
+            "HeightVariance": 14.0,
+            "AboveGroundVariance": 6.0,
+            "VarianceModulation": 11.0,
+            "NoiseFrequency": 0.3,
+            "NoiseType": 8
+          },
+          {
+            "Probability": 1.0,
+            "Height": 1.0,
+            "AboveGround": -6.0,
+            "HeightVariance": 6.0,
+            "AboveGroundVariance": 6.0,
+            "VarianceModulation": 0.0,
+            "NoiseFrequency": 0.4,
+            "NoiseType": 8
+          }
+        ],
+        "VerticalPathProbability": 0.7,
+        "VerticalPathNeedsHorizontalLength": 14,
+        "VerticalPathOnlyToHole": true,
+        "VerticalWallProbability": 0.0,
+        "VerticalNoiseType": 6,
+        "VerticalNoiseFrequency": 0.15,
+        "VerticalNoiseThreshold": 0.0,
+        "VerticalSpaceOnSides": 0,
+        "VerticalSpaceInMiddle": 0,
+        "TerrainVoxelsModulation": 0.0,
+        "TerrainVoxelsOffset": 0.0,
+        "BiomeFrequency": 0.05,
+        "BiomeAffect": 0.5,
+        "DisturbanceNoiseType": 2,
+        "FrontDisturbance": 14.86,
+        "BackDisturbance": 0.9,
+        "DisturbanceFrequency": 2.8,
+        "DisturbanceSmoothDistance": 0.001,
+        "DisturbanceHoleFactor": 0.44,
+        "DisturbanceRound": 25,
+        "BackThreshold": 0.5,
+        "BackEdgeMinWidth": 5,
+        "ScrambleEdgesFrequency": 0.21,
+        "ScrambleSmoothFactor": 0.1,
+        "OverTopBackFrequency": 0.1,
+        "OverTopWallMaxHeight": 10.0,
+        "FinalRipple": 0.09,
+        "FinalVerticalSlope": 0.3,
+        "FinalVerticalFrequency": 0.04,
+        "FinalBackSlope": 0.1,
+        "HuffmanTiles": [
+          203,
+          1,
+          20,
+          1,
+          21,
+          1,
+          21,
+          2,
+          20,
+          2,
+          20,
+          1,
+          21,
+          1,
+          21,
+          1,
+          20,
+          2,
+          19,
+          4,
+          19,
+          4,
+          7,
+          1,
+          11,
+          3,
+          3,
+          1,
+          3,
+          2,
+          11,
+          2,
+          3,
+          2,
+          2,
+          3,
+          10,
+          2,
+          3,
+          12,
+          5,
+          2,
+          3,
+          12,
+          5,
+          2,
+          3,
+          3,
+          14,
+          2,
+          3,
+          2,
+          15,
+          2,
+          3,
+          2,
+          15,
+          2,
+          3,
+          2,
+          15,
+          2,
+          3,
+          2,
+          15,
+          2,
+          3,
+          2,
+          15,
+          7,
+          16,
+          5,
+          99
+        ]
+      },
+      "MapBoundsHandling": {
+        "DestroyObjectsOutOfBoundsBottom": true,
+        "DestroyObjectsOutOfBoundsTop": false,
+        "DestroyObjectsOutOfBoundsLeft": false,
+        "DestroyObjectsOutOfBoundsRight": false,
+        "CollideObjectsOutOfBoundsBottom": false,
+        "CollideObjectsOutOfBoundsTop": false,
+        "CollideObjectsOutOfBoundsLeft": true,
+        "CollideObjectsOutOfBoundsRight": true
+      },
+      "TerrainGenerator": {
+        "GlobalOffset": 0.0,
+        "GlobalOffsetDepth": 0.0,
+        "GlobalRotation": 0.0,
+        "RandomlyGenerate": false,
+        "MainScale": 1.0,
+        "MainSteepnessScale": 1.0,
+        "Layers": [
+          {
+            "Scale": 244.9,
+            "Steepness": 0.2,
+            "NoiseType": 1
+          },
+          {
+            "Scale": 32.9,
+            "Steepness": 1.12,
+            "NoiseType": 0
+          }
+        ],
+        "DepthNoiseScale": 20.3,
+        "DepthNoiseSize": 6.9,
+        "RippleScale": 58.7,
+        "FinalRipple": -0.26,
+        "ScaleDepthByHeight": 0.0,
+        "ScaleDepthByHeightNoiseScale": 0.1,
+        "NormalsSmoothing": 0.0,
+        "UseCurves": true,
+        "TerrainCurve": [
+          24.522,
+          24.545,
+          24.522,
+          24.631,
+          24.632,
+          24.632,
+          23.418,
+          23.345,
+          23.346,
+          16.675,
+          14.141,
+          13.867,
+          14.088,
+          14.076,
+          14.056,
+          14.056,
+          12.848,
+          12.589,
+          12.997,
+          13.146,
+          13.146,
+          12.791,
+          12.094,
+          11.7,
+          11.701,
+          12.027,
+          12.716,
+          13.349,
+          14.362,
+          14.34,
+          14.341,
+          13.757,
+          10.905,
+          10.905,
+          10.814,
+          10.148,
+          12.558,
+          12.558,
+          12.554,
+          12.406,
+          12.746,
+          12.745
+        ],
+        "CurvesTangent": 0.5,
+        "FlattenMiddleWidth": 3
+      },
+      "MapObjects": {
+        "Objects": [
+          {
+            "Prefab": "basecamp",
+            "Position": {
+              "x": 20.4882,
+              "y": 28.2927,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": -1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 49.1397,
+              "y": 20.1056,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 61.0487,
+              "y": 42.6558,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 24.3695,
+              "y": 27.9483,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 23.9357,
+              "y": 22.2326,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 54.5833,
+              "y": 26.1207,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 53.9789,
+              "y": 26.9577,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 342.2422
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 73.5504,
+              "y": 32.8548,
+              "z": 10.08
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 4.0867,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 73.5069,
+              "y": 24.9678,
+              "z": 12.2867
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 3.2052,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 32.1933,
+              "y": 43.1838,
+              "z": 13.0828
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 1.3006,
+              "y": 7.4572,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 67.1241,
+              "y": 41.1484,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 344.3451
+            },
+            "Scale": {
+              "x": 0.4591,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 57.9462,
+              "y": 39.018,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 35.1868
+            },
+            "Scale": {
+              "x": 0.4201,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 49.6054,
+              "y": 16.1197,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 317.1212
+            },
+            "Scale": {
+              "x": 0.4263,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 65.7852,
+              "y": 9.7475,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 355.8354
+            },
+            "Scale": {
+              "x": 0.4248,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 20.4123,
+              "y": 42.2782,
+              "z": 18.053
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 7.4702,
+              "y": 76.7201,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.819,
+              "y": 21.2985,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5975,
+              "y": 21.3487,
+              "z": 0.2774
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.1878,
+              "y": 20.8592,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.4954,
+              "y": 20.6639,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.8078,
+              "y": 20.4804,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.2163,
+              "y": 21.6739,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.5193,
+              "y": 21.4699,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 69.3228,
+              "y": 38.8646,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 327.6102
+            },
+            "Scale": {
+              "x": 2.4382,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 62.9616,
+              "y": 40.5071,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 345.1834
+            },
+            "Scale": {
+              "x": 5.3095,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 67.0334,
+              "y": 42.9927,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 346.8626
+            },
+            "Scale": {
+              "x": 3.6443,
+              "y": -9.6229,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 60.6502,
+              "y": 40.4986,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 3.2172,
+              "y": 10.0748,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 57.464,
+              "y": 37.646,
+              "z": 0.0253
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 40.334
+            },
+            "Scale": {
+              "x": 2.9569,
+              "y": 8.0971,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 34.907,
+              "y": 53.9735,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 26.134,
+              "y": 19.0712,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 26.9135,
+              "y": 62.9796,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 24.7173,
+              "y": 53.3948,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 25.565,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 16.391,
+              "y": 26.7737,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9946
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 11.6215,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 40.4819,
+              "y": 45.5562,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 32.4188
+            },
+            "Scale": {
+              "x": 14.5588,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.5762,
+              "y": 18.4663,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 61.8993,
+              "y": 22.4616,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9616
+            },
+            "Scale": {
+              "x": 7.0304,
+              "y": 10.7392,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 69.459,
+              "y": 22.8109,
+              "z": -0.1443
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 8.9262
+            },
+            "Scale": {
+              "x": 9.7249,
+              "y": 10.6798,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 54.5822,
+              "y": 24.1568,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 27.0224
+            },
+            "Scale": {
+              "x": 0.528,
+              "y": 0.6273,
+              "z": 0.7383
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 56.2719,
+              "y": 22.6009,
+              "z": 0.0576
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.6583
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 57.8624,
+              "y": 21.1707,
+              "z": 0.0634
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5924,
+              "y": 19.5731,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.2842
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.089,
+              "y": 19.4363,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 1.023
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.3885,
+              "y": 19.2515,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.9136,
+              "y": 21.8228,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.0102,
+              "y": 18.8814,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.2704,
+              "y": 18.6721,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.6974,
+              "y": 19.0782,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.3926,
+              "y": 20.046,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.1072,
+              "y": 20.2749,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.6957,
+              "y": 19.8608,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 25.8579,
+              "y": 60.9595,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 30.291,
+              "y": 60.781,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 23.6876,
+              "y": 27.1157,
+              "z": -1.0845
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 195.0
+            },
+            "Scale": {
+              "x": 0.4186,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 24.1541,
+              "y": 43.1031,
+              "z": 8.4
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 270.0
+            },
+            "Scale": {
+              "x": 1.5531,
+              "y": 7.4926,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 20.4123,
+              "y": 42.2782,
+              "z": 18.053
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 7.4702,
+              "y": 76.7201,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.819,
+              "y": 21.2985,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5975,
+              "y": 21.3487,
+              "z": 0.2774
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.1878,
+              "y": 20.8592,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.4954,
+              "y": 20.6639,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.8078,
+              "y": 20.4804,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.2163,
+              "y": 21.6739,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.5193,
+              "y": 21.4699,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 69.3228,
+              "y": 38.8646,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 327.6102
+            },
+            "Scale": {
+              "x": 2.4382,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 62.9616,
+              "y": 40.5071,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 345.1834
+            },
+            "Scale": {
+              "x": 5.3095,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 67.0334,
+              "y": 42.9927,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 346.8626
+            },
+            "Scale": {
+              "x": 3.6443,
+              "y": -9.6229,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 60.6502,
+              "y": 40.4986,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 3.2172,
+              "y": 10.0748,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 57.464,
+              "y": 37.646,
+              "z": 0.0253
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 40.334
+            },
+            "Scale": {
+              "x": 2.9569,
+              "y": 8.0971,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 34.907,
+              "y": 53.9735,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 26.134,
+              "y": 19.0712,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 26.9135,
+              "y": 62.9796,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 24.7173,
+              "y": 53.3948,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 25.565,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 16.391,
+              "y": 26.7737,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9946
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 11.6215,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 40.4819,
+              "y": 45.5562,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 32.4188
+            },
+            "Scale": {
+              "x": 14.5588,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.5762,
+              "y": 18.4663,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 61.8993,
+              "y": 22.4616,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9616
+            },
+            "Scale": {
+              "x": 7.0304,
+              "y": 10.7392,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 69.459,
+              "y": 22.8109,
+              "z": -0.1443
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 8.9262
+            },
+            "Scale": {
+              "x": 9.7249,
+              "y": 10.6798,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 54.5822,
+              "y": 24.1568,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 27.0224
+            },
+            "Scale": {
+              "x": 0.528,
+              "y": 0.6273,
+              "z": 0.7383
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 56.2719,
+              "y": 22.6009,
+              "z": 0.0576
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.6583
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 57.8624,
+              "y": 21.1707,
+              "z": 0.0634
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5924,
+              "y": 19.5731,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.2842
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.089,
+              "y": 19.4363,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 1.023
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.3885,
+              "y": 19.2515,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.9136,
+              "y": 21.8228,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.0102,
+              "y": 18.8814,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.2704,
+              "y": 18.6721,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.6974,
+              "y": 19.0782,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.3926,
+              "y": 20.046,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.1072,
+              "y": 20.2749,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.6957,
+              "y": 19.8608,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 25.8579,
+              "y": 60.9595,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 30.291,
+              "y": 60.781,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 73.4744,
+              "y": 23.86,
+              "z": -1.0845
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 0.4186,
+              "y": 0.5252,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 73.5257,
+              "y": 36.9962,
+              "z": 8.4
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 180.0
+            },
+            "Scale": {
+              "x": 1.5531,
+              "y": 3.78,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 20.4123,
+              "y": 42.216,
+              "z": 18.053
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 7.4702,
+              "y": 76.7201,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.819,
+              "y": 21.2985,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5975,
+              "y": 21.3487,
+              "z": 0.2774
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.1878,
+              "y": 20.8592,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.4954,
+              "y": 20.6639,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.8078,
+              "y": 20.4804,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.2163,
+              "y": 21.6739,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.5193,
+              "y": 21.4699,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 69.3228,
+              "y": 38.8646,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 327.6102
+            },
+            "Scale": {
+              "x": 2.4382,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 62.9616,
+              "y": 40.5071,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 345.1834
+            },
+            "Scale": {
+              "x": 5.3095,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 67.0334,
+              "y": 42.9927,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 346.8626
+            },
+            "Scale": {
+              "x": 3.6443,
+              "y": -9.6229,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 60.6502,
+              "y": 40.4986,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 3.2172,
+              "y": 10.0748,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 57.464,
+              "y": 37.646,
+              "z": 0.0253
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 40.334
+            },
+            "Scale": {
+              "x": 2.9569,
+              "y": 8.0971,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 34.907,
+              "y": 53.9735,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 26.134,
+              "y": 19.0712,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 26.9135,
+              "y": 62.9796,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 24.7173,
+              "y": 53.3948,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 25.565,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 16.391,
+              "y": 26.7737,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9946
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 11.6215,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 40.4819,
+              "y": 45.5562,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 32.4188
+            },
+            "Scale": {
+              "x": 14.5588,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.5762,
+              "y": 18.4663,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 61.8993,
+              "y": 22.4616,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9616
+            },
+            "Scale": {
+              "x": 7.0304,
+              "y": 10.7392,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 69.459,
+              "y": 22.8109,
+              "z": -0.1443
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 8.9262
+            },
+            "Scale": {
+              "x": 9.7249,
+              "y": 10.6798,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 54.5822,
+              "y": 24.1568,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 27.0224
+            },
+            "Scale": {
+              "x": 0.528,
+              "y": 0.6273,
+              "z": 0.7383
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 56.2719,
+              "y": 22.6009,
+              "z": 0.0576
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.6583
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 57.8624,
+              "y": 21.1707,
+              "z": 0.0634
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5924,
+              "y": 19.5731,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.2842
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.089,
+              "y": 19.4363,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 1.023
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.3885,
+              "y": 19.2515,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.9136,
+              "y": 21.8228,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.0102,
+              "y": 18.8814,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.2704,
+              "y": 18.6721,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.6974,
+              "y": 19.0782,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.3926,
+              "y": 20.046,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.1072,
+              "y": 20.2749,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.6957,
+              "y": 19.8608,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 25.8579,
+              "y": 60.9595,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 30.291,
+              "y": 60.781,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 73.5061,
+              "y": 32.8913,
+              "z": -1.0845
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 0.4186,
+              "y": 0.5009,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 73.491,
+              "y": 24.8551,
+              "z": 8.4
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.5531,
+              "y": 3.6901,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 20.4123,
+              "y": 42.2782,
+              "z": 18.053
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 7.4702,
+              "y": 76.7201,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.819,
+              "y": 21.2985,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5975,
+              "y": 21.3487,
+              "z": 0.2774
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.1878,
+              "y": 20.8592,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.4954,
+              "y": 20.6639,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.8078,
+              "y": 20.4804,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.2163,
+              "y": 21.6739,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.5193,
+              "y": 21.4699,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 69.3228,
+              "y": 38.8646,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 327.6102
+            },
+            "Scale": {
+              "x": 2.4382,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 62.9616,
+              "y": 40.5071,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 345.1834
+            },
+            "Scale": {
+              "x": 5.3095,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 67.0334,
+              "y": 42.9927,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 346.8626
+            },
+            "Scale": {
+              "x": 3.6443,
+              "y": -9.6229,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 60.6502,
+              "y": 40.4986,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 3.2172,
+              "y": 10.0748,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 57.464,
+              "y": 37.646,
+              "z": 0.0253
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 40.334
+            },
+            "Scale": {
+              "x": 2.9569,
+              "y": 8.0971,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 34.907,
+              "y": 53.9735,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 26.134,
+              "y": 19.0712,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 26.9135,
+              "y": 62.9796,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 24.7173,
+              "y": 53.3948,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 25.565,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 16.391,
+              "y": 26.7737,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9946
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 11.6215,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 40.4819,
+              "y": 45.5562,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 32.4188
+            },
+            "Scale": {
+              "x": 14.5588,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.5762,
+              "y": 18.4663,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 61.8993,
+              "y": 22.4616,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9616
+            },
+            "Scale": {
+              "x": 7.0304,
+              "y": 10.7392,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 69.459,
+              "y": 22.8109,
+              "z": -0.1443
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 8.9262
+            },
+            "Scale": {
+              "x": 9.7249,
+              "y": 10.6798,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 54.5822,
+              "y": 24.1568,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 27.0224
+            },
+            "Scale": {
+              "x": 0.528,
+              "y": 0.6273,
+              "z": 0.7383
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 56.2719,
+              "y": 22.6009,
+              "z": 0.0576
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.6583
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 57.8624,
+              "y": 21.1707,
+              "z": 0.0634
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5924,
+              "y": 19.5731,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.2842
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.089,
+              "y": 19.4363,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 1.023
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.3885,
+              "y": 19.2515,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.9136,
+              "y": 21.8228,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.0102,
+              "y": 18.8814,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.2704,
+              "y": 18.6721,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.6974,
+              "y": 19.0782,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.3926,
+              "y": 20.046,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.1072,
+              "y": 20.2749,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.6957,
+              "y": 19.8608,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 25.8579,
+              "y": 60.9595,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 30.291,
+              "y": 60.781,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 23.3796,
+              "y": 43.143,
+              "z": -1.0845
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 270.0
+            },
+            "Scale": {
+              "x": 0.4186,
+              "y": 0.9791,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 25.4612,
+              "y": 20.4934,
+              "z": 8.4
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 15.0
+            },
+            "Scale": {
+              "x": 1.5531,
+              "y": 7.4926,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 20.4123,
+              "y": 42.2782,
+              "z": 18.053
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 7.4702,
+              "y": 76.7201,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.819,
+              "y": 21.2985,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5975,
+              "y": 21.3487,
+              "z": 0.2774
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.1878,
+              "y": 20.8592,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.4954,
+              "y": 20.6639,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.8078,
+              "y": 20.4804,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.2163,
+              "y": 21.6739,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.5193,
+              "y": 21.4699,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 69.3228,
+              "y": 38.8646,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 327.6102
+            },
+            "Scale": {
+              "x": 2.4382,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 62.9616,
+              "y": 40.5071,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 345.1834
+            },
+            "Scale": {
+              "x": 5.3095,
+              "y": 10.0,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 67.0334,
+              "y": 42.9927,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 346.8626
+            },
+            "Scale": {
+              "x": 3.6443,
+              "y": -9.6229,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 60.6502,
+              "y": 40.4986,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 3.2172,
+              "y": 10.0748,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_cube_b-x0.25",
+            "Position": {
+              "x": 57.464,
+              "y": 37.646,
+              "z": 0.0253
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 40.334
+            },
+            "Scale": {
+              "x": 2.9569,
+              "y": 8.0971,
+              "z": 10.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 34.907,
+              "y": 53.9735,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 26.134,
+              "y": 19.0712,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 26.9135,
+              "y": 62.9796,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 24.7173,
+              "y": 53.3948,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 90.0
+            },
+            "Scale": {
+              "x": 25.565,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 16.391,
+              "y": 26.7737,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9946
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 11.6215,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 40.4819,
+              "y": 45.5562,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 32.4188
+            },
+            "Scale": {
+              "x": 14.5588,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.5762,
+              "y": 18.4663,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 61.8993,
+              "y": 22.4616,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.9616
+            },
+            "Scale": {
+              "x": 7.0304,
+              "y": 10.7392,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 69.459,
+              "y": 22.8109,
+              "z": -0.1443
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 8.9262
+            },
+            "Scale": {
+              "x": 9.7249,
+              "y": 10.6798,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 54.5822,
+              "y": 24.1568,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 27.0224
+            },
+            "Scale": {
+              "x": 0.528,
+              "y": 0.6273,
+              "z": 0.7383
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 56.2719,
+              "y": 22.6009,
+              "z": 0.0576
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 46.6583
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 57.8624,
+              "y": 21.1707,
+              "z": 0.0634
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.1652
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 59.5924,
+              "y": 19.5731,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 48.2842
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 62.089,
+              "y": 19.4363,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 86.0274
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.8627,
+              "y": 24.1094,
+              "z": 1.023
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 335.0778
+            },
+            "Scale": {
+              "x": 7.1258,
+              "y": 10.59,
+              "z": 17.0057
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.3885,
+              "y": 19.2515,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.6712
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.9136,
+              "y": 21.8228,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.0102,
+              "y": 18.8814,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.2704,
+              "y": 18.6721,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.6974,
+              "y": 19.0782,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.4961
+            },
+            "Scale": {
+              "x": 0.7794,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 71.3926,
+              "y": 20.046,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 84.9133
+            },
+            "Scale": {
+              "x": 0.7932,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 69.1072,
+              "y": 20.2749,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.544
+            },
+            "Scale": {
+              "x": 0.7825,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 73.6957,
+              "y": 19.8608,
+              "z": 0.0508
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 85.1013
+            },
+            "Scale": {
+              "x": 0.7916,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 25.8579,
+              "y": 60.9595,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 30.291,
+              "y": 60.781,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          }
+        ]
+      }
+    }
+  },
+  "Meta": {
+    "Description": "vanilla",
+    "Thumbnail": "",
+    "Author": "MM",
+    "Version": "1",
+    "Game": "Soldat2",
+    "GameVersion": "0.7.22"
+  }
+}

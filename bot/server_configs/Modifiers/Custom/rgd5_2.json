@@ -9,7 +9,7 @@
           "Bullets",
           "Hitbox"
         ],
-        "SecsToExplode": 3.0,
+        "SecsToExplode": 2.5,
         "Bounciness": 0.5,
         "InheritedVelocity": 1.0,
         "TrailOnlyWhenThrown": false,
@@ -20,12 +20,12 @@
         "StopVelocity": 0.5
       },
       "Explosion": {
-        "Damage": 0.67,
+        "Damage": 0.78,
         "StunSecs": 0.1,
-        "StunIfDamageAtLeast": 0.67,
+        "StunIfDamageAtLeast": 0.8,
         "ExplosionRadius": 7.0,
-        "ExplosionForce": 2150.0,
-        "ExplosionUpliftModifier": 1.0,
+        "ExplosionForce": 2250.0,
+        "ExplosionUpliftModifier": 1.15,
         "CamShakeAmount": 9.0
       }
     }

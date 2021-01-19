@@ -7,12 +7,6 @@
     "Condition": ""
   },
   {
-    "rules": "CaptureTheFlag",
-    "level": "ctf_steel",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
-    "condition": ""
-  },
-  {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_rotten",
     "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
@@ -63,12 +57,6 @@
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_division",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
-    "Condition": ""
-  },
-  {
-    "Rules": "CaptureTheFlag",
-    "Level": "ctf_magpie",
     "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
     "Condition": ""
   }

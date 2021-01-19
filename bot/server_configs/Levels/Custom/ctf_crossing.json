@@ -1,0 +1,740 @@
+{
+  "Objects": {
+    "ctf_crossing": {
+      "MapSettings": {
+        "Scene": "nevada",
+        "Author": "NamelessWolf",
+        "Seed": 0,
+        "Generate": false,
+        "Mirror": true,
+        "Scale": {
+          "x": 3.5,
+          "y": 2.2,
+          "z": 2.0
+        },
+        "HeightAdd": 5,
+        "MonumentOffset": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "HueShift": 0.0,
+        "SaturationShift": 0.0,
+        "BrightnessShift": 0.0,
+        "SunIntensityShift": 0.0,
+        "SunVerticalAngle": 124.7,
+        "SunHorizontalAngle": -180.1
+      },
+      "VoxelMap3D": {
+        "WorldWidth": 3,
+        "WorldHeight": 5,
+        "PlatformsMaxHeight": 16,
+        "NoiseFrequency": 0.1,
+        "MainNoiseType": 4,
+        "BiomeNoiseType": 6,
+        "BaseTopDownGradient": 1.0,
+        "BaseTopBottomGradient": false,
+        "Paths": [
+          {
+            "Probability": 1.0,
+            "Height": 0.0,
+            "AboveGround": 5.0,
+            "HeightVariance": 7.0,
+            "AboveGroundVariance": 7.0,
+            "VarianceModulation": 0.0,
+            "NoiseFrequency": 0.1,
+            "NoiseType": 2
+          },
+          {
+            "Probability": 1.0,
+            "Height": 0.0,
+            "AboveGround": 7.0,
+            "HeightVariance": 14.0,
+            "AboveGroundVariance": 6.0,
+            "VarianceModulation": 11.0,
+            "NoiseFrequency": 0.3,
+            "NoiseType": 8
+          },
+          {
+            "Probability": 1.0,
+            "Height": 1.0,
+            "AboveGround": -6.0,
+            "HeightVariance": 6.0,
+            "AboveGroundVariance": 6.0,
+            "VarianceModulation": 0.0,
+            "NoiseFrequency": 0.4,
+            "NoiseType": 8
+          }
+        ],
+        "VerticalPathProbability": 0.7,
+        "VerticalPathNeedsHorizontalLength": 14,
+        "VerticalPathOnlyToHole": true,
+        "VerticalWallProbability": 0.0,
+        "VerticalNoiseType": 6,
+        "VerticalNoiseFrequency": 0.15,
+        "VerticalNoiseThreshold": 0.0,
+        "VerticalSpaceOnSides": 0,
+        "VerticalSpaceInMiddle": 0,
+        "TerrainVoxelsModulation": 0.0,
+        "TerrainVoxelsOffset": 0.0,
+        "BiomeFrequency": 0.05,
+        "BiomeAffect": 0.5,
+        "DisturbanceNoiseType": 2,
+        "FrontDisturbance": 14.86,
+        "BackDisturbance": 0.9,
+        "DisturbanceFrequency": 2.8,
+        "DisturbanceSmoothDistance": 0.001,
+        "DisturbanceHoleFactor": 0.44,
+        "DisturbanceRound": 25,
+        "BackThreshold": 0.5,
+        "BackEdgeMinWidth": 5,
+        "ScrambleEdgesFrequency": 0.21,
+        "ScrambleSmoothFactor": 0.1,
+        "OverTopBackFrequency": 0.1,
+        "OverTopWallMaxHeight": 10.0,
+        "FinalRipple": 0.09,
+        "FinalVerticalSlope": 0.3,
+        "FinalVerticalFrequency": 0.04,
+        "FinalBackSlope": 0.1,
+        "HuffmanTiles": [
+          143,
+          2,
+          21,
+          2,
+          18,
+          6,
+          13,
+          1,
+          1,
+          3,
+          3,
+          2,
+          12,
+          5,
+          4,
+          3,
+          8,
+          7,
+          5,
+          5,
+          4,
+          9,
+          5,
+          4,
+          4,
+          10,
+          5,
+          3,
+          3,
+          12,
+          8,
+          15,
+          7,
+          15,
+          7,
+          3,
+          19,
+          3,
+          19,
+          3,
+          18,
+          4,
+          18,
+          16,
+          6,
+          16,
+          7,
+          14,
+          9,
+          12,
+          6,
+          2,
+          1,
+          12,
+          6,
+          3,
+          1,
+          11,
+          6,
+          4,
+          3,
+          8,
+          6,
+          5,
+          3,
+          7,
+          6,
+          6,
+          4,
+          5,
+          6,
+          7,
+          4,
+          5,
+          5,
+          8,
+          3,
+          7,
+          3,
+          9,
+          3,
+          8,
+          1,
+          10,
+          2,
+          19,
+          3,
+          2,
+          1,
+          10,
+          1,
+          5,
+          2,
+          2,
+          7,
+          3,
+          1,
+          1,
+          7
+        ]
+      },
+      "MapBoundsHandling": {
+        "DestroyObjectsOutOfBoundsBottom": true,
+        "DestroyObjectsOutOfBoundsTop": false,
+        "DestroyObjectsOutOfBoundsLeft": false,
+        "DestroyObjectsOutOfBoundsRight": false,
+        "CollideObjectsOutOfBoundsBottom": false,
+        "CollideObjectsOutOfBoundsTop": false,
+        "CollideObjectsOutOfBoundsLeft": true,
+        "CollideObjectsOutOfBoundsRight": true
+      },
+      "TerrainGenerator": {
+        "GlobalOffset": 0.0,
+        "GlobalOffsetDepth": 0.0,
+        "GlobalRotation": 0.0,
+        "RandomlyGenerate": false,
+        "MainScale": 1.0,
+        "MainSteepnessScale": 1.0,
+        "Layers": [
+          {
+            "Scale": 244.9,
+            "Steepness": 0.2,
+            "NoiseType": 1
+          },
+          {
+            "Scale": 32.9,
+            "Steepness": 1.12,
+            "NoiseType": 0
+          }
+        ],
+        "DepthNoiseScale": 20.3,
+        "DepthNoiseSize": 6.9,
+        "RippleScale": 58.7,
+        "FinalRipple": -0.26,
+        "ScaleDepthByHeight": 0.0,
+        "ScaleDepthByHeightNoiseScale": 0.1,
+        "NormalsSmoothing": 0.0,
+        "UseCurves": true,
+        "TerrainCurve": [
+          19.495,
+          20.078,
+          20.361,
+          20.363,
+          20.363,
+          19.371,
+          18.717,
+          18.259,
+          17.754,
+          16.817,
+          15.997,
+          15.225,
+          14.172,
+          13.4,
+          14.056,
+          14.031,
+          13.482,
+          14.502,
+          13.528,
+          12.21,
+          11.927,
+          11.668,
+          11.456,
+          11.41,
+          11.41,
+          11.441,
+          11.692,
+          12.242,
+          12.77,
+          13.324,
+          13.61,
+          14.423,
+          15.837,
+          16.762,
+          17.691,
+          17.972,
+          20.472,
+          22.546,
+          22.937,
+          23.152,
+          23.333,
+          25.993
+        ],
+        "CurvesTangent": 0.5,
+        "FlattenMiddleWidth": 3
+      },
+      "MapObjects": {
+        "Objects": [
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 52.2345,
+              "y": 36.3978,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "basecamp",
+            "Position": {
+              "x": 17.536,
+              "y": 36.401,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 64.4892,
+              "y": 38.5661,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 306.9124
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 38.4813,
+              "y": 53.9074,
+              "z": -0.9967
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 326.9345
+            },
+            "Scale": {
+              "x": 35.1508,
+              "y": 21.5716,
+              "z": 21.5716
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 35.2441,
+              "y": 33.0513,
+              "z": -1.9053
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 36.7421,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 69.9765,
+              "y": 26.6333,
+              "z": -3.7182
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 7.8902,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 55.7118,
+              "y": 19.305,
+              "z": -3.567
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 31.3487
+            },
+            "Scale": {
+              "x": 32.3256,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "truss",
+            "Position": {
+              "x": 68.3485,
+              "y": 26.8525,
+              "z": -0.5032
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.3589,
+              "y": 1.3589,
+              "z": 1.3589
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 66.5344,
+              "y": 40.0817,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 270.4267
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 2.7816,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_ramp_c_large-x2",
+            "Position": {
+              "x": 11.3705,
+              "y": 40.8917,
+              "z": -1.9395
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 215.8942
+            },
+            "Scale": {
+              "x": 2.4152,
+              "y": 2.4152,
+              "z": 2.4152
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_ramp_c_large-x2",
+            "Position": {
+              "x": 11.2522,
+              "y": 45.0581,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 180.6823
+            },
+            "Scale": {
+              "x": 4.3214,
+              "y": 4.3214,
+              "z": 4.3214
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 34.0053,
+              "y": 45.0615,
+              "z": -1.7687
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 44.1543,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_ramp_c_large-x2",
+            "Position": {
+              "x": 12.3351,
+              "y": 34.9326,
+              "z": -0.3495
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 270.9388
+            },
+            "Scale": {
+              "x": 3.9201,
+              "y": 3.9201,
+              "z": 3.9201
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 47.817,
+              "y": 19.5774,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 31.2893,
+              "y": 64.0913,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 72.211,
+              "y": 51.5844,
+              "z": -1.7128
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 5.3773,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 52.2545,
+              "y": 62.7771,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 327.9908
+            },
+            "Scale": {
+              "x": 36.3726,
+              "y": 24.8034,
+              "z": 24.8034
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 33.0348,
+              "y": 68.0988,
+              "z": -0.6783
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 34.002
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 46.3017,
+              "y": 27.9475,
+              "z": -2.5207
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 32.4547
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 22.1989,
+              "y": 72.7669,
+              "z": -0.4223
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 18.0,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "concrete slab",
+            "Position": {
+              "x": 6.6211,
+              "y": 55.8818,
+              "z": -1.3556
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 10.329,
+              "y": 18.0,
+              "z": 18.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          }
+        ]
+      }
+    }
+  },
+  "Meta": {
+    "Description": "vanilla",
+    "Thumbnail": "",
+    "Author": "MM",
+    "Version": "1",
+    "Game": "Soldat2",
+    "GameVersion": "0.7.22"
+  }
+}

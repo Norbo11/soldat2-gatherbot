@@ -1,33 +1,33 @@
 {
   "Objects": {
-    "ctf_Nat": {
+    "ctf_strike": {
       "MapSettings": {
-        "Scene": "laos",
+        "Scene": "nevada",
         "Author": "",
         "Seed": 0,
         "Generate": false,
         "Mirror": true,
         "Scale": {
-          "x": 3.0,
+          "x": 3.5,
           "y": 2.2,
           "z": 2.0
         },
         "HeightAdd": 5,
         "MonumentOffset": {
-          "x": 0.0,
-          "y": 0.0,
-          "z": 0.0
+          "x": 17.8,
+          "y": 11.0,
+          "z": 190.0
         },
-        "HueShift": 0.0,
-        "SaturationShift": 0.0,
-        "BrightnessShift": 0.0,
-        "SunIntensityShift": 0.0,
+        "HueShift": 0.081,
+        "SaturationShift": -0.097,
+        "BrightnessShift": -0.037,
+        "SunIntensityShift": -0.014,
         "SunVerticalAngle": 124.7,
-        "SunHorizontalAngle": -180.1
+        "SunHorizontalAngle": 218.496
       },
       "VoxelMap3D": {
-        "WorldWidth": 8,
-        "WorldHeight": 10,
+        "WorldWidth": 4,
+        "WorldHeight": 4,
         "PlatformsMaxHeight": 16,
         "NoiseFrequency": 0.1,
         "MainNoiseType": 4,
@@ -82,12 +82,12 @@
         "DisturbanceNoiseType": 2,
         "FrontDisturbance": 14.86,
         "BackDisturbance": 0.9,
-        "DisturbanceFrequency": 0.8,
+        "DisturbanceFrequency": 2.8,
         "DisturbanceSmoothDistance": 0.001,
         "DisturbanceHoleFactor": 0.44,
         "DisturbanceRound": 25,
-        "BackThreshold": 0.0,
-        "BackEdgeMinWidth": 10,
+        "BackThreshold": 0.11,
+        "BackEdgeMinWidth": 5,
         "ScrambleEdgesFrequency": 0.21,
         "ScrambleSmoothFactor": 0.1,
         "OverTopBackFrequency": 0.1,
@@ -97,181 +97,99 @@
         "FinalVerticalFrequency": 0.04,
         "FinalBackSlope": 0.1,
         "HuffmanTiles": [
-          1205,
-          2,
-          1,
-          1,
-          5,
-          1,
-          48,
-          10,
-          48,
-          7,
-          50,
-          8,
-          36,
-          1,
-          13,
-          9,
-          19,
-          2,
-          7,
-          8,
-          13,
-          8,
-          3,
-          2,
-          13,
-          4,
-          5,
-          10,
-          3,
-          1,
-          8,
-          7,
-          5,
-          6,
-          7,
-          5,
-          5,
-          10,
-          3,
-          3,
-          6,
-          6,
-          7,
+          214,
+          11,
           17,
-          5,
-          3,
-          3,
-          4,
-          4,
-          3,
-          5,
           2,
-          14,
-          9,
-          17,
-          3,
-          5,
+          2,
           4,
-          3,
-          2,
-          16,
-          3,
-          2,
-          1,
-          18,
-          3,
-          5,
-          4,
-          3,
-          2,
-          16,
-          3,
           21,
+          1,
+          4,
+          2,
+          30,
           3,
-          6,
-          3,
-          3,
-          2,
-          11,
-          3,
-          3,
-          2,
-          35,
-          3,
-          4,
+          12,
           1,
-          1,
-          4,
-          2,
-          1,
-          41,
-          4,
-          3,
-          1,
-          1,
-          1,
-          2,
-          1,
-          2,
-          1,
-          41,
-          5,
-          2,
-          1,
-          4,
-          1,
-          2,
-          1,
-          3,
-          3,
-          36,
-          4,
-          2,
-          1,
-          11,
-          4,
-          19,
-          2,
-          16,
-          5,
-          7,
-          1,
-          4,
-          2,
-          20,
-          4,
-          16,
-          4,
-          6,
-          1,
-          4,
-          1,
-          20,
-          5,
-          16,
-          5,
-          4,
-          2,
-          4,
-          1,
-          19,
-          4,
-          19,
-          11,
-          2,
-          2,
-          18,
-          2,
-          2,
-          1,
-          19,
-          1,
-          6,
-          8,
-          17,
-          2,
-          31,
-          2,
-          3,
-          3,
           13,
-          5,
-          36,
+          3,
+          12,
           1,
+          7,
+          2,
+          5,
+          2,
+          9,
+          2,
           1,
           3,
           5,
+          3,
+          15,
+          1,
+          1,
+          5,
+          6,
+          2,
+          10,
+          3,
+          1,
+          3,
+          11,
+          5,
+          5,
+          4,
+          1,
+          2,
+          13,
+          3,
           8,
-          43,
-          8,
+          2,
+          1,
+          1,
+          26,
+          1,
+          1,
+          1,
+          28,
+          1,
+          27,
+          2,
+          27,
+          2,
+          16,
+          2,
+          2,
+          2,
+          5,
+          2,
+          17,
+          4,
+          5,
+          3,
+          25,
+          5,
+          9,
+          4,
+          11,
+          7,
+          6,
+          6,
+          12,
+          5,
+          6,
+          7,
+          6,
+          3,
+          2,
+          3,
+          14,
+          14,
+          17,
+          1,
           4,
           2,
-          49,
-          2,
-          1440
+          3
         ]
       },
       "MapBoundsHandling": {
@@ -312,118 +230,62 @@
         "NormalsSmoothing": 0.0,
         "UseCurves": true,
         "TerrainCurve": [
-          27.608,
-          27.526,
-          31.195,
-          32.033,
-          34.226,
-          35.488,
-          35.987,
-          37.045,
-          37.043,
-          37.057,
-          37.631,
-          37.644,
-          38.226,
-          38.248,
-          39.135,
-          39.175,
-          41.086,
-          41.198,
-          41.198,
-          41.279,
-          41.355,
-          41.238,
-          40.676,
-          40.497,
-          38.037,
-          37.117,
-          37.075,
-          37.287,
-          37.255,
-          37.243,
-          37.243,
-          37.345,
-          37.363,
-          37.188,
-          30.876,
-          30.894,
-          30.894,
-          30.899,
-          30.977,
-          31.007,
-          31.083,
-          31.119,
-          31.21,
-          31.348,
-          31.508,
-          31.629,
-          31.697,
-          32.99,
-          33.715,
-          33.858,
-          34.135,
-          34.11,
-          33.844,
-          33.567,
-          33.347,
-          33.116,
-          32.869,
-          32.838,
-          32.825,
-          32.614,
-          32.583,
-          32.622,
-          32.46,
-          32.337,
-          32.304,
-          32.396,
-          32.72,
-          33.569,
-          34.723,
-          35.398,
-          35.979,
-          36.234,
-          36.234,
-          36.208,
-          35.139,
-          32.399,
-          32.968,
-          34.211,
-          32.683,
-          32.683,
-          32.877,
-          33.663,
-          33.989,
-          35.481,
-          35.524,
-          35.755,
-          35.755,
-          35.723,
-          35.504,
-          35.504,
-          35.471,
-          35.253,
-          35.418,
-          34.775,
-          34.775,
-          34.739,
-          34.189,
-          34.213,
-          34.696,
-          34.641,
-          33.755,
-          33.417,
-          33.364,
-          33.333,
-          33.141,
-          33.622,
-          33.622,
-          33.636,
-          36.083,
-          36.097,
-          42.321,
-          43.399
+          34.863,
+          34.823,
+          32.531,
+          29.968,
+          20.094,
+          15.61,
+          19.172,
+          17.676,
+          18.697,
+          17.685,
+          9.627,
+          15.841,
+          6.49,
+          5.9,
+          5.38,
+          5.29,
+          5.239,
+          5.119,
+          4.93,
+          4.801,
+          4.7,
+          4.577,
+          4.479,
+          4.323,
+          4.174,
+          4.107,
+          4.044,
+          3.76,
+          3.503,
+          3.553,
+          3.497,
+          3.29,
+          3.171,
+          3.021,
+          3.026,
+          0.0,
+          3.147,
+          4.453,
+          3.47,
+          3.47,
+          4.033,
+          6.009,
+          4.716,
+          5.313,
+          5.754,
+          8.111,
+          7.868,
+          18.775,
+          8.198,
+          7.648,
+          6.475,
+          7.462,
+          5.752,
+          5.963,
+          5.791,
+          5.698
         ],
         "CurvesTangent": 0.5,
         "FlattenMiddleWidth": 3
@@ -431,590 +293,31 @@
       "MapObjects": {
         "Objects": [
           {
-            "Prefab": "rickety bridge",
+            "Prefab": "block_ramp_c_large-x2",
             "Position": {
-              "x": 36.242,
-              "y": 85.4865,
+              "x": 12.9482,
+              "y": 26.0709,
               "z": 0.0
             },
             "Rotation": {
               "x": 0.0,
               "y": 0.0,
-              "z": 0.0
+              "z": 198.6642
             },
             "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
+              "x": 6.8968,
+              "y": 6.8968,
+              "z": 4.2156
             },
             "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "rickety bridge",
-            "Position": {
-              "x": 142.8391,
-              "y": 96.1126,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "rickety bridge",
-            "Position": {
-              "x": 125.0274,
-              "y": 98.6969,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 145.6204,
-              "y": 94.1414,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 127.9743,
-              "y": 96.511,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 92.1611,
-              "y": 100.1717,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 38.983,
-              "y": 85.6799,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 36.18,
-              "y": 85.6692,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "guard tower",
-            "Position": {
-              "x": 37.524,
-              "y": 80.9227,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "guard tower",
-            "Position": {
-              "x": 90.7371,
-              "y": 95.4024,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "tent cover",
-            "Position": {
-              "x": 144.0904,
-              "y": 94.1631,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "tent cover",
-            "Position": {
-              "x": 126.4225,
-              "y": 96.4976,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "tent cover big",
-            "Position": {
-              "x": 113.0544,
-              "y": 98.4746,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "tent cover big",
-            "Position": {
-              "x": 83.7905,
-              "y": 92.2141,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "wood bridge",
-            "Position": {
-              "x": 53.4775,
-              "y": 90.766,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 77.9484,
-              "y": 51.0331,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 53.9946,
-              "y": 60.7746,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.6394,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 93.7474,
-              "y": 69.4829,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "truss",
-            "Position": {
-              "x": 78.052,
-              "y": 63.3335,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "wood bridge",
-            "Position": {
-              "x": 77.7497,
-              "y": 82.8257,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 270.8079
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "wood bridge",
-            "Position": {
-              "x": 123.3899,
-              "y": 62.3092,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.4747,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "wood bridge",
-            "Position": {
-              "x": 57.6358,
-              "y": 57.6982,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 57.9476,
-              "y": 50.0935,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.4448,
-              "y": 1.6005,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 105.0985,
-              "y": 53.7215,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 126.1246,
-              "y": 49.687,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 162.5701,
-              "y": 70.1966,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.3874,
-              "y": 1.3571,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 122.9966,
-              "y": 63.4661,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 75.0907,
-              "y": 63.5158,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
-          },
-          {
-            "Prefab": "sandbags",
-            "Position": {
-              "x": 51.0256,
-              "y": 63.633,
-              "z": 0.0
-            },
-            "Rotation": {
-              "x": 0.0,
-              "y": 0.0,
-              "z": 0.0
-            },
-            "Scale": {
-              "x": 1.0,
-              "y": 1.0,
-              "z": 1.0
-            },
-            "Snap": false,
-            "Background": false
+            "Background": false,
+            "Segments": 0
           },
           {
             "Prefab": "soldier respawn",
             "Position": {
-              "x": 47.3581,
-              "y": 65.838,
+              "x": 6.9259,
+              "y": 39.303,
               "z": 0.0
             },
             "Rotation": {
@@ -1028,13 +331,14 @@
               "z": 1.0
             },
             "Snap": false,
-            "Background": false
+            "Background": false,
+            "Segments": 0
           },
           {
             "Prefab": "soldier respawn",
             "Position": {
-              "x": 43.6699,
-              "y": 66.1584,
+              "x": 15.5253,
+              "y": 33.2589,
               "z": 0.0
             },
             "Rotation": {
@@ -1048,13 +352,224 @@
               "z": 1.0
             },
             "Snap": false,
-            "Background": false
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "railing",
+            "Position": {
+              "x": 8.3505,
+              "y": 37.967,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 91.2743
+            },
+            "Scale": {
+              "x": 0.7196,
+              "y": 1.1202,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "block_curve_cshape_a-x2",
+            "Position": {
+              "x": 31.3844,
+              "y": 21.0915,
+              "z": 1.0818
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 38.6673
+            },
+            "Scale": {
+              "x": 8.4414,
+              "y": 9.6419,
+              "z": 5.3292
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 93.7848,
+              "y": 17.8145,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 10.4322
+            },
+            "Scale": {
+              "x": 4.1667,
+              "y": 1.8647,
+              "z": -11.0691
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "nevadaslab",
+            "Position": {
+              "x": 36.4573,
+              "y": 17.8341,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 316.5176
+            },
+            "Scale": {
+              "x": 25.6322,
+              "y": 25.6322,
+              "z": 116.7939
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 19.906,
+              "y": 6.8532,
+              "z": 8.4
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 353.8347
+            },
+            "Scale": {
+              "x": 13.3356,
+              "y": 21.9712,
+              "z": 9.0351
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "nevadaslab",
+            "Position": {
+              "x": -4.2107,
+              "y": 33.0452,
+              "z": -8.7585
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 81.6143
+            },
+            "Scale": {
+              "x": 91.7881,
+              "y": 91.7881,
+              "z": 91.7881
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 72.9451,
+              "y": 59.1282,
+              "z": -2.9776
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 93.0912
+            },
+            "Scale": {
+              "x": 3.7904,
+              "y": 65.2278,
+              "z": 3.7904
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "nevadaslab",
+            "Position": {
+              "x": 31.7915,
+              "y": 19.9264,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 24.4945,
+              "y": 25.6322,
+              "z": 116.7939
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "cylinderstructure",
+            "Position": {
+              "x": 66.7828,
+              "y": 16.0594,
+              "z": 6.4422
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 359.3595
+            },
+            "Scale": {
+              "x": 4.6758,
+              "y": 9.7154,
+              "z": 6.6847
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
+          },
+          {
+            "Prefab": "bigslab",
+            "Position": {
+              "x": 26.8509,
+              "y": 4.6238,
+              "z": 8.4
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 10.4203,
+              "y": 3.6559,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": true,
+            "Segments": 0
           },
           {
             "Prefab": "basecamp",
             "Position": {
-              "x": 64.4379,
-              "y": 74.7522,
+              "x": 31.9557,
+              "y": 23.9412,
               "z": 0.0
             },
             "Rotation": {
@@ -1068,7 +583,239 @@
               "z": 1.0
             },
             "Snap": false,
-            "Background": false
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "soldier respawn",
+            "Position": {
+              "x": 10.9261,
+              "y": 35.8868,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 51.1788,
+              "y": 4.4235,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 26.987,
+              "y": 7.6414,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 23.6026,
+              "y": 31.8889,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 62.7233,
+              "y": 36.2144,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 76.5976,
+              "y": 49.5287,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 71.6791,
+              "y": 16.1962,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 69.6986,
+              "y": 27.4848,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "sandbags",
+            "Position": {
+              "x": 83.8238,
+              "y": 9.7513,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "wood bridge",
+            "Position": {
+              "x": 73.7012,
+              "y": 15.9628,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
+          },
+          {
+            "Prefab": "wood bridge",
+            "Position": {
+              "x": 67.815,
+              "y": 32.8089,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "Snap": false,
+            "Background": false,
+            "Segments": 0
           }
         ]
       }
@@ -1080,6 +827,6 @@
     "Author": "MM",
     "Version": "1",
     "Game": "Soldat2",
-    "GameVersion": "0.7.18"
+    "GameVersion": "0.7.19"
   }
 }
