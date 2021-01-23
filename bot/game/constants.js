@@ -101,6 +101,10 @@ const SOLDAT_WEAPONS = {
         id: "16",
         formattedName: "N/A"
     },
+    DEAGLES: {
+        id: "17",
+        formattedName: "Deagles"
+    },
 }
 
 const IN_GAME_STATES = {
