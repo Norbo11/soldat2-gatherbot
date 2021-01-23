@@ -3,61 +3,61 @@
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_guardian",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_rotten",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_laos",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_berry",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_blitz",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_Snakebite",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_cobra",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_ash",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_nubya",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   },
   {
     "Rules": "CaptureTheFlag",
     "Level": "ctf_division",
-    "Modifiers": ["FasterWeaponSwap", "Gather", "wmv01", "rgd5_2"],
+    "Modifiers": ["FasterWeaponSwap", "Gather"],
     "Condition": ""
   }
 ]
