@@ -36,6 +36,10 @@ const setUpEvents = () => {
     client.once("ready", (...args) => {
         client.on("message", (...args) => message(client, ...args))
         client.on("presenceUpdate", (...args) => presenceUpdate(client, ...args))
+        client.on('debug', logger.log.debug)
+        client.on('warn', logger.log.warn)
+        client.on('rateLimit', logger.log.warn)
+
         ready(client, ...args)
     })
     process.on("SIGINT", cleanUp)
