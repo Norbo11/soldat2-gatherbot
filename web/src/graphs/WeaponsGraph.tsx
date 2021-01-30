@@ -40,9 +40,11 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
             return
         }
 
+        const legendWidth = 100;
+
         // set the dimensions and margins of the graph
         const margin = {top: 50, right: 30, bottom: 30, left: 50}
-        const width = figureWidth - margin.left - margin.right
+        const width = figureWidth - margin.left - margin.right - legendWidth;
         const height = figureHeight - margin.top - margin.bottom;
         const curveType = xAxisType === "rounds" ? d3.curveLinear : d3.curveStep
         const lines: d3.Selection<SVGPathElement, WeaponStatsPoint[], null, undefined>[] = []
@@ -142,29 +144,11 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
             .attr("x", 0)
             .attr("y", 0)
 
+        const legend = graph.append('g')
+
         // Create a group where both the line and the brush are drawn, link it to the earlier clip path
         const group = graph.append('g')
             .attr("clip-path", "url(#clip)")
-
-        _.keys(weaponStats[0].weapons).map(weaponName => {
-            // Add the line to the above group
-            const line = group.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", color(weaponName))
-                .attr("stroke-width", 2.0)
-                .attr("d", getLine(weaponName))
-
-            line.on("mouseover", () => {
-                line.attr("stroke-width", 3.0)
-            })
-
-            line.on("mouseout", () => {
-                line.attr("stroke-width", 2.0)
-            })
-
-            lines.push(line)
-        })
 
         // Add a brush for selecting an area to zoom into
         const brush = d3.brushX()
@@ -177,6 +161,54 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
         group.append("g")
             .attr("class", "brush")
             .call(brush);
+
+        _.keys(weaponStats[0].weapons).map((weaponName, i) => {
+            // Add the line to the above group
+            const line = group.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", color(weaponName))
+                .attr("stroke-width", 2.0)
+                .attr("d", getLine(weaponName))
+
+            line.on("mouseover", (e: d3.ClientPointEvent, d: WeaponStatsPoint[]) => {
+                const xPoint = x.invert(e.clientX)
+                const yPoint = y.invert(e.clientY)
+
+                line.attr("stroke-width", 4.0)
+                line.append("text")
+                    .datum(weaponName)
+                    .attr("x", e.clientX)
+                    .attr("y", e.clientY)
+                    .style("fill", d => color(d))
+                    .text(d => `${weaponName}: `)
+            })
+
+            line.on("mouseout", () => {
+                line.attr("stroke-width", 2.0)
+            })
+
+            legend
+                .append("circle")
+                .datum(weaponName)
+                .attr("cx", width + 20)
+                .attr("cy", d => i * 20) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("r", 6)
+                .style("fill", d => color(d))
+
+            legend
+                .append("text")
+                .datum(weaponName)
+                .attr("x", width + 40)
+                .attr("y", d => i * 20) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", d => color(d))
+                .text(d => d)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+                .style("font-size", "14px")
+
+            lines.push(line)
+        })
 
         const transitionGraph = (data: WeaponStatsPoint[]) => {
             // Transition to new axis using the new domains
@@ -237,54 +269,54 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
             <Dimmer active inverted>
                 <Loader inverted>Loading...</Loader>
             </Dimmer>
-        : <div>
-        <h3>Weapon Kills Over Time</h3>
-            <Form>
-                <p>Click & drag to zoom. Double-click to zoom out fully.</p>
-                <Form.Group inline>
-                    <label>X-Axis</label>
-                    <Form.Radio
-                        inline
-                        label={"Time"}
-                        value={"time"}
-                        checked={xAxisType === "time"}
-                        onChange={(e, {value}) => setXAxisType(value as string)}
-                    />
-                    <Form.Radio
-                        inline
-                        label={"Round Number"}
-                        value={"rounds"}
-                        checked={xAxisType === "rounds"}
-                        onChange={(e, {value}) => setXAxisType(value as string)}
-                    />
+            : <div>
+                <h3>Weapon Kills Over Time</h3>
+                <Form>
+                    <p>Click & drag to zoom. Double-click to zoom out fully.</p>
+                    <Form.Group inline>
+                        <label>X-Axis</label>
+                        <Form.Radio
+                            inline
+                            label={"Time"}
+                            value={"time"}
+                            checked={xAxisType === "time"}
+                            onChange={(e, {value}) => setXAxisType(value as string)}
+                        />
+                        <Form.Radio
+                            inline
+                            label={"Round Number"}
+                            value={"rounds"}
+                            checked={xAxisType === "rounds"}
+                            onChange={(e, {value}) => setXAxisType(value as string)}
+                        />
 
-                    <span>
+                        <span>
                         Last <Input
-                        value={numRoundsToDisplay}
-                        style={{
-                            width: "50px",
-                        }}
-                        onChange={(e) => {
-                            setNumRoundsToDisplayString(e.target.value)
+                            value={numRoundsToDisplay}
+                            style={{
+                                width: "70px",
+                            }}
+                            onChange={(e) => {
+                                setNumRoundsToDisplayString(e.target.value)
 
-                            const newValue = parseInt(e.target.value)
-                            if (!isNaN(newValue)) {
-                                setNumRoundsToDisplay(Math.max(1, newValue))
-                            }
-                        }}
-                    /> Rounds
+                                const newValue = parseInt(e.target.value)
+                                if (!isNaN(newValue)) {
+                                    setNumRoundsToDisplay(Math.max(1, newValue))
+                                }
+                            }}
+                        /> Rounds
                     </span>
-                </Form.Group>
-            </Form>
-            <div className={"svg-container"}>
-                <svg
-                    ref={d3Container}
-                    preserveAspectRatio="xMinYMin meet"
-                    viewBox={`0 0 ${figureWidth} ${figureHeight}`}
-                    className={"svg-content-responsive"}
-                />
+                    </Form.Group>
+                </Form>
+                <div className={"svg-container"}>
+                    <svg
+                        ref={d3Container}
+                        preserveAspectRatio="xMinYMin meet"
+                        viewBox={`0 0 ${figureWidth} ${figureHeight}`}
+                        className={"svg-content-responsive"}
+                    />
+                </div>
             </div>
-        </div>
     )
 }
 
