@@ -1,5 +1,5 @@
 import _ from "lodash"
-import stats, {getKillsAndDeathsPerPlayer} from "../game/stats";
+import stats, {getKillsAndDeathsPerPlayer, getWeaponStatsOverTime} from "../game/stats";
 
 export default {
     routes: [
@@ -74,6 +74,14 @@ export default {
                 }
 
                 res.json(result)
+            }
+        },
+        {
+            method: "get",
+            path: "/api/v1/weapons",
+            handler: async (req, res, next) => {
+                const weaponStatsOverTime = await getWeaponStatsOverTime(currentStatsDb)
+                res.json(weaponStatsOverTime)
             }
         }
     ]

@@ -220,6 +220,42 @@ const getGatherStats = async (statsDb) => {
     }
 }
 
+export const getWeaponStatsOverTime = async (statsDb) => {
+    const games = await statsDb.getAllGames()
+    const cumulativeWeaponStats = {}
+    const weaponStatsPerRound = []
+
+    Object.keys(SOLDAT_WEAPONS).forEach(weaponKey => {
+        cumulativeWeaponStats[SOLDAT_WEAPONS[weaponKey].formattedName] = {
+            kills: 0,
+        }
+    })
+
+    let roundNumber = 0;
+
+    games.forEach(game => {
+        game.rounds.forEach(round => {
+            const weaponStatsThisRound = {}
+
+            round.events.forEach(event => {
+                if (event.type === SOLDAT_EVENTS.PLAYER_KILL) {
+                    cumulativeWeaponStats[event.weaponName].kills += 1
+                }
+            })
+
+            weaponStatsThisRound["startTime"] = round.startTime
+            weaponStatsThisRound["roundNumber"] = roundNumber
+            weaponStatsThisRound["weapons"] = _.cloneDeep(cumulativeWeaponStats)
+
+            weaponStatsPerRound.push(weaponStatsThisRound)
+
+            roundNumber += 1
+        })
+    })
+
+    return weaponStatsPerRound
+}
+
 const getTopPlayers = async (statsDb, minimumGamesPlayed, gameMode) => {
     const allDiscordIds = await statsDb.getAllDiscordIds()
     const allPlayerStats = []
