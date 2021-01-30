@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import "./App.css";
 import {Ratings} from "./graphs/Ratings";
-import {fetchAllRatings, fetchUser, RatingResponse, UserResponse} from "./util/api";
+import {fetchAllRatings, fetchUser, fetchWeaponStats, RatingResponse, UserResponse, WeaponStatsPoint} from "./util/api";
 import 'semantic-ui-css/semantic.min.css'
 import {Container} from "semantic-ui-react";
 import _ from "lodash";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {UserStatsPage} from "./UserStatsPage";
+import {WeaponsGraph} from "./graphs/WeaponsGraph";
 
 export interface UserCache {
     [discordId: string]: UserResponse
@@ -18,10 +19,15 @@ export const UserCacheContext = React.createContext({} as UserCache)
 function App() {
     const [ratings, setRatings] = useState<RatingResponse[]>([])
     const [userCache, setUserCache] = useState<UserCache>({})
+    const [weaponStats, setWeaponStats] = useState<WeaponStatsPoint[]>([])
 
     useEffect(() => {
         fetchAllRatings().then(ratings => {
             setRatings(ratings)
+        })
+
+        fetchWeaponStats().then(weaponStats => {
+            setWeaponStats(weaponStats)
         })
     }, [])
 
@@ -51,6 +57,11 @@ function App() {
                             <UserStatsPage
                                 userCache={userCache}
                                 fetchNewUser={fetchNewUser}
+                            />
+                        </Route>
+                        <Route path={"/weapons"}>
+                            <WeaponsGraph
+                                weaponStats={weaponStats}
                             />
                         </Route>
                     </Switch>

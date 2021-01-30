@@ -97,10 +97,24 @@ export interface UserResponse {
     sortedGames: Game[]
 }
 
+export interface WeaponStatsPoint {
+    startTime: number,
+    roundNumber: number,
+    weapons: {
+        [weaponName: string]: {
+            kills: number
+        }
+    }
+}
+
 export const fetchAllRatings = async (): Promise<RatingResponse[]> => {
     return (await fetch(`${API_URL}/ratings/all`)).json()
 }
 
 export const fetchUser = async (discordId: string): Promise<UserResponse> => {
     return (await fetch(`${API_URL}/ratings/user/${discordId}`)).json()
+}
+
+export const fetchWeaponStats = async (): Promise<WeaponStatsPoint[]> => {
+    return (await fetch(`${API_URL}/weapons`)).json()
 }
