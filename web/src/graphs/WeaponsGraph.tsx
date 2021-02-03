@@ -162,30 +162,68 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
             .attr("class", "brush")
             .call(brush);
 
+        const lineWidth = 2
+        const lineWidthHover = 4
+
         _.keys(weaponStats[0].weapons).map((weaponName, i) => {
+
+            // We have a weapon called N/A which messes up selectors
+            const cleanWeaponName = weaponName.replace("/", "")
+
             // Add the line to the above group
             const line = group.append("path")
                 .datum(data)
                 .attr("fill", "none")
                 .attr("stroke", color(weaponName))
-                .attr("stroke-width", 2.0)
+                .attr("stroke-width", lineWidth)
                 .attr("d", getLine(weaponName))
 
             line.on("mouseover", (e: d3.ClientPointEvent, d: WeaponStatsPoint[]) => {
-                const xPoint = x.invert(e.clientX)
-                const yPoint = y.invert(e.clientY)
+                const [clientX, clientY] = d3.pointer(e)
 
-                line.attr("stroke-width", 4.0)
-                line.append("text")
+                const xPoint = x.invert(clientX)
+                const yPoint = y.invert(clientY)
+
+                let index;
+
+                if (xPoint instanceof Date) {
+                    index = d3.bisect(dataToDisplay.map(d => d.startTime), xPoint.valueOf())
+                }
+                else {
+                    index = d3.bisect(dataToDisplay.map(d => d.roundNumber), xPoint)
+                }
+
+                const datum = dataToDisplay[index]
+
+                line.attr("stroke-width", lineWidthHover)
+                const tooltipGroup = graph
+                    .append("g")
+                    .attr("id", `${cleanWeaponName}Tooltip`)
+
+                const tooltipText = tooltipGroup.append("text")
+                    .attr("id", `${cleanWeaponName}TooltipText`)
                     .datum(weaponName)
-                    .attr("x", e.clientX)
-                    .attr("y", e.clientY)
-                    .style("fill", d => color(d))
-                    .text(d => `${weaponName}: `)
+                    .attr("x", clientX + 10)
+                    .attr("y", clientY - 10) // 100 is where the first dot appears. 25 is the distance between dots
+                    .style("fill", color(weaponName))
+                    .text(`${weaponName}: ${datum.weapons[weaponName].kills}`)
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+                    .style("font-size", "14px")
+
+                const tooltipPadding = 3
+
+                tooltipGroup.insert("rect", `#${cleanWeaponName}TooltipText`)
+                    .style("fill", "rgb(0, 0, 0, 0.7)")
+                    .attr("x", clientX + 10 - tooltipPadding)
+                    .attr("y", clientY - 10 - tooltipText.node()!.getBBox().height)
+                    .attr("width", tooltipText.node()!.getBBox().width + tooltipPadding * 2)
+                    .attr("height", tooltipText.node()!.getBBox().height + tooltipPadding * 2)
             })
 
-            line.on("mouseout", () => {
-                line.attr("stroke-width", 2.0)
+            line.on("mouseout", (e: d3.ClientPointEvent, d: WeaponStatsPoint[]) => {
+                line.attr("stroke-width", lineWidth)
+                graph.select(`#${cleanWeaponName}Tooltip`).remove()
             })
 
             legend
