@@ -48,7 +48,7 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
         const height = figureHeight - margin.top - margin.bottom;
         const curveType = xAxisType === "rounds" ? d3.curveLinear : d3.curveStep
         const lines: d3.Selection<SVGPathElement, WeaponStatsPoint[], null, undefined>[] = []
-        const color = d3.scaleOrdinal(d3.schemeCategory10);
+        const color = d3.scaleOrdinal([...d3.schemeCategory10, ...d3.schemeTableau10]);
 
         // append the svg object to the body of the page
         let svg = d3.select(d3Container.current)
