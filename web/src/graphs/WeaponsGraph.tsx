@@ -1,4 +1,4 @@
-import {Button, Dimmer, Form, Grid} from "semantic-ui-react";
+import {Button, Container, Dimmer, Form, Grid, Search} from "semantic-ui-react";
 import Modal from "semantic-ui-react/dist/commonjs/modules/Modal";
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
@@ -188,8 +188,7 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
 
                 if (xPoint instanceof Date) {
                     index = d3.bisect(dataToDisplay.map(d => d.startTime), xPoint.valueOf())
-                }
-                else {
+                } else {
                     index = d3.bisect(dataToDisplay.map(d => d.roundNumber), xPoint)
                 }
 
@@ -309,43 +308,45 @@ export const WeaponsGraph = ({weaponStats}: Props) => {
             </Dimmer>
             : <div>
                 <h3>Weapon Kills Over Time</h3>
-                <Form>
-                    <p>Click & drag to zoom. Double-click to zoom out fully.</p>
-                    <Form.Group inline>
-                        <label>X-Axis</label>
-                        <Form.Radio
-                            inline
-                            label={"Time"}
-                            value={"time"}
-                            checked={xAxisType === "time"}
-                            onChange={(e, {value}) => setXAxisType(value as string)}
-                        />
-                        <Form.Radio
-                            inline
-                            label={"Round Number"}
-                            value={"rounds"}
-                            checked={xAxisType === "rounds"}
-                            onChange={(e, {value}) => setXAxisType(value as string)}
-                        />
+                <Container>
+                    <Form>
+                        <p>Click & drag to zoom. Double-click to zoom out fully.</p>
+                        <Form.Group inline>
+                            <label>X-Axis</label>
+                            <Form.Radio
+                                inline
+                                label={"Time"}
+                                value={"time"}
+                                checked={xAxisType === "time"}
+                                onChange={(e, {value}) => setXAxisType(value as string)}
+                            />
+                            <Form.Radio
+                                inline
+                                label={"Round Number"}
+                                value={"rounds"}
+                                checked={xAxisType === "rounds"}
+                                onChange={(e, {value}) => setXAxisType(value as string)}
+                            />
 
-                        <span>
+                            <span>
                         Last <Input
-                            value={numRoundsToDisplay}
-                            style={{
-                                width: "70px",
-                            }}
-                            onChange={(e) => {
-                                setNumRoundsToDisplayString(e.target.value)
+                                value={numRoundsToDisplay}
+                                style={{
+                                    width: "70px",
+                                }}
+                                onChange={(e) => {
+                                    setNumRoundsToDisplayString(e.target.value)
 
-                                const newValue = parseInt(e.target.value)
-                                if (!isNaN(newValue)) {
-                                    setNumRoundsToDisplay(Math.max(1, newValue))
-                                }
-                            }}
-                        /> Rounds
-                    </span>
-                    </Form.Group>
-                </Form>
+                                    const newValue = parseInt(e.target.value)
+                                    if (!isNaN(newValue)) {
+                                        setNumRoundsToDisplay(Math.max(1, newValue))
+                                    }
+                                }}
+                            /> Rounds
+                            </span>
+                        </Form.Group>
+                    </Form>
+                </Container>
                 <div className={"svg-container"}>
                     <svg
                         ref={d3Container}

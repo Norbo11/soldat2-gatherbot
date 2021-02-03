@@ -406,8 +406,7 @@ export function Ratings({ratings, userCache, fetchNewUser}: Props) {
     return (
         <div>
             <h1>Soldat 2 Gather Ratings</h1>
-            <p>Note: this site is currently under construction. It will contain a lot more than just this graph.
-            Send your suggestions to Norbo!</p>
+            <p>Note: this site is currently under construction. Send your suggestions to Norbo!</p>
 
             <Container>
                 <Form>

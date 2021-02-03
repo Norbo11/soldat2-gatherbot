@@ -3,23 +3,23 @@ import "./App.css";
 import {Ratings} from "./graphs/Ratings";
 import {fetchAllRatings, fetchUser, fetchWeaponStats, RatingResponse, UserResponse, WeaponStatsPoint} from "./util/api";
 import 'semantic-ui-css/semantic.min.css'
-import {Container} from "semantic-ui-react";
+import {Container, Menu} from "semantic-ui-react";
 import _ from "lodash";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch, useLocation, useHistory} from "react-router-dom";
 import {UserStatsPage} from "./UserStatsPage";
 import {WeaponsGraph} from "./graphs/WeaponsGraph";
-
+import logo from './images/s2_gather.png'
 export interface UserCache {
     [discordId: string]: UserResponse
 }
 
-
-export const UserCacheContext = React.createContext({} as UserCache)
-
 function App() {
-    const [ratings, setRatings] = useState<RatingResponse[]>([])
-    const [userCache, setUserCache] = useState<UserCache>({})
-    const [weaponStats, setWeaponStats] = useState<WeaponStatsPoint[]>([])
+    const history = useHistory();
+    const location = useLocation();
+
+    const [ratings, setRatings] = useState<RatingResponse[]>([]);
+    const [userCache, setUserCache] = useState<UserCache>({});
+    const [weaponStats, setWeaponStats] = useState<WeaponStatsPoint[]>([]);
 
     useEffect(() => {
         fetchAllRatings().then(ratings => {
@@ -42,32 +42,49 @@ function App() {
     }
 
     return (
-        <UserCacheContext.Provider value={userCache}>
-            <Container fluid style={{"padding": "50px"}} textAlign={"center"}>
-                <Router>
-                    <Switch>
-                        <Route exact path={"/"}>
-                            <Ratings
-                                ratings={ratings}
-                                userCache={userCache}
-                                fetchNewUser={fetchNewUser}
-                            />
-                        </Route>
-                        <Route path={"/stats/:discordId"}>
-                            <UserStatsPage
-                                userCache={userCache}
-                                fetchNewUser={fetchNewUser}
-                            />
-                        </Route>
-                        <Route path={"/weapons"}>
-                            <WeaponsGraph
-                                weaponStats={weaponStats}
-                            />
-                        </Route>
-                    </Switch>
-                </Router>
+        <div>
+            <Menu fixed={"top"}>
+                <Menu.Item>
+                    <img src={logo}/>
+                </Menu.Item>
+                <Menu.Item
+                    name='ratings'
+                    active={location.pathname === '/'}
+                    onClick={() => history.push("/")}
+                >
+                    Ratings
+                </Menu.Item>
+                <Menu.Item
+                    name='weapons'
+                    active={location.pathname === '/weapons'}
+                    onClick={() => history.push("/weapons")}
+                >
+                    Weapons
+                </Menu.Item>
+            </Menu>
+            <Container fluid style={{padding: "50px", marginTop: "50px"}} textAlign={"center"}>
+                <Switch>
+                    <Route exact path={"/"} key={"ratings"}>
+                        <Ratings
+                            ratings={ratings}
+                            userCache={userCache}
+                            fetchNewUser={fetchNewUser}
+                        />
+                    </Route>
+                    <Route path={"/stats/:discordId"} key={"userStats"}>
+                        <UserStatsPage
+                            userCache={userCache}
+                            fetchNewUser={fetchNewUser}
+                        />
+                    </Route>
+                    <Route path={"/weapons"} key={"weapons"}>
+                        <WeaponsGraph
+                            weaponStats={weaponStats}
+                        />
+                    </Route>
+                </Switch>
             </Container>
-        </UserCacheContext.Provider>
+        </div>
     );
 }
 
