@@ -1,5 +1,6 @@
 import _ from "lodash"
 import stats, {getKillsAndDeathsPerPlayer, getWeaponStatsOverTime} from "../game/stats";
+import moment from "moment";
 
 export default {
     routes: [
@@ -82,6 +83,36 @@ export default {
             handler: async (req, res, next) => {
                 const weaponStatsOverTime = await getWeaponStatsOverTime(currentStatsDb)
                 res.json(weaponStatsOverTime)
+            }
+        },
+        {
+            method: "get",
+            path: "/api/v1/gathers/per_day",
+            handler: async (req, res, next) => {
+                const games = await currentStatsDb.getAllGames()
+                const userCache = await currentStatsDb.getAllCachedDiscordUsers()
+
+                let gamesPerDay = _.groupBy(games, game => moment(game.startTime).format("DD-MM-YYYY"))
+                for (let date of _.keys(gamesPerDay)) {
+                    const gamesForDate = gamesPerDay[date]
+
+                    for (let game of _.values(gamesForDate)) {
+                        for (let round of game.rounds) {
+                            delete round["events"]
+                        }
+                    }
+
+                    const players = new Set(_.flatten(gamesForDate.map(game => [...game.redPlayers, ...game.bluePlayers])).map(discordId => userCache[discordId].displayName))
+
+                    gamesPerDay[date] = {
+                        total: gamesForDate.length,
+                        players: [...players],
+                        numPlayers: players.size,
+                        bySize: _.mapValues(_.groupBy(gamesForDate, game => game.size), games => games.length),
+                        games: gamesForDate
+                    }
+                }
+                res.json(gamesPerDay)
             }
         }
     ]

@@ -187,6 +187,12 @@ class StatsDB {
         })
     }
 
+    async getAllCachedDiscordUsers() {
+        let result = await this.db.collection("DiscordUserCache").find({})
+        result = await result.toArray()
+        return _.mapValues(_.groupBy(result, user => user.discordId), users => users[0])
+    }
+
     async getCachedDiscordUser(discordId) {
         const result = await this.db.collection("DiscordUserCache").findOne({discordId})
         if (result) {
