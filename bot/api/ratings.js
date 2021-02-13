@@ -92,9 +92,9 @@ export default {
                 const games = await currentStatsDb.getAllGames()
                 const userCache = await currentStatsDb.getAllCachedDiscordUsers()
 
-                let gamesPerDay = _.groupBy(games, game => moment(game.startTime).format("DD-MM-YYYY"))
-                for (let date of _.keys(gamesPerDay)) {
-                    const gamesForDate = gamesPerDay[date]
+                let dateToStats = _.groupBy(games, game => moment(game.startTime).format("DD-MM-YYYY"))
+                for (let date of _.keys(dateToStats)) {
+                    const gamesForDate = dateToStats[date]
 
                     for (let game of _.values(gamesForDate)) {
                         for (let round of game.rounds) {
@@ -104,7 +104,7 @@ export default {
 
                     const players = new Set(_.flatten(gamesForDate.map(game => [...game.redPlayers, ...game.bluePlayers])).map(discordId => userCache[discordId].displayName))
 
-                    gamesPerDay[date] = {
+                    dateToStats[date] = {
                         total: gamesForDate.length,
                         players: [...players],
                         numPlayers: players.size,
@@ -112,6 +112,14 @@ export default {
                         games: gamesForDate
                     }
                 }
+
+                const gamesPerDay = []
+
+                _.forEach(_.sortBy(_.keys(dateToStats)), date => {
+                    dateToStats[date]["date"] = date
+                    gamesPerDay.push(dateToStats[date])
+                })
+
                 res.json(gamesPerDay)
             }
         }

@@ -1,7 +1,15 @@
 import React, {useEffect, useState} from "react";
 import "./App.css";
 import {Ratings} from "./graphs/Ratings";
-import {fetchAllRatings, fetchUser, fetchWeaponStats, RatingResponse, UserResponse, WeaponStatsPoint} from "./util/api";
+import {
+    fetchAllRatings,
+    fetchGatherStats,
+    fetchUser,
+    fetchWeaponStats, GatherStatsPoint,
+    RatingResponse,
+    UserResponse,
+    WeaponStatsPoint
+} from "./util/api";
 import 'semantic-ui-css/semantic.min.css'
 import {Container, Menu} from "semantic-ui-react";
 import _ from "lodash";
@@ -9,6 +17,7 @@ import {BrowserRouter as Router, Route, Switch, useLocation, useHistory} from "r
 import {UserStatsPage} from "./UserStatsPage";
 import {WeaponsGraph} from "./graphs/WeaponsGraph";
 import logo from './images/s2_gather.png'
+import {GathersGraph} from "./graphs/GathersGraph";
 export interface UserCache {
     [discordId: string]: UserResponse
 }
@@ -20,6 +29,7 @@ function App() {
     const [ratings, setRatings] = useState<RatingResponse[]>([]);
     const [userCache, setUserCache] = useState<UserCache>({});
     const [weaponStats, setWeaponStats] = useState<WeaponStatsPoint[]>([]);
+    const [gatherStats, setGatherStats] = useState<GatherStatsPoint[]>([]);
 
     useEffect(() => {
         fetchAllRatings().then(ratings => {
@@ -28,6 +38,10 @@ function App() {
 
         fetchWeaponStats().then(weaponStats => {
             setWeaponStats(weaponStats)
+        })
+
+        fetchGatherStats().then(gatherStats => {
+            setGatherStats(gatherStats)
         })
     }, [])
 
@@ -61,6 +75,13 @@ function App() {
                 >
                     Weapons
                 </Menu.Item>
+                <Menu.Item
+                    name='gathers'
+                    active={location.pathname === '/gathers'}
+                    onClick={() => history.push("/gathers")}
+                >
+                    Gathers
+                </Menu.Item>
             </Menu>
             <Container fluid style={{padding: "50px", marginTop: "50px"}} textAlign={"center"}>
                 <Switch>
@@ -80,6 +101,11 @@ function App() {
                     <Route path={"/weapons"} key={"weapons"}>
                         <WeaponsGraph
                             weaponStats={weaponStats}
+                        />
+                    </Route>
+                    <Route path={"/gathers"} key={"gathers"}>
+                        <GathersGraph
+                            gatherStats={gatherStats}
                         />
                     </Route>
                 </Switch>

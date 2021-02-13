@@ -107,6 +107,17 @@ export interface WeaponStatsPoint {
     }
 }
 
+export interface GatherStatsPoint {
+    date: string,
+    total: number,
+    players: string[],
+    numPlayers: number,
+    bySize: {
+        [size: number]: number
+    },
+    games: Game[]
+}
+
 export const fetchAllRatings = async (): Promise<RatingResponse[]> => {
     return (await fetch(`${API_URL}/ratings/all`)).json()
 }
@@ -117,4 +128,8 @@ export const fetchUser = async (discordId: string): Promise<UserResponse> => {
 
 export const fetchWeaponStats = async (): Promise<WeaponStatsPoint[]> => {
     return (await fetch(`${API_URL}/weapons`)).json()
+}
+
+export const fetchGatherStats = async (): Promise<GatherStatsPoint[]> => {
+    return (await fetch(`${API_URL}/gathers/per_day`)).json()
 }
