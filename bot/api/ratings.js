@@ -92,7 +92,7 @@ export default {
                 const games = await currentStatsDb.getAllGames()
                 const userCache = await currentStatsDb.getAllCachedDiscordUsers()
 
-                let dateToStats = _.groupBy(games, game => moment(game.startTime).format("DD-MM-YYYY"))
+                let dateToStats = _.groupBy(games, game => moment(game.startTime).format("YYYY-MM-DD"))
                 for (let date of _.keys(dateToStats)) {
                     let gamesForDate = dateToStats[date]
 
@@ -124,10 +124,24 @@ export default {
 
                 const gamesPerDay = []
 
-                _.forEach(_.sortBy(_.keys(dateToStats)), date => {
-                    dateToStats[date]["date"] = date
-                    gamesPerDay.push(dateToStats[date])
-                })
+                // Here we make sure we return data for a continuous date range, even if we had no games on
+                // particular days
+                let minDate = moment(_.min(_.keys(dateToStats)), "YYYY-MM-DD")
+                const maxDate = moment(_.max(_.keys(dateToStats)), "YYYY-MM-DD")
+
+                while (minDate < maxDate) {
+                    const date = minDate.format("YYYY-MM-DD")
+                    let stats = dateToStats[date]
+
+                    if (stats === undefined) {
+                        stats = {}
+                    }
+
+                    stats["date"] = date
+                    gamesPerDay.push(stats)
+
+                    minDate.add(1, "days")
+                }
 
                 res.json(gamesPerDay)
             }

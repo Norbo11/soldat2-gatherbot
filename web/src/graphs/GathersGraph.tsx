@@ -48,7 +48,7 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
         const margin = {top: 50, right: 30, bottom: 70, left: 50}
         const width = figureWidth - margin.left - margin.right - legendWidth;
         const height = figureHeight - margin.top - margin.bottom;
-        const bars: d3.Selection<SVGRectElement, Game, null, undefined>[] = []
+        let bars: d3.Selection<SVGRectElement, Game, null, undefined>[] = []
         const sizeColor = d3.scaleOrdinal([...d3.schemeCategory10]);
 
         // append the svg object to the body of the page
@@ -74,30 +74,46 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
             const maxGames = _.max(dataToDisplay.map(item => item.total))
 
             return d3.scaleLinear()
-                .domain([0, maxGames!])
+                .domain([0, maxGames! + 1])
                 .range([height, 0])
         }
 
-        const filterData = (data: GatherStatsPoint[], minX: Date, maxX: Date) => {
+        const filterData = (data: GatherStatsPoint[], minX: string, maxX: string) => {
             return _.filter(data, d => {
-                const date = moment(d.date).toDate()
-                return date >= minX && date <= maxX
+                return d.date >= minX && d.date <= maxX
             })
         }
 
         let x = getXScale(dataToDisplay)
         let y = getYScale(dataToDisplay)
 
-        const xAxis = graph.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
 
-        xAxis.selectAll("text")
-            .attr("y", 0)
-            .attr("x", 9)
-            .attr("dy", ".35em")
-            .attr("transform", "rotate(90)")
-            .attr("text-anchor", "start")
+        const drawXAxis = () => {
+            const xAxis = graph.append("g")
+                .attr("id", "xAxis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+            xAxis.selectAll("text")
+                .attr("y", 0)
+                .attr("x", 9)
+                .attr("dy", ".35em")
+                .attr("transform", "rotate(90)")
+                .attr("text-anchor", "start")
+
+            xAxis.selectAll(".tick")
+                .filter(d => {
+                    if (typeof d === "string") {
+                        const day = moment(d, "YYYY-MM-DD").get("day")
+                        return day === 6 || day === 0;
+                    }
+                    return false;
+                })
+                .select("text")
+                .attr("color", "red")
+        }
+
+        drawXAxis()
 
         const yAxis = graph.append("g")
             .call(d3.axisLeft(y));
@@ -132,74 +148,81 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
             .attr("class", "brush")
             .call(brush);
 
-        const gameBarHeight = y(0) - y(1);
-        console.log(gameBarHeight)
+        const sizes = new Set<number>();
 
-        _.forEach(dataToDisplay, item => {
-            _.forEach(_.sortBy(item.games, game => game.size), (game, i) => {
-                // Add the line to the above group
-                const gameBar = group.append("rect")
-                    .datum(game)
-                    .attr("id", `gameBar${game.startTime}`)
-                    .attr("fill", sizeColor(`${game.size}`))
-                    .attr("stroke", "black")
-                    .attr("stroke-width", "1")
-                    .attr("x", x(item.date)!)
-                    .attr("y", y(i) - gameBarHeight)
-                    .attr("height", gameBarHeight)
-                    .attr("width", x.bandwidth())
+        const drawBars = () => {
+            const gameBarHeight = y(0) - y(1);
 
-                gameBar.on("mouseover", (e: d3.ClientPointEvent, d: Game) => {
-                    const gameBoxWidth = 400
-                    const gameBoxHeight = 200
+            _.forEach(dataToDisplay, (item, j) => {
+                _.forEach(_.sortBy(item.games, game => game.size), (game, i) => {
+                    sizes.add(game.size)
 
-                    // Make sure tooltips do not leave the bounds of the figure
-                    const tooltipX = Math.max(0, Math.min(width - gameBoxWidth, x(item.date)! - gameBoxWidth / 2))
-                    const tooltipY = Math.max(0, Math.min(height - gameBoxHeight, y(i)))
+                    // Add the line to the above group
+                    const gameBar = group.append("rect")
+                        .datum(game)
+                        .attr("id", `gameBar${game.startTime}`)
+                        .attr("fill", sizeColor(`${game.size}`))
+                        .attr("stroke", "black")
+                        .attr("stroke-width", "1")
+                        .attr("x", x(item.date)!)
+                        .attr("y", y(i) - gameBarHeight)
+                        .attr("height", gameBarHeight)
+                        .attr("width", x.bandwidth())
 
-                    // This is controlled by React.createPortal in the render method of this component
-                    group.insert("foreignObject")
-                        .attr("id", `gameHoverBox${game.startTime}`)
-                        .attr("x", tooltipX)
-                        .attr("y", tooltipY)
-                        .attr("width", gameBoxWidth)
-                        .attr("height", gameBoxHeight)
+                    gameBar.on("mouseover", (e: d3.ClientPointEvent, d: Game) => {
+                        const gameBoxWidth = 400
+                        const gameBoxHeight = 200
 
-                        // This ensures that when we draw the game box, we don't capture a mouseout event and
-                        // immediately remove it
-                        .attr("pointer-events", "none")
+                        // Make sure tooltips do not leave the bounds of the figure
+                        const tooltipX = Math.max(0, Math.min(width - gameBoxWidth, x(item.date)! - gameBoxWidth / 2))
+                        const tooltipY = Math.max(0, Math.min(height - gameBoxHeight, y(i)))
 
-                    setHoverGame(game)
+                        // This is controlled by React.createPortal in the render method of this component
+                        group.insert("foreignObject")
+                            .attr("id", `gameHoverBox${game.startTime}`)
+                            .attr("x", tooltipX)
+                            .attr("y", tooltipY)
+                            .attr("width", gameBoxWidth)
+                            .attr("height", gameBoxHeight)
+
+                            // This ensures that when we draw the game box, we don't capture a mouseout event and
+                            // immediately remove it
+                            .attr("pointer-events", "none")
+
+                        setHoverGame(game)
+                    })
+
+                    gameBar.on("mouseout", (e: d3.ClientPointEvent, d: Game) => {
+                        graph.select(`#gameHoverBox${d.startTime}`).remove()
+                        setHoverGame(undefined)
+                    })
+
+                    bars.push(gameBar)
                 })
-
-                gameBar.on("mouseout", (e: d3.ClientPointEvent, d: Game) => {
-                    graph.select(`#gameHoverBox${d.startTime}`).remove()
-                    setHoverGame(undefined)
-                })
-
-                // TODO: Add legend for sizes
-                //
-                // legend
-                //     .append("circle")
-                //     .datum(weaponName)
-                //     .attr("cx", width + 20)
-                //     .attr("cy", d => i * 20) // 100 is where the first dot appears. 25 is the distance between dots
-                //     .attr("r", 6)
-                //     .style("fill", d => sizeColor(d))
-                //
-                // legend
-                //     .append("text")
-                //     .datum(weaponName)
-                //     .attr("x", width + 40)
-                //     .attr("y", d => i * 20) // 100 is where the first dot appears. 25 is the distance between dots
-                //     .style("fill", d => sizeColor(d))
-                //     .text(d => d)
-                //     .attr("text-anchor", "left")
-                //     .style("alignment-baseline", "middle")
-                //     .style("font-size", "14px")
-
-                bars.push(gameBar)
             })
+        }
+
+        drawBars()
+
+        _.forEach(Array.from(sizes), (size, i) => {
+            legend
+                .append("circle")
+                .datum(size)
+                .attr("cx", width + 20)
+                .attr("cy", d => i * 20) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("r", 6)
+                .style("fill", d => sizeColor(`${size}`))
+
+            legend
+                .append("text")
+                .datum(size)
+                .attr("x", width + 40)
+                .attr("y", d => i * 20) // 100 is where the first dot appears. 25 is the distance between dots
+                .style("fill", d => sizeColor(`${size}`))
+                .text(d => `Size: ${d}`)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle")
+                .style("font-size", "14px")
         })
 
         const transitionGraph = (data: GatherStatsPoint[]) => {
@@ -208,39 +231,38 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
                 .duration(1000)
                 .call(d3.axisLeft(y));
 
-            xAxis.transition()
-                .duration(1000)
-                .call(d3.axisBottom(x))
+            graph.select("#xAxis").remove()
+            drawXAxis()
 
-            // TODO: Potentially transition bars?
-            // bars.forEach(bar => {
-            //     bar
-            //         .transition()
-            //         .duration(1000)
-            //         .attr("d", getLine(weaponName))
-            // })
+            _.forEach(bars, bar => {
+                bar.remove()
+            })
+
+            drawBars()
         }
 
         function updateChart(event: D3BrushEvent<unknown>, d: unknown) {
             // This is the area that has been selected
-            // const extent = event.selection as [number, number]
-            //
-            // if (extent) {
-            //     // If something was selected, filter the data to display
-            //     const [minX, maxX] = [x.invert(extent[0]), x.invert(extent[1])]
-            //
-            //     dataToDisplay = filterData(data, minX, maxX)
-            //
-            //     x = getXScale(dataToDisplay)
-            //     y = getYScale(dataToDisplay)
-            //
-            //     // This remove the grey brush area as soon as the selection has been done
-            //     // group.select(".brush").call(brush.move, null)
-            //     brush.move(group.select(".brush"), null)
-            // }
-            //
-            // // Update axis and line position
-            // transitionGraph(dataToDisplay)
+            const extent = event.selection as [number, number]
+
+            if (extent) {
+                // If something was selected, filter the data to display
+                const selectedDomain = x.domain().filter(d => x(d)! >= extent[0] && x(d)! <= extent[1])
+                const minX = _.min(selectedDomain)!
+                const maxX = _.max(selectedDomain)!
+
+                dataToDisplay = filterData(data, minX, maxX)
+
+                x = getXScale(dataToDisplay)
+                y = getYScale(dataToDisplay)
+
+                // This remove the grey brush area as soon as the selection has been done
+                // group.select(".brush").call(brush.move, null)
+                brush.move(group.select(".brush"), null)
+            }
+
+            // Update axis and line position
+            transitionGraph(dataToDisplay)
         }
 
         // If user double click, reinitialize the chart by zooming out over the unfiltered data
@@ -252,7 +274,7 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
             transitionGraph(dataToDisplay)
         });
 
-        transitionGraph(dataToDisplay)
+        // transitionGraph(dataToDisplay)
     }, [gatherStats, numDatesToDisplay])
 
 
@@ -296,7 +318,7 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
                                         setNumDatesToDisplay(Math.max(1, newValue))
                                     }
                                 }}
-                            /> Games
+                            /> Days
                             </span>
                         </Form.Group>
                     </Form>
