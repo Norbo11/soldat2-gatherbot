@@ -94,7 +94,16 @@ export default {
 
                 let dateToStats = _.groupBy(games, game => moment(game.startTime).format("DD-MM-YYYY"))
                 for (let date of _.keys(dateToStats)) {
-                    const gamesForDate = dateToStats[date]
+                    let gamesForDate = dateToStats[date]
+
+                    gamesForDate = gamesForDate.map((game, i) => {{
+                        const allEvents = _.flatMap(game.rounds, round => round.events)
+                        const playerKillsAndDeaths = getKillsAndDeathsPerPlayer([...game.redPlayers, ...game.bluePlayers], allEvents)
+                        return {
+                            ...game,
+                            playerKillsAndDeaths
+                        }
+                    }})
 
                     for (let game of _.values(gamesForDate)) {
                         for (let round of game.rounds) {

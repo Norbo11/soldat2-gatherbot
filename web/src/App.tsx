@@ -106,6 +106,8 @@ function App() {
                     <Route path={"/gathers"} key={"gathers"}>
                         <GathersGraph
                             gatherStats={gatherStats}
+                            userCache={userCache}
+                            fetchNewUser={fetchNewUser}
                         />
                     </Route>
                 </Switch>

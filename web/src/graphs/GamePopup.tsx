@@ -13,9 +13,10 @@ interface GamePopupContentsProps {
     game: Game,
     userCache: UserCache,
     fetchNewUser: (discordId: string) => void,
+    alpha: number
 }
 
-export const GamePopupContents = ({userCache, fetchNewUser, game}: GamePopupContentsProps) => {
+export const GamePopupContents = ({userCache, fetchNewUser, game, alpha}: GamePopupContentsProps) => {
     useEffect(() => {
         const fetchUsers = async () => {
             for (let discordId of [...game.bluePlayers, ...game.redPlayers]) {
@@ -34,14 +35,14 @@ export const GamePopupContents = ({userCache, fetchNewUser, game}: GamePopupCont
         Blue: {
             teamName: "Blue",
             players: bluePlayers,
-            color: "rgb(13, 33, 161, 0.6)",
+            color: `rgb(13, 33, 161, ${alpha})`,
             winProbability: game.blueWinProbability,
             floated: "left"
         } as TeamInfo,
         Red: {
             teamName: "Red",
             players: redPlayers,
-            color: "rgb(224, 54, 22, 0.6)",
+            color: `rgb(224, 54, 22, ${alpha})`,
             winProbability: game.redWinProbability,
             floated: "right"
         } as TeamInfo
@@ -53,7 +54,7 @@ export const GamePopupContents = ({userCache, fetchNewUser, game}: GamePopupCont
             // divided
             // style={{width: "600px"}}
             // container // Provide a fixed-width container
-            padded
+            // padded
             textAlign={"center"}
         >
             <Grid.Row>
@@ -163,6 +164,7 @@ export const GamePopup = ({children, game, userCache, fetchNewUser}: GamePopupPr
                     game={game}
                     userCache={userCache}
                     fetchNewUser={fetchNewUser}
+                    alpha={0.6}
                 />
             }
             mouseEnterDelay={500}

@@ -14,17 +14,19 @@ import _ from "lodash"
 import * as jStat from "jstat";
 import {getNormalColorScale, GLOBAL_MU, GLOBAL_SIGMA, normal, NormalPoint} from "../util/normalCurve";
 import {UserCache} from "../App";
-import {RoundPopupContents} from "./GamePopup";
+import {GamePopupContents, RoundPopupContents} from "./GamePopup";
 import Input from "semantic-ui-react/dist/commonjs/elements/Input";
 import {BaseType} from "d3-selection";
 
 
 interface Props {
-    gatherStats: GatherStatsPoint[]
+    gatherStats: GatherStatsPoint[],
+    userCache: UserCache,
+    fetchNewUser: (discordId: string) => void,
 }
 
 
-export const GathersGraph = ({gatherStats}: Props) => {
+export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
 
     const figureWidth = 1000
     const figureHeight = 450
@@ -33,6 +35,7 @@ export const GathersGraph = ({gatherStats}: Props) => {
 
     const [numDatesToDisplay, setNumDatesToDisplay] = useState(1000)
     const [numDatesToDisplayString, setNumDatesToDisplayString] = useState("1000")
+    const [hoverGame, setHoverGame] = useState<Game | undefined>(undefined)
 
     useEffect(() => {
         if (gatherStats.length === 0) {
@@ -42,7 +45,7 @@ export const GathersGraph = ({gatherStats}: Props) => {
         const legendWidth = 100;
 
         // set the dimensions and margins of the graph
-        const margin = {top: 50, right: 30, bottom: 30, left: 50}
+        const margin = {top: 50, right: 30, bottom: 70, left: 50}
         const width = figureWidth - margin.left - margin.right - legendWidth;
         const height = figureHeight - margin.top - margin.bottom;
         const bars: d3.Selection<SVGRectElement, Game, null, undefined>[] = []
@@ -73,7 +76,6 @@ export const GathersGraph = ({gatherStats}: Props) => {
             return d3.scaleLinear()
                 .domain([0, maxGames!])
                 .range([height, 0])
-                .nice()
         }
 
         const filterData = (data: GatherStatsPoint[], minX: Date, maxX: Date) => {
@@ -82,13 +84,6 @@ export const GathersGraph = ({gatherStats}: Props) => {
                 return date >= minX && date <= maxX
             })
         }
-        //
-        // const getLine = (weaponName: string) => {
-        //     return d3.line<WeaponStatsPoint>()
-        //         .x(d => x(getXValue(d)))
-        //         .y(d => y(d.weapons[weaponName].kills))
-        //         .curve(curveType)
-        // }
 
         let x = getXScale(dataToDisplay)
         let y = getYScale(dataToDisplay)
@@ -137,70 +132,49 @@ export const GathersGraph = ({gatherStats}: Props) => {
             .attr("class", "brush")
             .call(brush);
 
-        const gameBarHeight = 50;
-
-        console.log(dataToDisplay)
-        console.log(y(0))
-        console.log(y(1))
-        console.log(y(2))
+        const gameBarHeight = y(0) - y(1);
+        console.log(gameBarHeight)
 
         _.forEach(dataToDisplay, item => {
             _.forEach(_.sortBy(item.games, game => game.size), (game, i) => {
                 // Add the line to the above group
                 const gameBar = group.append("rect")
                     .datum(game)
+                    .attr("id", `gameBar${game.startTime}`)
                     .attr("fill", sizeColor(`${game.size}`))
+                    .attr("stroke", "black")
+                    .attr("stroke-width", "1")
                     .attr("x", x(item.date)!)
                     .attr("y", y(i) - gameBarHeight)
                     .attr("height", gameBarHeight)
                     .attr("width", x.bandwidth())
 
                 gameBar.on("mouseover", (e: d3.ClientPointEvent, d: Game) => {
-                    // TODO: Display game details
-                    // const [clientX, clientY] = d3.pointer(e)
-                    //
-                    // const xPoint = x.invert(clientX)
-                    // const yPoint = y.invert(clientY)
-                    //
-                    // let index;
-                    //
-                    // if (xPoint instanceof Date) {
-                    //     index = d3.bisect(dataToDisplay.map(d => d.startTime), xPoint.valueOf())
-                    // } else {
-                    //     index = d3.bisect(dataToDisplay.map(d => d.roundNumber), xPoint)
-                    // }
-                    //
-                    // const datum = dataToDisplay[index]
-                    //
-                    // gameBar.attr("stroke-width", lineWidthHover)
-                    // const tooltipGroup = graph
-                    //     .append("g")
-                    //     .attr("id", `${cleanWeaponName}Tooltip`)
-                    //
-                    // const tooltipText = tooltipGroup.append("text")
-                    //     .attr("id", `${cleanWeaponName}TooltipText`)
-                    //     .datum(weaponName)
-                    //     .attr("x", clientX + 10)
-                    //     .attr("y", clientY - 10) // 100 is where the first dot appears. 25 is the distance between dots
-                    //     .style("fill", sizeColor(weaponName))
-                    //     .text(`${weaponName}: ${datum.weapons[weaponName].kills}`)
-                    //     .attr("text-anchor", "left")
-                    //     .style("alignment-baseline", "middle")
-                    //     .style("font-size", "14px")
-                    //
-                    // const tooltipPadding = 3
-                    //
-                    // tooltipGroup.insert("rect", `#${cleanWeaponName}TooltipText`)
-                    //     .style("fill", "rgb(0, 0, 0, 0.7)")
-                    //     .attr("x", clientX + 10 - tooltipPadding)
-                    //     .attr("y", clientY - 10 - tooltipText.node()!.getBBox().height)
-                    //     .attr("width", tooltipText.node()!.getBBox().width + tooltipPadding * 2)
-                    //     .attr("height", tooltipText.node()!.getBBox().height + tooltipPadding * 2)
+                    const gameBoxWidth = 400
+                    const gameBoxHeight = 200
+
+                    // Make sure tooltips do not leave the bounds of the figure
+                    const tooltipX = Math.max(0, Math.min(width - gameBoxWidth, x(item.date)! - gameBoxWidth / 2))
+                    const tooltipY = Math.max(0, Math.min(height - gameBoxHeight, y(i)))
+
+                    // This is controlled by React.createPortal in the render method of this component
+                    group.insert("foreignObject")
+                        .attr("id", `gameHoverBox${game.startTime}`)
+                        .attr("x", tooltipX)
+                        .attr("y", tooltipY)
+                        .attr("width", gameBoxWidth)
+                        .attr("height", gameBoxHeight)
+
+                        // This ensures that when we draw the game box, we don't capture a mouseout event and
+                        // immediately remove it
+                        .attr("pointer-events", "none")
+
+                    setHoverGame(game)
                 })
 
                 gameBar.on("mouseout", (e: d3.ClientPointEvent, d: Game) => {
-                    // gameBar.attr("stroke-width", lineWidth)
-                    // graph.select(`#${cleanWeaponName}Tooltip`).remove()
+                    graph.select(`#gameHoverBox${d.startTime}`).remove()
+                    setHoverGame(undefined)
                 })
 
                 // TODO: Add legend for sizes
@@ -281,13 +255,30 @@ export const GathersGraph = ({gatherStats}: Props) => {
         transitionGraph(dataToDisplay)
     }, [gatherStats, numDatesToDisplay])
 
+
+    let portal = null;
+    if (hoverGame !== undefined) {
+        const hoverBoxElem = document.getElementById(`gameHoverBox${hoverGame.startTime}`)!
+
+        portal = ReactDOM.createPortal(
+            <GamePopupContents
+                game={hoverGame}
+                userCache={userCache}
+                fetchNewUser={fetchNewUser}
+                alpha={1.0}
+            />, hoverBoxElem
+        )
+    }
+
+
     return (
         gatherStats.length === 0 ?
             <Dimmer active inverted>
                 <Loader inverted>Loading...</Loader>
             </Dimmer>
             : <div>
-                <h3>Weapon Kills Over Time</h3>
+                {portal}
+                <h3>Gathers Over Time</h3>
                 <Container>
                     <Form>
                         <p>Click & drag to zoom. Double-click to zoom out fully.</p>
@@ -305,7 +296,7 @@ export const GathersGraph = ({gatherStats}: Props) => {
                                         setNumDatesToDisplay(Math.max(1, newValue))
                                     }
                                 }}
-                            /> Rounds
+                            /> Games
                             </span>
                         </Form.Group>
                     </Form>
