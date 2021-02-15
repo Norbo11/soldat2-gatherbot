@@ -33,8 +33,8 @@ export const GathersGraph = ({gatherStats, userCache, fetchNewUser}: Props) => {
 
     const d3Container = useRef(null)
 
-    const [numDatesToDisplay, setNumDatesToDisplay] = useState(1000)
-    const [numDatesToDisplayString, setNumDatesToDisplayString] = useState("1000")
+    const [numDatesToDisplay, setNumDatesToDisplay] = useState(100)
+    const [numDatesToDisplayString, setNumDatesToDisplayString] = useState("100")
     const [hoverGame, setHoverGame] = useState<Game | undefined>(undefined)
 
     useEffect(() => {

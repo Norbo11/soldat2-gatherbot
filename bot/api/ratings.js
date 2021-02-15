@@ -129,7 +129,7 @@ export default {
                 let minDate = moment(_.min(_.keys(dateToStats)), "YYYY-MM-DD")
                 const maxDate = moment(_.max(_.keys(dateToStats)), "YYYY-MM-DD")
 
-                while (minDate < maxDate) {
+                while (minDate <= maxDate) {
                     const date = minDate.format("YYYY-MM-DD")
                     let stats = dateToStats[date]
 
